@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 14, 2020 at 02:21 PM
+-- Generation Time: Apr 14, 2020 at 03:07 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
   `Nom` varchar(255) NOT NULL,
   `AdresseMail` varchar(255) NOT NULL,
   `AdresseLigne1` varchar(255) NOT NULL,
-  `AdresseLigne2` varchar(255) NOT NULL,
+  `AdresseLigne2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `Ville` varchar(255) NOT NULL,
   `CodePostal` varchar(255) NOT NULL,
   `Pays` varchar(255) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
   `NumeroCarte` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`IDAcheteur`),
   KEY `NumeroCarte` (`NumeroCarte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -62,6 +62,15 @@ CREATE TABLE IF NOT EXISTS `carte` (
   `Solde` decimal(10,2) NOT NULL,
   PRIMARY KEY (`NumeroCarte`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `carte`
+--
+
+INSERT INTO `carte` (`NumeroCarte`, `TypeCarte`, `NomTitulaire`, `MoisExpiration`, `AnneeExpiration`, `CodeSecurite`, `Solde`) VALUES
+('1', 'Visa', 'Duparc Aurele', 05, 22, 111, '1000.00'),
+('2', 'Mastercard', 'Jolly Simon', 10, 20, 222, '1000.00'),
+('3', 'American Express', 'Louche Sylvain', 06, 21, 333, '1000.00');
 
 -- --------------------------------------------------------
 
@@ -180,6 +189,15 @@ CREATE TABLE IF NOT EXISTS `vendeur` (
   `Admin` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Pseudo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `vendeur`
+--
+
+INSERT INTO `vendeur` (`Pseudo`, `AdresseMail`, `Nom`, `Photo`, `ImageFond`, `Description`, `Admin`) VALUES
+('Aurele', 'aurele.duparc@edu.ece.fr', 'Duparc', 'Images/photo-aurele', 'Images/fond-aurele', 'Admin numero 1', 1),
+('Simon', 'simon.jolly@edu.ece.fr', 'Jolly', 'Images/photo-simon', 'Images/photo-sylvain', 'Admin numero 2', 1),
+('Sylvain', 'sylvain.louche@edu.ece.fr', 'Louche', 'Images/photo-sylvain', 'Images/fond-sylvain', 'Admin numero 3', 1);
 
 --
 -- Constraints for dumped tables
