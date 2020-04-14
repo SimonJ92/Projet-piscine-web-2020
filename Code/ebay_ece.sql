@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 14, 2020 at 03:18 PM
+-- Generation Time: Apr 14, 2020 at 04:07 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -21,6 +21,25 @@ SET time_zone = "+00:00";
 --
 -- Database: `ebay_ece`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+DROP PROCEDURE IF EXISTS `AddMoney`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddMoney` (IN `Ajout` DECIMAL(10,2), IN `NumeroVoulu` VARCHAR(255))  MODIFIES SQL DATA
+    COMMENT 'Permet d''ajouter de l''argent sur une carte'
+UPDATE carte
+SET carte.Solde = carte.Solde + Ajout
+where carte.NumeroCarte = NumeroVoulu$$
+
+DROP PROCEDURE IF EXISTS `RemoveMoney`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `RemoveMoney` (IN `Retrait` DECIMAL(10,2), IN `NumeroVoulu` VARCHAR(255))  MODIFIES SQL DATA
+UPDATE carte
+Set carte.Solde = carte.Solde - retrait
+WHERE carte.NumeroCarte = NumeroVoulu$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -43,7 +62,14 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
   `NumeroCarte` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`IDAcheteur`),
   KEY `NumeroCarte` (`NumeroCarte`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `acheteur`
+--
+
+INSERT INTO `acheteur` (`IDAcheteur`, `Prenom`, `Nom`, `AdresseMail`, `AdresseLigne1`, `AdresseLigne2`, `Ville`, `CodePostal`, `Pays`, `Telephone`, `NumeroCarte`) VALUES
+(4, 'John', 'Doe', 'truc@gmail.com', 'Adresse1', NULL, 'Paris', '75015', 'France', '+33611111111', '2');
 
 -- --------------------------------------------------------
 
@@ -53,9 +79,9 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
 
 DROP TABLE IF EXISTS `carte`;
 CREATE TABLE IF NOT EXISTS `carte` (
-  `NumeroCarte` varchar(255) NOT NULL,
-  `TypeCarte` varchar(255) NOT NULL,
-  `NomTitulaire` varchar(255) NOT NULL,
+  `NumeroCarte` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `TypeCarte` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `NomTitulaire` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `MoisExpiration` int(2) UNSIGNED ZEROFILL NOT NULL,
   `AnneeExpiration` int(2) UNSIGNED ZEROFILL NOT NULL,
   `CodeSecurite` int(4) NOT NULL,
@@ -97,7 +123,7 @@ DROP TABLE IF EXISTS `negociation`;
 CREATE TABLE IF NOT EXISTS `negociation` (
   `NumeroNegociation` int(10) NOT NULL AUTO_INCREMENT,
   `IDAcheteur` int(10) NOT NULL,
-  `PseudoVendeur` varchar(20) NOT NULL,
+  `PseudoVendeur` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
   `NumeroProduit` int(10) NOT NULL,
   `Prop1` decimal(10,2) UNSIGNED DEFAULT NULL,
   `Prop2` decimal(10,2) UNSIGNED DEFAULT NULL,
@@ -156,17 +182,17 @@ CREATE TABLE IF NOT EXISTS `panier` (
 DROP TABLE IF EXISTS `produit`;
 CREATE TABLE IF NOT EXISTS `produit` (
   `Numero` int(10) NOT NULL AUTO_INCREMENT,
-  `Nom` varchar(255) NOT NULL,
-  `Photo1` varchar(255) DEFAULT NULL,
-  `Photo2` varchar(255) DEFAULT NULL,
-  `Photo3` varchar(255) DEFAULT NULL,
-  `Photo4` varchar(255) DEFAULT NULL,
-  `Photo5` varchar(255) DEFAULT NULL,
-  `MethodeVente` varchar(255) NOT NULL,
+  `Nom` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `Photo1` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Photo2` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Photo3` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Photo4` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Photo5` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `MethodeVente` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `PrixDirect` decimal(10,2) UNSIGNED NOT NULL,
-  `DescriptionCourte` text NOT NULL,
-  `DescriptionLongue1` text NOT NULL,
-  `Categorie` varchar(255) NOT NULL,
+  `DescriptionCourte` text COLLATE utf8mb4_general_ci NOT NULL,
+  `DescriptionLongue1` text COLLATE utf8mb4_general_ci NOT NULL,
+  `Categorie` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `PseudoVendeur` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`Numero`),
   KEY `PseudoVendeur` (`PseudoVendeur`)
@@ -180,12 +206,12 @@ CREATE TABLE IF NOT EXISTS `produit` (
 
 DROP TABLE IF EXISTS `vendeur`;
 CREATE TABLE IF NOT EXISTS `vendeur` (
-  `Pseudo` varchar(20) NOT NULL,
-  `AdresseMail` varchar(255) NOT NULL,
-  `Nom` varchar(255) NOT NULL,
-  `Photo` varchar(255) DEFAULT NULL,
-  `ImageFond` varchar(255) DEFAULT NULL,
-  `Description` varchar(255) DEFAULT NULL,
+  `Pseudo` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `AdresseMail` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `Nom` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `Photo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ImageFond` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Description` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `Admin` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Pseudo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
