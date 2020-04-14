@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 14, 2020 at 03:07 PM
+-- Generation Time: Apr 14, 2020 at 03:18 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -31,19 +31,19 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `acheteur`;
 CREATE TABLE IF NOT EXISTS `acheteur` (
   `IDAcheteur` int(10) NOT NULL AUTO_INCREMENT,
-  `Prenom` varchar(255) NOT NULL,
-  `Nom` varchar(255) NOT NULL,
-  `AdresseMail` varchar(255) NOT NULL,
-  `AdresseLigne1` varchar(255) NOT NULL,
-  `AdresseLigne2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `Ville` varchar(255) NOT NULL,
-  `CodePostal` varchar(255) NOT NULL,
-  `Pays` varchar(255) NOT NULL,
-  `Telephone` varchar(255) NOT NULL,
-  `NumeroCarte` varchar(255) DEFAULT NULL,
+  `Prenom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `AdresseMail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `AdresseLigne1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `AdresseLigne2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Ville` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `CodePostal` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Pays` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Telephone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `NumeroCarte` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`IDAcheteur`),
   KEY `NumeroCarte` (`NumeroCarte`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `carte` (
   `CodeSecurite` int(4) NOT NULL,
   `Solde` decimal(10,2) NOT NULL,
   PRIMARY KEY (`NumeroCarte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `carte`
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `enchere` (
   `NumeroProduit` int(10) NOT NULL,
   PRIMARY KEY (`IDEnchere`),
   KEY `NumeroProduit` (`NumeroProduit`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `negociation` (
   KEY `IDAcheteur` (`IDAcheteur`),
   KEY `PseudoVendeur` (`PseudoVendeur`),
   KEY `NumeroProduit` (`NumeroProduit`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `offre` (
   PRIMARY KEY (`IDEnchere`,`IDAcheteur`),
   KEY `IDEnchere` (`IDEnchere`,`IDAcheteur`),
   KEY `IDAcheteur` (`IDAcheteur`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `panier` (
   PRIMARY KEY (`NumeroProduit`,`IDClient`),
   KEY `NumeroProduit` (`NumeroProduit`,`IDClient`),
   KEY `IDClient` (`IDClient`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -167,10 +167,10 @@ CREATE TABLE IF NOT EXISTS `produit` (
   `DescriptionCourte` text NOT NULL,
   `DescriptionLongue1` text NOT NULL,
   `Categorie` varchar(255) NOT NULL,
-  `PseudoVendeur` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `PseudoVendeur` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`Numero`),
   KEY `PseudoVendeur` (`PseudoVendeur`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `vendeur` (
   `Description` varchar(255) DEFAULT NULL,
   `Admin` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Pseudo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `vendeur`
