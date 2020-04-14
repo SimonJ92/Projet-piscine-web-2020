@@ -1,0 +1,40 @@
+.page-footer {
+ background-color: #282d32;
+ color: #f0f9ff;
+ padding: 60px 0 30px;
+}
+
+.footer-copyright {
+ color: #f0f9ff;
+ padding-top: 24px;
+ opacity: 0.3;
+ font-size: 13px;
+}
+
+.page-footer h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.page-footer ul {
+  padding: 0;
+  list-style: none;
+  line-height: 2;
+  font-size: 14px;
+}
+
+.page-footer ul a {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.6;
+}
+
+.page-footer ul a:hover {
+  opacity: 0.8;
+}
+
+.page-footer img {
+  opacity: 0.8;
+}
