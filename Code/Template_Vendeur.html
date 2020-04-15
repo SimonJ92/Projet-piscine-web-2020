@@ -11,6 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="Styles/style.css">
 		<link rel="stylesheet" type="text/css" href="Styles/myFooter.css">
 		<link rel="stylesheet" type="text/css" href="Styles/bootstrap.min.css">		<!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
+		<link rel="stylesheet" href="Styles/nav_bar.css">
 	</head>
 
 	<body>	
@@ -18,30 +19,49 @@
 	<!-- TOP -->
 	<!-- 00 -->
 		
-		<nav class="navbar navbar-expand-md">
+		<nav class="navbar navbar-expand-md" role="main" >
 			<a class="navbar-brand" href="#">
 				<img src="Images/logo.png" alt="">
 			</a>
-	 	
-			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+		 	<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-		
 			<div class="collapse navbar-collapse" id="site-name">
-				<h1>Bienvenue sur Ebay ECE</h1>
+				<h1>Informations</h1>
 			</div>
-		
 			<div class="collapse navbar-collapse" id="main-navigation">
-			<div class="row">
-				<div class="col-9"><a class="nav-link" href="#">Mon Compte</a>
+				<div class="row">
+					<div class="col-9">
+						<a class="nav-link" href="#">Mon Compte</a>
+					</div>
+					<div class="col-4">
+						<a class="nav-link" href="#">
+							<img style="max-width:100px;" src="Images/paniers.png" alt="">
+						</a>
+					</div>	
 				</div>
-				<div class="col-4">
-					<a class="nav-link" href="#">
-						<img style="max-width:100px;" src="Images/paniers.png" alt="">	<!-- Remplacer par le bouton admin -> lien vers la liste des vendeurs -->
-					</a>
-				</div>	
 			</div>
 		</nav>
+
+		<div class="navbar sticky-top" role="sub" >
+			<a href="#accueil">Accueil</a>
+			<a href="#mesProduits">Mes Produits</a>
+			<div class="subnav">
+				<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
+				<div class="subnav-content">
+					<a href="#ferrailles">Ferrailles ou Trésors</a>
+					<a href="#musee">Bon pour le Musée</a>
+					<a href="#vip">Accessoires VIP</a>	
+				</div>
+			</div>
+			<div class="subnav">
+				<button class="subnavbtn">Ventes<i class="fa fa-caret-down"></i></button>
+				<div class="subnav-content">
+					<a href="#encheres">Enchères</a>
+					<a href="#negociations">Négociations</a>
+				</div>
+			</div> 				
+		</div>
 
 	
 		<div style="height: 1000px;">
