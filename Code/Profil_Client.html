@@ -12,9 +12,96 @@
 		<link rel="stylesheet" href="Styles/MyFooter.css">
 		<link rel="stylesheet" href="Styles/bootstrap.min.css">  <!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
 		<link rel="stylesheet" href="Styles/nav_bar.css">
+		<link rel="stylesheet" href="Styles/page_client.css">
+		<script src="Scripts/script_pageclient.js" type="text/javascript" ></script>
+		
+		<!-- <script type="text/javascript"> -->
+			<!-- function changement_prenom(){ -->
+				<!-- var prenom = prompt("Entrez votre prénom","Saisir votre Prénom"); -->
+				<!-- if(prenom == null || prenom =="" || prenom =="Saisir votre Prénom") { -->
+					<!-- alert("Vous n'avez pas changer de prénom."); -->
+				<!-- }else { -->
+					<!-- document.getElementById("old_prenom").innerHTML = prenom; -->
+					<!-- alert("Votre changement a été effectué, voici votre nouveau prénom : "+prenom); -->
+				<!-- } -->
+			 <!-- } -->
+			 <!-- function changement_nom(){ -->
+				<!-- var nom = prompt("Entrez votre Nom","Saisir votre Nom"); -->
+				<!-- if(nom == null || nom =="" || nom =="Saisir votre Nom") { -->
+					<!-- alert("Vous n'avez pas changer de Nom."); -->
+				<!-- }else { -->
+					<!-- document.getElementById("old_nom").innerHTML = nom; -->
+					<!-- alert("Votre changement a été effectué, voici votre nouveau nom : "+nom); -->
+				<!-- } -->
+			 <!-- } -->
+			 <!-- function changement_mail(){ -->
+				<!-- var mail = prompt("Entrez votre mail","Saisir votre Adresse Mail"); -->
+				<!-- if(mail == null || mail =="" || mail =="Saisir votre Adresse Mail") { -->
+					<!-- alert("Vous n'avez pas changer de mail."); -->
+				<!-- }else { -->
+					<!-- document.getElementById("old_mail").innerHTML = mail; -->
+					<!-- alert("Votre changement a été effectué, voici votre nouveau mail : "+mail); -->
+				<!-- } -->
+			 <!-- } -->
+			 <!-- function changement_adresse1(){ -->
+				<!-- var adresse1 = prompt("Entrez votre adresse","Saisir votre Adresse"); -->
+				<!-- if(adresse1 == null || adresse1 =="" || adresse1 =="Saisir votre Adresse") { -->
+					<!-- alert("Vous n'avez pas changer d'adresse."); -->
+				<!-- }else { -->
+					<!-- document.getElementById("old_adresse1").innerHTML = adresse1; -->
+					<!-- alert("Votre changement a été effectué, voici votre nouvelle adresse : "+adresse1); -->
+				<!-- } -->
+			 <!-- } -->
+			 <!-- function changement_adresse2(){ -->
+				<!-- var adresse2 = prompt("Entrez votre adresse","Saisir votre Adresse"); -->
+				<!-- if(adresse2 == null || adresse2 =="" || adresse2 =="Saisir votre Adresse") { -->
+					<!-- alert("Vous n'avez pas changer d'adresse."); -->
+				<!-- }else { -->
+					<!-- document.getElementById("old_adresse2").innerHTML = adresse2; -->
+					<!-- alert("Votre changement a été effectué, voici votre nouvelle adresse : "+adresse2); -->
+				<!-- } -->
+			 <!-- } -->
+			 <!-- function changement_ville(){ -->
+				<!-- var ville = prompt("Entrez votre ville","Saisir votre Ville"); -->
+				<!-- if(ville == null || ville =="" || ville =="Saisir votre Ville") { -->
+					<!-- alert("Vous n'avez pas changer de ville."); -->
+				<!-- }else { -->
+					<!-- document.getElementById("old_ville").innerHTML = ville; -->
+					<!-- alert("Votre changement a été effectué, voici votre nouvelle ville : "+ville); -->
+				<!-- } -->
+			 <!-- } -->
+			 <!-- function changement_zip(){ -->
+				<!-- var zip = prompt("Entrez votre code postal","Saisir votre Code Postal"); -->
+				<!-- if(zip == null || zip =="" || zip =="Saisir votre Prénom") { -->
+					<!-- alert("Vous n'avez pas changer de code postal."); -->
+				<!-- }else { -->
+					<!-- document.getElementById("old_zip").innerHTML = zip; -->
+					<!-- alert("Votre changement a été effectué, voici votre nouveau code postal : "+zip); -->
+				<!-- } -->
+			 <!-- } -->
+			 <!-- function changement_pays(){ -->
+				<!-- var pays = prompt("Entrez votre pays","Saisir votre Pays"); -->
+				<!-- if(pays == null || pays =="" || pays =="Saisir votre Pays") { -->
+					<!-- alert("Vous n'avez pas changer de pays."); -->
+				<!-- }else { -->
+					<!-- document.getElementById("old_pays").innerHTML = pays; -->
+					<!-- alert("Votre changement a été effectué, voici votre nouveau pays : "+pays); -->
+				<!-- } -->
+			 <!-- } -->
+			 <!-- function changement_phone(){ -->
+				<!-- var phone = prompt("Entrez votre téléphone","Saisir votre Numéro de Téléphone"); -->
+				<!-- if(phone == null || phone =="" || phone =="Saisir votre Numéro de Téléphone") { -->
+					<!-- alert("Vous n'avez pas changer de numéro de téléphone."); -->
+				<!-- }else { -->
+					<!-- document.getElementById("old_phone").innerHTML = phone; -->
+					<!-- alert("Votre changement a été effectué, voici votre nouveau phone : "+phone); -->
+				<!-- } -->
+			 <!-- } -->
+		<!-- </script> -->
 	</head>
 
-	<body>	
+	<body>
+		
 	<!-- 00 -->
 	<!-- TOP -->
 	<!-- 00 -->
@@ -45,7 +132,7 @@
 			
 		</nav>
 
-		<div class="navbar" role="sub" >
+		<div class="navbar sticky-top" role="sub" >
 			<a href="#accueil">Accueil</a>
 				<div class="subnav">
 						<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
@@ -65,13 +152,109 @@
 		</div>  
 
 
-			
-	<div style="height: 1000px;">
-	
 	<!-- 00 -->
 	<!-- DIV -->
 	<!-- 00 -->
-	
+	<div style="height: 1000px;">
+		<div class="row" id="ensemble">
+			<div class="col-sm-9" style="background-color:#aaa;">
+				<h2>Prénom</h2>
+				<p id="old_prenom">André</p>
+			</div>
+			<div class="col-sm-3" style="background-color:#bbb;">
+				<h2>Changement Prénom</h2>
+				<button onclick="changement_prenom()" position="center";>Modifier</button>
+			</div>
+		</div>
+		<br>
+		<div class="row" id="ensemble">
+			<div class="col-sm-9" style="background-color:#aaa;">
+				<h2>Nom</h2>
+				<p id="old_nom">Breton</p>
+			</div>
+			<div class="col-sm-3" style="background-color:#bbb;">
+				<h2>Changement Nom</h2>
+				<button onclick="changement_nom()">Modifier</button>
+			</div>
+		</div>
+		<br>
+		<div class="row" id="ensemble">
+			<div class="col-sm-9" style="background-color:#aaa;">
+				<h2>Adresse Mail</h2>
+				<p id="old_mail">andre.breton@edu.ece.fr</p>
+			</div>
+			<div class="col-sm-3" style="background-color:#bbb;">
+				<h2>Changement Adresse Mail</h2>
+				<button onclick="changement_mail()">Modifier</button>
+			</div>
+		</div>
+		<br>
+		<div class="row" id="ensemble">
+			<div class="col-sm-9" style="background-color:#aaa;">
+				<h2>Adresse 1</h2>
+				<p id="old_adresse1">10 Rue du Poète</p>
+			</div>
+			<div class="col-sm-3" style="background-color:#bbb;">
+				<h2>Changement Adresse 1</h2>
+				<button onclick="changement_adresse1()">Modifier</button>
+			</div>
+		</div>
+		<br>
+		<div class="row" id="ensemble">
+			<div class="col-sm-9" style="background-color:#aaa;">
+				<h2>Adresse 2</h2>
+				<p id="old_adresse2">Appartement N°28</p>
+			</div>
+			<div class="col-sm-3" style="background-color:#bbb;">
+				<h2>Changement Adresse 2</h2>
+				<button onclick="changement_adresse2()">Modifier</button>
+			</div>
+		</div>
+		<br>
+		<div class="row" id="ensemble">
+			<div class="col-sm-9" style="background-color:#aaa;">
+				<h2>Ville</h2>
+				<p id="old_ville">Tinchebray</p>
+			</div>
+			<div class="col-sm-3" style="background-color:#bbb;">
+				<h2>Changement Ville</h2>
+				<button onclick="changement_ville()">Modifier</button>
+			</div>
+		</div>
+		<br>
+		<div class="row" id="ensemble">
+			<div class="col-sm-9" style="background-color:#aaa;">
+				<h2>Code Postal</h2>
+				<p id="old_zip">61800</p>
+			</div>
+			<div class="col-sm-3" style="background-color:#bbb;">
+				<h2>Changement Code Postal</h2>
+				<button onclick="changement_zip()">Modifier</button>
+			</div>
+		</div>
+		<br>
+		<div class="row" id="ensemble">
+			<div class="col-sm-9" style="background-color:#aaa;">
+				<h2>Pays</h2>
+				<p id="old_pays">France</p>
+			</div>
+			<div class="col-sm-3" style="background-color:#bbb;">
+				<h2>Changement Pays</h2>
+				<button onclick="changement_pays()">Modifier</button>
+			</div>
+		</div>
+		<br>
+		<div class="row" id="ensemble">
+			<div class="col-sm-9" style="background-color:#aaa;">
+				<h2>Téléphone</h2>
+				<p id="old_phone">+33 1 23 45 67 89</p>
+			</div>
+			<div class="col-sm-3" style="background-color:#bbb;">
+				<h2>Changement Téléphone</h2>
+				<button onclick="changement_phone()">Modifier</button>
+			</div>
+		</div>
+		
 	</div>
 	
 	<!-- 00 -->
