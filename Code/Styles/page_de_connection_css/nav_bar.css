@@ -1,0 +1,23 @@
+.navbar {
+  background: rgba(8,230,136,0.79);
+}
+
+.nav-link, .navbar-brand {
+  cursor: pointer;
+}
+
+.nav-link {
+  margin-right: 1em !important;
+}
+
+.nav-link:hover {
+  color: #000;
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+
+.navbar.navbar-expand-md {
+}
+
