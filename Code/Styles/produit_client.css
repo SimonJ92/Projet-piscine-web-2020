@@ -1,0 +1,47 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+  grid-auto-rows: minmax(100px, auto);
+  margin : 10px;
+}
+.image {
+  grid-column: 1 / 2;
+  grid-row: 1 / 4;
+  background-color : red;
+}
+.descrip { 
+  grid-column: 2 / 4;
+  grid-row: 1 / 3;
+  background-color: yellow;
+}
+.vendeur {
+  grid-column: 2 / 3;
+  grid-row: 3 / 4;
+  background-color: green;
+}
+.lienvendeur {
+  grid-column: 3 / 4;
+  grid-row: 3 / 4;
+  background-color: red; 
+}
+.option {
+  grid-column: 1 / 4;
+  grid-row: 4 / 6;
+  background-color: green; 
+}
+.suppr {
+  grid-column: 1 / 4;
+  grid-row: 6 / 7;
+  background-color: blue; 
+}
+.simili{
+  grid-column: 1 / 4;
+  grid-row: 7 / 9;
+  background-color: yellow; 
+}
+.fulldescrip{
+  grid-column: 1 / 4;
+  grid-row: 9 / 12;
+  background-color: red; 
+}
