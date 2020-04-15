@@ -1,0 +1,48 @@
+<!-- Ajouter le link dans le head -->
+		<link rel="stylesheet" href="Styles/nav_bar.css">
+
+<!-- Modifier la barre de navigation, ajout d'un role pour chaque navbar -->
+<nav class="navbar navbar-expand-md" role="main" >
+					<a class="navbar-brand" href="#">
+						<img src="Images/logo.png" alt="">
+					</a>
+	 	
+					<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+		
+					<div class="collapse navbar-collapse" id="site-name">
+						<h1>Informations</h1>
+					</div>
+		
+					<div class="collapse navbar-collapse" id="main-navigation">
+						<div class="row">
+							<div class="col-9"><a class="nav-link" href="#">Mon Compte</a>
+							</div>
+							<div class="col-4"><a class="nav-link" href="#">
+								<img style="max-width:100px;" src="Images/paniers.png" alt="">
+								</a>
+							</div>	
+						</div>
+					</div>
+			
+		</nav>
+
+		<div class="navbar" role="sub" >
+			<a href="#accueil">Accueil</a>
+				<div class="subnav">
+						<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
+					<div class="subnav-content">
+						<a href="#ferrailles">Ferrailles ou Trésors</a>
+						<a href="#musee">Bon pour le Musée</a>
+						<a href="#vip">Accessoires VIP</a>	
+					</div>
+				</div>
+				<div class="subnav">
+						<button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
+					<div class="subnav-content">
+						<a href="#encheres">Enchères</a>
+						<a href="#negociations">Négociations</a>
+					</div>
+				</div> 				
+		</div>  
