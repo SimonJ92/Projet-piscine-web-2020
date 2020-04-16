@@ -1,0 +1,19 @@
+#titrePrincipal{
+	margin-top: 30px;
+	margin-bottom: 50px;
+	font-size: 3.5em;
+}
+
+#wrapperGeneral{
+	margin-left: 50px;
+	margin-right: 50px;
+	margin-bottom: 100px;
+}
+
+#wrapperInterieur{
+	background-color: blue;
+	height: 800px;
+	margin-left: 150px;
+	margin-right: 150px;
+	margin-bottom: 50px;
+}
