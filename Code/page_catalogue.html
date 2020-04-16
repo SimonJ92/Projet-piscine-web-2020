@@ -20,36 +20,41 @@
 				if("meilleur offre" == document.getElementById("type_vente").value)
 				{
 					
-					$("#option_encheres").hide();
+					$("#trie_encheres").hide();
+					alert("hide");
 				}
 				else
 				{
-					$("#option_encheres").show();
+					$("#trie_encheres").show();
+					alert("show");
 				}
 			}
+			
+			/*$(document).ready(function(){
+				 $("#options_type_vente").click(masque_trie_enchere());*/
 			 
-			 $(document).ready(function(){
-				 $("#valider").click(function(){
-					masque_trie_enchere();
-					var nom_objet = document.getElementById("nom_objet").value
-					var nom_vendeur = document.getElementById("nom_vendeur").value
-					var prix_min = document.getElementById("prix_min").value
-					var prix_max = document.getElementById("prix_max").value
-					var type_vente = document.getElementById("type_vente").value
-					var type_trie = document.getElementById("type_trie").value
-					
-					alert(nom_objet + " " + nom_vendeur + " " + prix_min + " " + prix_max + " " + type_vente + " " + type_trie);
-					
-					//blindage
-					if(prix_min > prix_max)
-					{
-						var sauve = prix_min;
-						prix_min = prix_max;
-						prix_max = sauve;
-					}
-				 
-				 });
-			 }); 
+				$(document).ready(function(){
+					$("#valider").click(function(){
+						masque_trie_enchere();
+						var nom_objet = document.getElementById("nom_objet").value
+						var nom_vendeur = document.getElementById("nom_vendeur").value
+						var prix_min = document.getElementById("prix_min").value
+						var prix_max = document.getElementById("prix_max").value
+						var type_vente = document.getElementById("type_vente").value
+						var type_trie = document.getElementById("type_trie").value
+
+						alert(nom_objet + " " + nom_vendeur + " " + prix_min + " " + prix_max + " " + type_vente + " " + type_trie);
+
+						//blindage
+						if(prix_min > prix_max)
+						{
+							var sauve = prix_min;
+							prix_min = prix_max;
+							prix_max = sauve;
+						}
+
+					});
+				}); 
 		 </script> 
 	</head>
 
@@ -58,48 +63,48 @@
 	<!-- TOP -->
 	<!-- 00 -->
 		
-	<nav class="navbar navbar-expand-md" role="main" >
-		<a class="navbar-brand" href="#">
-			<img src="Images/logo.png" alt="">
-		</a>
-		<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="site-name">
-			<h1>Informations</h1>
-		</div>
-		<div class="collapse navbar-collapse" id="main-navigation">
-			<div class="row">
-				<div class="col-9">
-					<a class="nav-link" href="#">Mon Compte</a>
+		<nav class="navbar navbar-expand-md" role="main" >
+			<a class="navbar-brand" href="#">
+				<img src="Images/logo.png" alt="" style="max-width: 150px;">
+			</a>
+		 	<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse text-center" style="width: 100%;">
+				<h1 style="margin: 0 auto;">Bienvenue sur Ebay-ECE</h1>
+			</div>
+			<div class="collapse navbar-collapse" id="main-navigation" style="width: 150px;">
+				<div class="row">
+					<div class="col-12 text-right">
+						<a class="nav-link" href="#">Mon Compte</a>
+					</div>
+					<div class="col-12 text-right">
+						<a class="nav-link" href="#">
+							<img style="max-width:100px;" src="Images/paniers.png" alt="">
+						</a>
+					</div>	
 				</div>
-				<div class="col-4">
-					<a class="nav-link" href="#">
-						<img style="max-width:100px;" src="Images/paniers.png" alt="">
-					</a>
-				</div>	
 			</div>
-		</div>
-	</nav>
+		</nav>
 
-	<div class="navbar sticky-top" role="sub" >
-		<a href="#accueil">Accueil</a>
-		<div class="subnav">
-			<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
-			<div class="subnav-content">
-				<a href="#ferrailles">Ferrailles ou Trésors</a>
-				<a href="#musee">Bon pour le Musée</a>
-				<a href="#vip">Accessoires VIP</a>	
+		<div class="navbar sticky-top" role="sub" >
+			<a href="#accueil">Accueil</a>
+			<div class="subnav">
+				<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
+				<div class="subnav-content">
+					<a href="#ferrailles">Ferrailles ou Trésors</a>
+					<a href="#musee">Bon pour le Musée</a>
+					<a href="#vip">Accessoires VIP</a>	
+				</div>
 			</div>
+			<div class="subnav">
+				<button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
+				<div class="subnav-content">
+					<a href="#encheres">Enchères</a>
+					<a href="#negociations">Négociations</a>
+				</div>
+			</div> 				
 		</div>
-		<div class="subnav">
-			<button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
-			<div class="subnav-content">
-				<a href="#encheres">Enchères</a>
-				<a href="#negociations">Négociations</a>
-			</div>
-		</div> 				
-	</div>
 	
 	<!-- 00 -->
 	<!-- DIV -->
@@ -128,18 +133,18 @@
 							<div class="filtre">
 								<p> filtrer par par type de vente proposée </p>
 								<p> <select id="type_vente" size=1>
-										<option>toute</option>
-										<option>meilleur offre</option>
-										<option>vente aux encheres</option>
+										<option id="options_type_vente">toute</option>
+										<option id="options_type_vente">meilleur offre</option>
+										<option id="options_type_vente">vente aux encheres</option>
 									</select> </p>
 							</div>
 							<div class="filtre">
-								<p> trier par date de fin d encheres </p>
+								<p> trier par </p>
 								<p> <select id="type_trie" size=1>
 										<option>ordre alphabetique</option>
 										<option>prix d'achat direct croissant</option>
 										<option>prix d'achat direct decroissant</option>
-										<option id="option_encheres">date de fin d'encheres</option>
+										<option id="trie_encheres">date de fin d'encheres</option>
 									</select> </p>
 							</div>
 							<input type="button" id="valider" value="valider la recherche">
