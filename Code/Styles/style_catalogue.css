@@ -1,0 +1,100 @@
+body {
+ padding: 0px;
+ margin: 0px;
+ background: #f2f6e9;
+}
+
+.recherche{
+	background-color: #369fe0;
+	margin-left: 3%;
+	margin-top: 15%;
+	padding-top: 20px;
+	height: 800px;
+	width: 290px;
+	text-align:center; 
+	color: black;
+}
+.page{
+	height: 1000px;
+}
+
+.filtre{
+	background-color: white;
+	border: 1px solid black;
+	margin-top: 4%;
+	margin-bottom: 4%;
+}
+
+/*.par_vendeur{
+	background-color: white;
+	border: 1px solid black;
+	padding: 20px;
+	margin-bottom: 2%;
+}
+
+.trie_prix{
+	background-color: white;
+	border: 1px solid black;
+	padding: 20px;
+	margin-bottom: 2%;
+}
+
+.borne_prix{
+	background-color: white;
+	border: 1px solid black;
+	padding: 20px;
+	margin-bottom: 2%;
+}
+
+.type_vente{
+	background-color: white;
+	border: 1px solid black;
+	padding: 20px;
+	margin-bottom: 2%;
+}
+
+.borne_date{
+	background-color: white;
+	border: 1px solid black;
+	padding: 20px;
+	margin-bottom: 2%;
+}*/
+
+.galerie{
+	background-color: #369fe0;
+	margin-left: 10%;
+	margin-top: 10%;
+	padding-top: 20px;
+	height: 700px;
+	width: 1400px;
+	text-align:center; 
+	color: black;
+}
+
+.valider{
+	background-color: white;
+	border: 1px solid black;
+}
+
+/*--- navigation bar ---*/
+.navbar {
+ background:#08e688;
+}
+.nav-link, .navbar-brand {
+ color: #fff;
+ cursor: pointer;
+}
+.nav-link {
+ margin-right: 1em !important;
+}
+.nav-link:hover {
+ color: #000;
+}
+.navbar-collapse {
+ justify-content: flex-end;
+}
+.header {
+ background-size: cover;
+ background-position: center;
+ position: relative;
+}
