@@ -13,17 +13,41 @@
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		
 		 <script>
+			//fonction qui cache ou affiche l'option de trie pas date de fin d'enchere
+			//si le cliant choisie de ne regarder que les meilleur offre
+			function masque_trie_enchere()
+			{
+				if("meilleur offre" == document.getElementById("type_vente").value)
+				{
+					
+					$("#option_encheres").hide();
+				}
+				else
+				{
+					$("#option_encheres").show();
+				}
+			}
+			 
 			 $(document).ready(function(){
 				 $("#valider").click(function(){
-					if("meilleur offre" == document.getElementById("type_vente").value)
+					masque_trie_enchere();
+					var nom_objet = document.getElementById("nom_objet").value
+					var nom_vendeur = document.getElementById("nom_vendeur").value
+					var prix_min = document.getElementById("prix_min").value
+					var prix_max = document.getElementById("prix_max").value
+					var type_vente = document.getElementById("type_vente").value
+					var type_trie = document.getElementById("type_trie").value
+					
+					alert(nom_objet + " " + nom_vendeur + " " + prix_min + " " + prix_max + " " + type_vente + " " + type_trie);
+					
+					//blindage
+					if(prix_min > prix_max)
 					{
-						//on cache l'option de trie encheres quand seul les meilleur offre sont afficher
-						$("#option_encheres").hide();
+						var sauve = prix_min;
+						prix_min = prix_max;
+						prix_max = sauve;
 					}
-					else
-					{
-						$("#option_encheres").show();
-					}
+				 
 				 });
 			 }); 
 		 </script> 
@@ -90,16 +114,16 @@
 							<h3> Filtre </h3>
 							<div class="filtre">
 								<p> chercher un objet par son nom :</p> 
-								<p> <input type="text" name="nom_objet"> </p>
+								<p> <input type="text" id="nom_objet"> </p>
 							</div>
 							<div class="filtre">
 								<p> chercher un objet par son vendeur : </p>
-								<p> <input type="text" name="nom_vendeur"> </p>
+								<p> <input type="text" id="nom_vendeur"> </p>
 							</div>
 							
 							<div class="filtre">
 								<p> ne garder que les objet entre </p>
-								<p><input style="width: 40px;" type="int" name="prix_min"> € et <input style="width: 40px;" type="int" name="prix_max">€ </p>
+								<p><input style="width: 50px;" type="int" id="prix_min"> € et <input style="width: 50px;" type="int" id="prix_max">€ </p>
 							</div>
 							<div class="filtre">
 								<p> filtrer par par type de vente proposée </p>
@@ -126,7 +150,32 @@
 							<h1> Catalogue :  </h1>
 						</div>
 						<div class="galerie">
-							
+							<div class="objet">
+								<form>
+									<table>
+										<tr>
+											<td>
+												<img class="image" src="Images/Hiroshige_nuit_de_neige_à_Kambara.png">
+											</td>
+											<td>
+												<h4>Nuit de neige à Kambara</h4>
+												<div class="description_objet">
+													<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis.  <p>
+												</div>
+												<p> objet mit en vente par: </p>
+											</td>
+											<td>
+												<h5> methode de vente: </h5>
+												<h5>199.99€ </h5>
+												<input type="button" id="achat_imediat" value="acheter maintenant">
+												<h5>ou </h5>
+												<p href="#encheres" id="encheres"> participer aux ensheres </p>
+												<p href="#negociations" id="meilleur_offre"> debuter un negociation avec le vendeur </p>
+											</td>
+										</tr>						
+									</table>
+								</form>
+							</div>
 						</div>
 					</td>
 				</tr>						
