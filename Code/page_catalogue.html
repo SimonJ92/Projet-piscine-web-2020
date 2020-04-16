@@ -15,6 +15,15 @@
 		 <script>
 			 $(document).ready(function(){
 				 $("#valider").click(function(){
+					if("meilleur offre" == document.getElementById("type_vente").value)
+					{
+						//on cache l'option de trie encheres quand seul les meilleur offre sont afficher
+						$("#option_encheres").hide();
+					}
+					else
+					{
+						$("#option_encheres").show();
+					}
 				 });
 			 }); 
 		 </script> 
@@ -94,7 +103,7 @@
 							</div>
 							<div class="filtre">
 								<p> filtrer par par type de vente proposée </p>
-								<p> <select name="type_vente" size=1>
+								<p> <select id="type_vente" size=1>
 										<option>toute</option>
 										<option>meilleur offre</option>
 										<option>vente aux encheres</option>
@@ -102,17 +111,20 @@
 							</div>
 							<div class="filtre">
 								<p> trier par date de fin d encheres </p>
-								<p> <select name="type_vente" size=1>
+								<p> <select id="type_trie" size=1>
 										<option>ordre alphabetique</option>
 										<option>prix d'achat direct croissant</option>
 										<option>prix d'achat direct decroissant</option>
-										<option class="option_encheres">date de fin d'encheres</option>
+										<option id="option_encheres">date de fin d'encheres</option>
 									</select> </p>
 							</div>
 							<input type="button" id="valider" value="valider la recherche">
 						</div>
 					</td>
 					<td>
+						<div class="titre">
+							<h1> Catalogue :  </h1>
+						</div>
 						<div class="galerie">
 							
 						</div>
