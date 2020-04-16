@@ -13,6 +13,10 @@
 		<link rel="stylesheet" href="Styles/bootstrap.min.css">  <!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		<link rel="stylesheet" href="Styles/produit_client.css">
+		<script src="Scripts/produit_client.js"></script>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 	</head>
 
 	<body>
@@ -47,21 +51,21 @@
 
 		<div class="navbar sticky-top" role="sub" >
 			<a href="#accueil">Accueil</a>
-				<div class="subnav">
-						<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
-					<div class="subnav-content">
-						<a href="#ferrailles">Ferrailles ou Trésors</a>
-						<a href="#musee">Bon pour le Musée</a>
-						<a href="#vip">Accessoires VIP</a>	
-					</div>
+			<div class="subnav">
+				<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
+				<div class="subnav-content">
+					<a href="#ferrailles">Ferrailles ou Trésors</a>
+					<a href="#musee">Bon pour le Musée</a>
+					<a href="#vip">Accessoires VIP</a>	
 				</div>
-				<div class="subnav">
-						<button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
-					<div class="subnav-content">
-						<a href="#encheres">Enchères</a>
-						<a href="#negociations">Négociations</a>
-					</div>
-				</div> 				
+			</div>
+			<div class="subnav">
+				<button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
+				<div class="subnav-content">
+					<a href="#encheres">Enchères</a>
+					<a href="#negociations">Négociations</a>
+				</div>
+			</div> 				
 		</div>  
 
 
@@ -73,7 +77,8 @@
 			<p>Image Produit 1</p>
 		</div>
 		<div class="descrip">
-			<p>Description brève du produit 1</p>
+			<h2> <b> Nom du produit</b> </h2>
+			<p>Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 </p>
 		</div>
 		<div class="vendeur">
 			<p>Vendeur A</p>
@@ -83,18 +88,61 @@
 		</div>
 	
 		<div class="option">
-			<p>Options d'achat</p>
+			<!-- <p>Options d'achat</p> -->
+			<div class="col text-center">
+				<button class="btn btn-block btn-primary ">Achat Direct</button> <br><br>
+				<button class="btn btn-block btn-primary">Voir aux enchères</button> <br><br>
+				<button class="btn btn-block btn-primary">Proposer une meilleure offre</button> <br><br>
+			</div>
 		</div>
-		<div class="suppr">
-			<p>Bouton pour supprimer le produit de la base de données</p>
+		
+		<div class="suppr"> 
+		<!-- Attention le client ne peut pas supprimer de produit -->
+			<!-- <p>Bouton pour supprimer le produit de la base de données</p> -->
+			<button class="btn btn-sm btn-block btn-danger">Supprimer le produit de mon panier</button>
 		</div>
+		
 		<div class="simili">
-			<p>Produits similaires/ du même vendeur</p>
+			<h3>Autres produits du vendeur</h3>
+			<div class="row">
+				<div class="col-4">
+					<div id="carrousel">
+					<ul>
+						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+					</ul>
+					<br>
+					</div>
+				</div>
+				<div class="col-4">
+					<div id="carrousel2">
+					<ul>
+						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+					</ul>
+					<br>
+					</div>
+				</div>
+				<div class="col-4">
+					<div id="carrousel3">
+					<ul>
+						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+					</ul>
+					<br>
+					</div>
+				</div>
+			</div>
 		</div>
+		
 		<div class="fulldescrip">
 			<p>Description complète<p>
 		</div>
-</div>
+	</div>
+
 	
 	<!-- 00 -->
 	<!-- FOOTER -->
