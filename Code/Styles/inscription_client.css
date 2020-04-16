@@ -1,0 +1,21 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+  grid-auto-rows: minmax(100px, auto);
+  margin : 10px;
+}
+.titre {
+  grid-column: 1/4;
+  grid-row: 2 / 3;
+  border-width: 1px;
+  border-style: solid;
+  border-color : black;
+  background-color : white;
+  box-shadow : 0px 1px 5px;
+}
+
+#bouton{
+	display:none;
+}
+
