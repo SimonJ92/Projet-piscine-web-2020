@@ -7,7 +7,7 @@ body {
 .recherche{
 	background-color: #369fe0;
 	margin-left: 3%;
-	margin-top: 15%;
+	margin-top: 17%;
 	padding-top: 20px;
 	height: 800px;
 	width: 290px;
@@ -25,56 +25,54 @@ body {
 	margin-bottom: 4%;
 }
 
-/*.par_vendeur{
-	background-color: white;
-	border: 1px solid black;
-	padding: 20px;
-	margin-bottom: 2%;
-}
-
-.trie_prix{
-	background-color: white;
-	border: 1px solid black;
-	padding: 20px;
-	margin-bottom: 2%;
-}
-
-.borne_prix{
-	background-color: white;
-	border: 1px solid black;
-	padding: 20px;
-	margin-bottom: 2%;
-}
-
-.type_vente{
-	background-color: white;
-	border: 1px solid black;
-	padding: 20px;
-	margin-bottom: 2%;
-}
-
-.borne_date{
-	background-color: white;
-	border: 1px solid black;
-	padding: 20px;
-	margin-bottom: 2%;
-}*/
-
-.galerie{
-	background-color: #369fe0;
-	margin-left: 10%;
-	margin-top: 10%;
-	padding-top: 20px;
-	height: 700px;
-	width: 1400px;
+.titre{
 	text-align:center; 
-	color: black;
+	padding-top: 20px;
+	margin-left: 140px;
 }
 
 .valider{
 	background-color: white;
 	border: 1px solid black;
 }
+
+.galerie{
+	background-color: #369fe0;	
+	height: 700px;
+	width: 1400px;
+	margin-left: 140px;
+	text-align:center; 
+	color: black;
+	padding-top: 20px;
+}
+
+.objet{
+	background-color: white;
+	border: 1px solid black;
+	margin-top: 10px;
+	margin-left: 50px;
+	height: 400px;
+	width: 1300px;
+}
+
+.image
+{
+	max-width: 420px;
+	margin-top: 50px;
+	margin-left: 30px;
+}
+
+.description_objet
+{
+	margin-top: 50px;
+	margin-bottom: 50px;
+	margin-left: 30px;
+	margin-right: 30px;
+	height: 150px;
+	width: 550px;
+	border: 1px solid black;
+}
+
 
 /*--- navigation bar ---*/
 .navbar {
