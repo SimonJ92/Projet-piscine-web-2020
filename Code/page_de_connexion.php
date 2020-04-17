@@ -5,11 +5,19 @@
     $db_handle = mysqli_connect('localhost', 'root', ''); 
     $db_found = mysqli_select_db($db_handle, "ebay_ece");
 
+    
+
     $typeConnected=(isset($_SESSION['typeConnected']))?(int) $_SESSION['typeConnected']:1;
+    //visiteur : 1
+    //client : 2
+    //vendeur : 3
     $idConnected=(isset($_SESSION['idConnected']))?(int) $_SESSION['idConnected']:0;
+    //id si client connecté
     $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
+    //pseudo si vendeur connecté
 
     //Page
+    $erreurIdentifiants = "";
     if ($idConnected!=0) {
         echo "erreur : vous êtes déjà connecté";
     }
@@ -28,7 +36,37 @@
             $ecranConnexion = 1;
         }
     }
-
+    if (isset($_POST["boutonConnexion"])) {
+        if ($_POST["boutonConnexion"] && $db_found) {
+            $ecranConnexion = isset($_POST["stateEcranConnexion"])?$_POST["stateEcranConnexion"]:0;
+            $identifiantConnexion = isset($_POST["identifiantConnexion"])?$_POST["identifiantConnexion"]:"";
+            $passwordConnexion = isset($_POST["motDePasse"])?$_POST["motDePasse"]:"";
+            if($ecranConnexion == 0){   //tentative de connexion d'un client
+                $sqlClient = "SELECT * from acheteur where AdresseMail like '%$identifiantConnexion%' and MotDePasse like '%$passwordConnexion%'";
+                $resultConnexionClient = mysqli_query($db_handle,$sqlClient);
+                if(mysqli_num_rows($resultConnexionClient) != 1){
+                    $erreurIdentifiants = "L'identifant ou le mot de passe est erroné ";
+                }elseif(mysqli_num_rows($resultConnexionClient) == 1){
+                    $erreurIdentifiants = "";
+                    $dataClient = mysqli_fetch_assoc($resultConnexionClient);
+                    $_SESSION["typeConnected"] = 2;
+                    $_SESSION["idConnected"] = $dataClient["IDAcheteur"];
+                    header('Location: http://localhost/Projet-piscine-web-2020/Code/accueil-client.php');
+                }
+            }elseif ($ecranConnexion == 1) {    //tentative de connexion d'un vendeur
+                $sqlVendeur = "SELECT * from vendeur where Pseudo like '%$identifiantConnexion%' and AdresseMail like '%$passwordConnexion%'";
+                $resultConnexionVendeur = mysqli_query($db_handle,$sqlVendeur);
+                if(mysqli_num_rows($resultConnexionVendeur) != 1){
+                    $erreurIdentifiants = "L'identifant ou le mot de passe est erroné";
+                }elseif(mysqli_num_rows($resultConnexionVendeur) == 1){
+                    $erreurIdentifiants = "";
+                }
+            }else{
+                echo "la variable 'ecranConnexion' est erronée";
+            }
+        }
+    }
+    
 
  ?>
 
@@ -96,7 +134,7 @@
     	
     	<div class="login-clean" style="padding: 0px;">
             <!--<div style="height: 3px;background-color: #369fe0;"></div>      Cette barre n'est pas sur les autres pages, donc soit on la retire, soit on l'ajoute partout-->
-            <div style="padding: 30px;"></div>
+            <div style="padding: 30px;" class="text-center"><?php echo $erreurIdentifiants; ?></div>
             <div class="container" style="width: 366px;height: 30px;padding: 0px;margin-bottom: 10px;">
                 <form class="form-inline button-group-justified" style="padding: 0px;" action="page_de_connexion.php" method="post">
 
@@ -105,16 +143,25 @@
                 </form>
             </div>
             <div class="container" style="width: 346px;height: 603px;padding: 10px;background-color: #39dd99;">
-                <form method="post" style="background-color: rgba(8,230,136,0.79);width: 326px;">
+                <form method="post" action="page_de_connexion.php" style="background-color: rgba(8,230,136,0.79);width: 326px;">
                     <h2 class="sr-only">Login Form</h2>
                     <div class="illustration"><img src="Images/page_de_connection_img/logo_v1_1.png"></div>
-                    <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email"></div>
-                    <div class="form-group"><input class="form-control" type="password" name="motDePasse" placeholder="Mot de passe"></div>
+                    <div class="form-group">
+                        <?php echo'<input class="form-control" type="'.(($ecranConnexion)?"text":"email").'" name="identifiantConnexion" placeholder="'.(($ecranConnexion)?"Pseudo":"Email").'">'; ?>
+                    </div>
+                    <div class="form-group">
+                        <?php echo'<input class="form-control" type="'.(($ecranConnexion)?"email":"password").'" name="motDePasse" placeholder="'.(($ecranConnexion)?"E-mail":"Mot de passe").'">'; ?>
+                    </div>
                     <a class="forgot" href="#" style="color: #3402ff;background-color: rgba(255,255,255,0);font-size: 14px;">Identifiant ou mot de passe oublié ?</a>
-                    <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background-color: #369fe0;">Connexion</button></div>
+                    <div class="form-group">
+                        <?php echo '<input type="hidden" name="stateEcranConnexion" value="'.$ecranConnexion.'">'; ?>
+                        <input class="btn btn-primary btn-block" type="submit" style="background-color: #369fe0;" value="Connexion" name="boutonConnexion">
+                    </div>
                     <a class="forgot" href="#" style="color: rgb(0,0,0);font-size: 14px;background-color: rgba(255,255,255,0);"></a>
-                    <p class="text-center" style="font-size: 14px;color: rgb(0,0,0);">nouveau sur ECE-Ebay ?<a class="forgot" href="#" style="color: rgb(52,2,255);font-size: 14px;background-color: rgba(255,255,255,0);">créez un compte<br></a></p>
-                     </form>
+                    <p class="text-center" style="font-size: 14px;color: rgb(0,0,0);">
+                        Nouveau sur ECE-Ebay ?<a class="forgot" href="#" style="color: rgb(52,2,255);font-size: 14px;background-color: rgba(255,255,255,0);">Créez un compte<br></a>
+                    </p>
+                </form>
             </div>
 
 
