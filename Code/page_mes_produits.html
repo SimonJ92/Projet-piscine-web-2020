@@ -13,6 +13,25 @@
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		
 		 <script>
+		 
+		 
+			function ouvre_form() {
+				document.getElementById("info_produit").style.display = "block";
+			}
+
+			function ferme_form() {
+				document.getElementById("info_produit").style.display = "none";
+			} 
+			
+			$(document).ready(function(){
+				$("#btn_ajout").click(function(){
+					var nom_produit = document.getElementById("nom").value
+					var description_produit = document.getElementById("description").value
+					var image_produit = document.getElementById("image").value
+					var categorie_produit = document.getElementById("categorie").value
+					//alert(nom_produit + description_produit + image_produit + categorie_produit);
+				});
+			}); 
 			
 		 </script> 
 	</head>
@@ -158,7 +177,28 @@
 			</div>
 			
 		</div>
-		<button id="ajoute_produit"> ajouter un produit a la vente </button>
+		<button id="ajoute_produit" onclick="ouvre_form()"> ajouter un produit a la vente </button>
+		
+		<div class="pop_up" id="info_produit" >
+		  <form action="mes_produits.php" class="info_form" >
+			<h1>ajouter un nouveau produit</h1>
+
+			<label for="nom"><b>Nom</b></label>
+			<input type="text" id="nom">
+
+			<label for="description"><b>Description</b></label>
+			<input type="text" id="description">
+			
+			<label for="image"><b>Image</b></label>
+			<input type="text" id="image">
+			
+			<label for="categorie"><b>categorie</b></label>
+			<input type="text" id="categorie">
+
+			<button type="button" class="btn" id="btn_ajout">ajouter</button>
+			<button type="button" class="btn fermer" onclick="ferme_form()">fermer</button>
+		  </form>
+		</div>
 	</div>
 	
 	<!-- 00 -->
