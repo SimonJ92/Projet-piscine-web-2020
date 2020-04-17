@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 17, 2020 at 08:48 AM
+-- Generation Time: Apr 17, 2020 at 06:02 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
   `CodePostal` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Pays` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Telephone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `MotDePasse` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `NumeroCarte` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`IDAcheteur`),
   KEY `NumeroCarte` (`NumeroCarte`)
@@ -68,11 +69,11 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
 -- Dumping data for table `acheteur`
 --
 
-INSERT INTO `acheteur` (`IDAcheteur`, `Prenom`, `Nom`, `AdresseMail`, `AdresseLigne1`, `AdresseLigne2`, `Ville`, `CodePostal`, `Pays`, `Telephone`, `NumeroCarte`) VALUES
-(4, 'John', 'Doe', 'truc@gmail.com', 'Adresse1', NULL, 'Paris', '75015', 'France', '+33611111111', '2'),
-(5, 'Jean', 'Méni', 'jean.meni@gmail.com', '20 rue des Pommiers', NULL, 'Paris', '75000', 'France', '0612345678', '2'),
-(6, 'Didier', 'Séreaux', 'didier.sereaux@gmail.com', '62 rue des arts', NULL, 'Paris', '75007', 'France', '0665896478', '1'),
-(7, 'Benjamin', 'Barni', 'benjamin.barni@gmail.com', '56 rue de l\'Armistice', NULL, 'Lyon', '69000', 'France', '0666493514', '2');
+INSERT INTO `acheteur` (`IDAcheteur`, `Prenom`, `Nom`, `AdresseMail`, `AdresseLigne1`, `AdresseLigne2`, `Ville`, `CodePostal`, `Pays`, `Telephone`, `MotDePasse`, `NumeroCarte`) VALUES
+(4, 'John', 'Doe', 'truc@gmail.com', 'Adresse1', NULL, 'Paris', '75015', 'France', '+33611111111', 'Password', '2'),
+(5, 'Jean', 'Méni', 'jean.meni@gmail.com', '20 rue des Pommiers', NULL, 'Paris', '75000', 'France', '0612345678', 'azerty', '2'),
+(6, 'Didier', 'Séreaux', 'didier.sereaux@gmail.com', '62 rue des arts', NULL, 'Paris', '75007', 'France', '0665896478', 'motdepasse', '1'),
+(7, 'Benjamin', 'Barni', 'benjamin.barni@gmail.com', '56 rue de l\'Armistice', NULL, 'Lyon', '69000', 'France', '0666493514', '123456', '2');
 
 -- --------------------------------------------------------
 
