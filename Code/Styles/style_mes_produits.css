@@ -1,4 +1,4 @@
-
+//source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_popup_form
 
 body {
  padding: 0px;
@@ -102,4 +102,60 @@ h4{
  background-size: cover;
  background-position: center;
  position: relative;
+}
+
+
+.pop_up {
+  display: none;
+  position: fixed;
+  margin: auto;
+  top: 15%;
+  right: 10%;
+  bottom: 5%;
+  left: 10%;
+  border: 3px solid #black;
+  z-index: 999999;
+  background-color: #369fe0;
+}
+
+
+.info_form {
+  padding: 10px;
+  margin: 0 auto;
+}
+
+
+.info_form input[type=text] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+
+.info_form input[type=text]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+.info_form .btn {
+  background-color: #08e688;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+
+.info_form .fermer {
+  background-color: red;
+}
+
+
+.info_form .btn:hover, .open-button:hover {
+  opacity: 1;
 }
