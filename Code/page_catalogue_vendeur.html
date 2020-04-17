@@ -12,7 +12,7 @@
 		<link rel="stylesheet" href="Styles/MyFooter.css">
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		
-		 <script>
+		<script>
 			//fonction qui cache ou affiche l'option de trie pas date de fin d'enchere
 			//si le cliant choisie de ne regarder que les meilleur offre
 			function masque_trie_enchere()
@@ -21,12 +21,10 @@
 				{
 					
 					$("#trie_encheres").hide();
-					alert("hide");
 				}
 				else
 				{
 					$("#trie_encheres").show();
-					alert("show");
 				}
 			}
 			
@@ -43,8 +41,6 @@
 						var type_vente = document.getElementById("type_vente").value
 						var type_trie = document.getElementById("type_trie").value
 
-						alert(nom_objet + " " + nom_vendeur + " " + prix_min + " " + prix_max + " " + type_vente + " " + type_trie);
-
 						//blindage
 						if(prix_min > prix_max)
 						{
@@ -55,7 +51,7 @@
 
 					});
 				}); 
-		 </script> 
+		 </script>
 	</head>
 
 	<body>	
