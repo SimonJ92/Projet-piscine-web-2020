@@ -3,7 +3,7 @@
     session_start();
 
     //identifier le nom de base de données 
-    $database = "ebay-ece"; 
+    $database = "ebay_ece"; 
 
     //connectez-vous dans votre BDD 
     //Rappel : votre serveur = localhost | votre login = root | votre mot de pass = '' (rien) 
