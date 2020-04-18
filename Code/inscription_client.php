@@ -26,8 +26,9 @@
 				if(mysqli_num_rows($resultTestCreation) != 0){
 					$erreurCreation = "Cette email est déjà utilisé";
 				}else{
-					$sqlCreation = "INSERT INTO acheteur (Prenom,Nom,AdresseMail,AdresseLigne1,AdresseLigne2,Ville,CodePostal,Pays,Telephone,MotDePasse,NumeroCarte) VALUES ('$creationPrenom','$creationNom',$creationMail','$creationAdresse1','$creationAdresse2','$creationVille','$creationZip','$creationPays','$creationPhone','$creationMdp','$creationNumber')";
+					$sqlCreation = "INSERT INTO acheteur (Prenom,Nom,AdresseMail,AdresseLigne1,AdresseLigne2,Ville,CodePostal,Pays,Telephone,MotDePasse,NumeroCarte) VALUES ('$creationPrenom','$creationNom','$creationMail','$creationAdresse1','$creationAdresse2','$creationVille','$creationZip','$creationPays','$creationPhone','$creationMdp','$creationNumber')";
 					$resultCreation = mysqli_query($db_handle,$sqlCreation);
+					echo "resultat : ".$resultCreation;
 					$erreurCreation  = "Profil créé";
 				}
 			}
