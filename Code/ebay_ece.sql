@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 17, 2020 at 06:02 PM
+-- Generation Time: Apr 18, 2020 at 10:09 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
 
 INSERT INTO `acheteur` (`IDAcheteur`, `Prenom`, `Nom`, `AdresseMail`, `AdresseLigne1`, `AdresseLigne2`, `Ville`, `CodePostal`, `Pays`, `Telephone`, `MotDePasse`, `NumeroCarte`) VALUES
 (4, 'John', 'Doe', 'truc@gmail.com', 'Adresse1', NULL, 'Paris', '75015', 'France', '+33611111111', 'Password', '2'),
-(5, 'Jean', 'Méni', 'jean.meni@gmail.com', '20 rue des Pommiers', NULL, 'Paris', '75000', 'France', '0612345678', 'azerty', '2'),
+(5, 'Jean', 'Meni', 'jean.meni@gmail.com', '20 rue des Pommiers', NULL, 'Paris', '75000', 'France', '0612345678', 'azerty', '2'),
 (6, 'Didier', 'Séreaux', 'didier.sereaux@gmail.com', '62 rue des arts', NULL, 'Paris', '75007', 'France', '0665896478', 'motdepasse', '1'),
 (7, 'Benjamin', 'Barni', 'benjamin.barni@gmail.com', '56 rue de l\'Armistice', NULL, 'Lyon', '69000', 'France', '0666493514', '123456', '2');
 
@@ -241,12 +241,12 @@ CREATE TABLE IF NOT EXISTS `produit` (
 --
 
 INSERT INTO `produit` (`Numero`, `Nom`, `Photo1`, `Photo2`, `Photo3`, `Photo4`, `Photo5`, `MethodeVente`, `PrixDirect`, `DescriptionCourte`, `DescriptionLongue1`, `Categorie`, `PseudoVendeur`) VALUES
-(1, 'Bugatti La voiture noire 2019', 'Images/Images-produits/Bugatti_La_Voiture_Noire_2019.png', 'Images/Images-produits/bugatti-la-voiture-noire-photo2.jpg', 'Images/Images-produits/Bugatti-La-Voiture-Noire-2019-photo3', 'Images/Images-produits/bugatti-la-voiture-noire-photo4.jpg', 'Images/Images-produits/bugatti-la-voiture-noire-photo5.jpg', 'Encheres', '11000000.00', 'Supercar GT du constructeur Bugatti. Modèle unique.', 'La Voiture Noire est une supercar GT de luxe du constructeur automobile français Bugatti. Voiture neuve parmi les plus chères et rapides du monde, vendue 11 millions € hors taxes1,2, elle est présentée au salon international de l\'automobile de Genève 2019 et est un modèle unique basé sur la Chiron.', 'VIP', 'Aurele'),
-(2, 'Buste de Victor Hugo', 'Images/Images-produits/Buste_de_Victor_Hugo.png', NULL, NULL, NULL, NULL, 'Negoce', '50000.00', 'Buste de Victor Hugo, par un artiste inconnu.', 'Victor Hugo est un poète, dramaturge, écrivain, romancier et dessinateur romantique français, né le 7 ventôse an X (26 février 1802) à Besançon et mort le 22 mai 1885 à Paris. Il est considéré comme l\'un des plus importants écrivains de langue française. Il est aussi une personnalité politique et un intellectuel engagé qui a eu un rôle idéologique majeur et occupe une place marquante dans l\'histoire des lettres françaises au XIXe siècle, dans des genres et des domaines d’une remarquable variété.', 'Musee', 'Simon'),
-(3, 'Costume original de Darth Vader', 'Images/Images-produits/costume_original_Darth_Vador.png', NULL, NULL, NULL, NULL, 'Encheres', '500000.00', 'Costume original de Darth Vader de la saga Star Wars.', 'Il s\'agit du costume initial utilisé au cours du tournage des films de la trilogie originale.', 'VIP', 'Sylvain'),
-(4, 'Fauteuil Louis XVI rouge', 'Images/Images-produits/fauteuil-Louis-XVI-rouge-rococo', NULL, NULL, NULL, NULL, 'Negoce', '120000.00', 'Fauteuil style Louis XVI de couleur rouge.', 'Fauteuil style Louis XVI de couleur rouge. Très bon état.', 'Ferraille', 'Vendeur 1'),
-(5, 'Nuit de Neige à Kambara - Hiroshige', 'Images/Images-produit/Hiroshige_nuit_de_neige_a_Kambara.png', NULL, NULL, NULL, NULL, 'Encheres', '500000.00', 'Tableau :\"Nuit de neige à Kambara\" par le dessinateur Hiroge. (1833)', 'Tableau :\"Nuit de neige à Kambara\" par le dessinateur Hiroge. (1833)', 'Musee', 'Aurele'),
-(6, 'Horloge', 'Images/Images-produits/horloge.png', NULL, NULL, NULL, NULL, 'Negoce', '10000.00', 'Petite horloge ornée de dorures.', 'Petite horloge ornée de dorures.', 'Ferraille', 'Simon'),
+(1, 'Bugatti La voiture noire 2019', 'Images/Images-produits/Bugatti_La_Voiture_Noire_2019.png', 'Images/Images-produits/bugatti-la-voiture-noire-photo2.jpg', 'Images/Images-produits/Bugatti-La-Voiture-Noire-2019-photo3', 'Images/Images-produits/bugatti-la-voiture-noire-photo4.jpg', 'Images/Images-produits/bugatti-la-voiture-noire-photo5.jpg', 'Encheres', '11000000.00', 'Supercar GT du constructeur Bugatti. Modele unique.', 'La Voiture Noire est une supercar GT de luxe du constructeur automobile français Bugatti. Voiture neuve parmi les plus cheres et rapides du monde, vendue 11 millions d\'euros hors taxes, elle est présentee au salon international de l\'automobile de Geneve 2019 et est un modele unique base sur la Chiron.', 'VIP', 'Aurele'),
+(2, 'Buste de Victor Hugo', 'Images/Images-produits/Buste_de_Victor_Hugo.png', NULL, NULL, NULL, NULL, 'Negoce', '50000.00', 'Buste de Victor Hugo, par un artiste inconnu.', 'Victor Hugo est un poete, dramaturge, ecrivain, romancier et dessinateur romantique français, ne le 7 ventose an X (26 fevrier 1802) a Besançon et mort le 22 mai 1885 à Paris. Il est considére comme l\'un des plus importants écrivains de langue française. Il est aussi une personnalite politique et un intellectuel engagé qui a eu un role ideologique majeur et occupe une place marquante dans l\'histoire des lettres françaises au XIXe siecle, dans des genres et des domaines d’une remarquable variéte.', 'Musee', 'Simon'),
+(3, 'Costume original de Darth Vader', 'Images/Images-produits/costume_original_Darth_Vador.png', NULL, NULL, NULL, NULL, 'Encheres', '500000.00', 'Costume original de Darth Vader de la saga Star Wars.', 'Il s\'agit du costume initial utilise au cours du tournage des films de la trilogie originale.', 'VIP', 'Sylvain'),
+(4, 'Fauteuil Louis XVI rouge', 'Images/Images-produits/fauteuil-Louis-XVI-rouge-rococo', NULL, NULL, NULL, NULL, 'Negoce', '120000.00', 'Fauteuil style Louis XVI de couleur rouge.', 'Fauteuil style Louis XVI de couleur rouge. Tres bon etat.', 'Ferraille', 'Vendeur 1'),
+(5, 'Nuit de Neige à Kambara - Hiroshige', 'Images/Images-produit/Hiroshige_nuit_de_neige_a_Kambara.png', NULL, NULL, NULL, NULL, 'Encheres', '500000.00', 'Tableau :\"Nuit de neige a Kambara\" par le dessinateur Hiroge. (1833)', 'Tableau :\"Nuit de neige a Kambara\" par le dessinateur Hiroge. (1833)', 'Musee', 'Aurele'),
+(6, 'Horloge', 'Images/Images-produits/horloge.png', NULL, NULL, NULL, NULL, 'Negoce', '10000.00', 'Petite horloge ornee de dorures.', 'Petite horloge ornee de dorures.', 'Ferraille', 'Simon'),
 (7, 'Statuette de Bouddha en jade', 'Images/Images-produits/statuette-jade-bouddha.png', NULL, NULL, NULL, NULL, 'Negoce', '5000.00', 'Sculpture de Bouddha -jade. Artiste inconnu.', 'Sculpture de Bouddha -jade. Artiste inconnu.', 'Ferraille', 'Sylvain'),
 (8, 'Le Rigi bleu - William Turner', 'Images/Images-produits/william-turner-le_rigi-bleu', NULL, NULL, NULL, NULL, 'Encheres', '5400000.00', '\"Le Rigi Bleu\", peinture par William Turner.', '\"Le Rigi Bleu\", peinture par William Turner.', 'Musee', 'Vendeur 1');
 

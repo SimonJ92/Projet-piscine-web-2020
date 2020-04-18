@@ -60,6 +60,7 @@
                     $erreurIdentifiants = "L'identifant ou le mot de passe est erroné";
                 }elseif(mysqli_num_rows($resultConnexionVendeur) == 1){
                     $erreurIdentifiants = "";
+                    $dataVendeur = 
                 }
             }else{
                 echo "la variable 'ecranConnexion' est erronée";
