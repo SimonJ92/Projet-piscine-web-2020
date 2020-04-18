@@ -1,31 +1,33 @@
 <?php 
 	$db_handle = mysqli_connect('localhost','root','');
-	$db_found = mysqli_select_db($db_handle,'ebay_ece');
+	$db_found = mysqli_select_db($db_handle,"ebay_ece");
 	$erreurCreation ="";
 	
 	if (isset($_POST["boutonCreation"])) {
 		if($_POST["boutonCreation"] && $db_found){
-			$creationPrenom = isset($_POST["creationPrenom"])?$_POST["creationPrenom"]:"";
-			$creationNom = isset($_POST["creationNom"])?$_POST["creationNom"]:"";
-			$creationMail = isset($_POST["creationMail"])?$_POST["creationMail"]:"";
-			$creationMdp = isset($_POST["creationMdp"])?$_POST["creationMdp"]:"";
-			$creationAdresse1 = isset($_POST["creationAdresse1"])?$_POST["creationAdresse1"]:"";
-			$creationAdresse2 = isset($_POST["creationAdresse2"])?$_POST["creationAdresse2"]:"";
-			$creationVille = isset($_POST["creationVille"])?$_POST["creationVille"]:"";
-			$creationZip = isset($_POST["creationZip"])?$_POST["creationZip"]:"";
-			$creationPays = isset($_POST["creationPays"])?$_POST["creationPays"]:"";
-			$creationPhone = isset($_POST["creationPhone"])?$_POST["creationPhone"]:"";
-			$creationNumber = isset($_POST["creationNumber"])?$_POST["creationNumber"]:"";
-			if($creationPrenom=="" || $creationNom=="" || $creationMail=="" || $creationMdp=="" || $creationAdresse1=="" || $creationAdresse2=="" || $creationVille=="" || $creationZip=="" || $creationPays=="" || $creationPhone=="" || $creationNumber=="") {
+			
+			$creationPrenom = isset($_POST["creationPrenom"])? $_POST["creationPrenom"]:"";
+			$creationNom = isset($_POST["creationNom"])? $_POST["creationNom"]:"";
+			$creationMail = isset($_POST["creationMail"])? $_POST["creationMail"]:"";
+			$creationMdp = isset($_POST["creationMdp"])? $_POST["creationMdp"]:"";
+			$creationAdresse1 = isset($_POST["creationAdresse1"])? $_POST["creationAdresse1"]:"";
+			$creationAdresse2 = isset($_POST["creationAdresse2"])? $_POST["creationAdresse2"]:"";
+			$creationVille = isset($_POST["creationVille"])? $_POST["creationVille"]:"";
+			$creationZip = isset($_POST["creationZip"])? $_POST["creationZip"]:"";
+			$creationPays = isset($_POST["creationPays"])? $_POST["creationPays"]:"";
+			$creationPhone = isset($_POST["creationPhone"])? $_POST["creationPhone"]:"";
+			$creationNumber = isset($_POST["creationNumber"])? $_POST["creationNumber"]:"";
+			
+			if($creationPrenom=="" || $creationNom=="" || $creationMail=="" || $creationMdp=="" || $creationAdresse1=="" || $creationVille=="" || $creationZip=="" || $creationPays=="" || $creationPhone=="" || $creationNumber=="") {
 				$erreurCreation= "Tous les champs doivent être remplis";
 			}else{
-				$sqlTestCreation = "SELECT * FROM acheteur where AdresseMail like '%$creationMail%'";
+				$sqlTestCreation = "SELECT * FROM acheteur WHERE AdresseMail like '%$creationMail%'";
 				$resultTestCreation = mysqli_query($db_handle,$sqlTestCreation) or die (mysqli_error($db_handle));
 				if(mysqli_num_rows($resultTestCreation) != 0){
 					$erreurCreation = "Cette email est déjà utilisé";
 				}else{
-					$sqlCreation = "insert into acheteur(Prenom,Nom,AdresseMail,AdresseLigne1,AdresseLigne2,Ville,CodePostal,Pays,Telephone.NumeroCarte) values('$creationPrenom','$creationNom',$creationMail','$creationMdp','$creationAdresse1','$creationAdresse2','$creationVille','$creationZip','$creationPays','$creationPhone','$creationNumber')";
-					$resultatCreation = mysqli_query($db_handle,$sqlCreation);
+					$sqlCreation = "INSERT INTO acheteur (Prenom,Nom,AdresseMail,AdresseLigne1,AdresseLigne2,Ville,CodePostal,Pays,Telephone,MotDePasse,NumeroCarte) VALUES ('$creationPrenom','$creationNom',$creationMail','$creationAdresse1','$creationAdresse2','$creationVille','$creationZip','$creationPays','$creationPhone','$creationMdp','$creationNumber')";
+					$resultCreation = mysqli_query($db_handle,$sqlCreation);
 					$erreurCreation  = "Profil créé";
 				}
 			}
@@ -223,7 +225,7 @@
 						<button type="submit" class="btn btn-sm btn-primary" disabled display="none">Créer mon compte</button>
 					</div>
 					<div id="bouton">
-						<input type="submit" name="boutonCreation" id="boutoncreation" class="btn btn-sm btn-primary" onclick="creation()" value="Créer mon compte">
+						<input type="submit" name="boutonCreation" id="boutonCreation" class="btn btn-sm btn-primary" onclick="creation()" value="Créer mon compte">
 					</div>
 					<div class="form-group">
 						<p>    </p>
