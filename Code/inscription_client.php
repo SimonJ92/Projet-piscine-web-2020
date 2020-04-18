@@ -1,6 +1,51 @@
 <?php 
-	$db_handle = mysqli_connect('localhost','root','');
-	$db_found = mysqli_select_db($db_handle,"ebay_ece");
+	 //En tête
+    session_start();
+
+    $db_handle = mysqli_connect('localhost', 'root', ''); 
+    $db_found = mysqli_select_db($db_handle, "ebay_ece");
+
+    
+
+    $typeConnected=(isset($_SESSION['typeConnected']))?(int) $_SESSION['typeConnected']:1;
+    //visiteur : 1
+    //client : 2
+    //vendeur : 3
+    $idConnected=(isset($_SESSION['idConnected']))?(int) $_SESSION['idConnected']:0;
+    //id si client connecté
+    $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
+    //pseudo si vendeur connecté
+
+    if(isset($_POST["toggleConnexion"])){
+    	if($_POST["toggleConnexion"]){
+    		if($typeConnected == 1){
+    			header('Location: page_de_connexion.php');
+    		}
+    		if($typeConnected ==2 || $typeConnected == 3){
+    			$_SESSION['typeConnected'] = 1;
+    			$_SESSION['idConnected'] = 0;
+    			$_SESSION['pseudoConnected'] = '';
+    			header('Location: accueil_client.php');
+    		}
+    	}
+    }
+
+	if(isset($_POST["boutonCompte"])){
+    	if($_POST["boutonCompte"]){
+    		if($typeConnected == 2){	//client connecté
+    			header('Location: profil_client.php');
+    			exit();
+    		}elseif ($typeConnected == 3){	//vendeur connecté
+    			header('Location: profil_vendeur_prive.php');
+    			exit();
+    		}
+    		else{
+    			echo "Erreur : type de connexion : $typeConnected";
+    		}
+    	}
+    }
+
+    //Page
 	$erreurCreation ="";
 	
 	if (isset($_POST["boutonCreation"])) {
@@ -72,38 +117,37 @@
 	</head>
 
 	<body>
-		
-	<!-- 00 -->
-	<!-- TOP -->
-	<!-- 00 -->
-		
 		<nav class="navbar navbar-expand-md" role="main" >
-			<a class="navbar-brand" href="#" style="margin-right: 15%;">
-				<img src="Images/logo.png" alt="" style="max-width: 150px;">
-			</a>
-		 	<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse text-center" style="width: 50%;">
-				<h1 style="margin: 0 auto;">Bienvenue sur Ebay-ECE</h1>
-			</div>
-			<div class="collapse navbar-collapse" id="main-navigation" style="width: 25%">
-				<div class="row">
-					<form action="" method="post" class="form-inline text-center">
-						<div class="col-12 text-right">
-								<input type="submit" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">
-								<input type="submit" name="toggleConnexion" value="Connexion" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">
-						</div>
-						<div class="col-12 text-center">
-							<a class="nav-link" href="#">
-								<img style="max-width:100px;" src="Images/paniers.png" alt="">
-							</a>
-						</div>
-					</form>
-				</div>
+            <?php echo '<a class="navbar-brand" href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'" style="margin-right: 15%;">'; ?>
+                <img src="Images/logo.png" alt="" style="max-width: 150px;">
+            </a>
+            <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse text-center" style="width: 50%;">
+                <h1 style="margin: 0 auto;">Bienvenue sur Ebay-ECE</h1>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navigation" style="width: 25%">
+                <div class="row">
+                    <form action="" method="post" class="form-inline text-center">
+                        <div class="col-12 text-right">
+                                <?php 
+                                	echo '<input type="'.(($typeConnected == 1)?"hidden":"submit").'" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">';
+                                 ?>
+                                <?php 
+                                	echo '<input type="submit" name="toggleConnexion" value="'.(($typeConnected == 1)?"Connexion":"Déconnexion").'" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">';
+                                 ?>
+                        </div>
+                        <div class="col-12 text-center">
+                            <a class="nav-link" href="panier.php">
+                                <img style="max-width:100px;" src="Images/paniers.png">
+                            </a>
+                        </div>
+                    </form>
+                </div>
 
-			</div>
-		</nav>
+            </div>
+        </nav>
 
 
 	<!-- 00 -->
@@ -261,38 +305,58 @@
 	<!-- 00 -->
 
     	<footer class="page-footer">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-4 col-sm-12 text-center">
-						<h3>Page</h3>
-	                    <ul>
-	                        <li><a href="#">Accueil</a></li>
-	                        <li><a href="#">Mon compte</a></li>
-	                        <li><a href="#">Acheter</a></li>
-	                        <li><a href="#">Conditions d&#39;utilisation</a></li>
-	                    </ul>
-					</div>
-					<div class="col-md-4 col-sm-12 text-center">
-						<h3>Partenaires</h3>
-						<ul>
-							<li><img src="Images/ECE.png"/></li><br>
-							<li><img src="Images/ECE_Tech.png"/></li>
-						</ul>
-					</div>
-					<div class="col-md-4 col-sm-12 text-center">
-						<h3>Nous contacter</h3>
-	                    <ul>
-	                    	<li><a href="mailto:aurele.duparc@edu.ece.fr">aurele.duparc@edu.ece.fr</a><br></li>
-		                    <li><a href="#">+33 1 23 45 67 89</a><br></li>
-		                    <li><a href="#">37 Quai de Grenelle<br>
-		                    Immeuble POLLUX<br>
-		                	75015 Paris</a></li>
-	                	</ul>
-					</div>
-				</div>
-				<div class="footer-copyright text-center">Copyright &copy; 2020 <strong>Ebay ECE</strong></div>
-			</div>
-		</footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12 text-center">
+                        <h3>Page</h3>
+                        <ul>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'">';
+                            	?>
+                            	Accueil</a>
+                            </li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"profil_vendeur_prive.php":(($typeConnected == 2)?"profil_client.php":"page_de_connexion.php")).'">';
+                            	?>
+                            	Mon compte</a>
+                            </li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"categories_vendeur.php":"categories_client.php").'">';
+                            	?>
+                            	Acheter</a>
+                            </li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"infos_vendeur.php":"infos_client.php").'">';
+                            	?>
+                            	Conditions d&#39;utilisation</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 col-sm-12 text-center">
+                        <h3>Partenaires</h3>
+                        <ul>
+                            <li><img src="Images/ECE.png"/></li><br>
+                            <li><img src="Images/ECE_Tech.png"/></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 col-sm-12 text-center">
+                          <h3>Nous contacter</h3>
+                         <ul>
+                            <li><a href="mailto:aurele.duparc@edu.ece.fr">aurele.duparc@edu.ece.fr</a><br></li>
+                            <li><a href="#">+33 1 23 45 67 89</a><br></li>
+                            <li><a href="#">37 Quai de Grenelle<br>
+                            Immeuble POLLUX<br>
+                            75015 Paris</a></li>
+                        </ul>
+                     </div>
+                </div>
+                <div class="footer-copyright text-center">Copyright &copy; 2020 <strong>Ebay ECE</strong></div>
+            </div>
+        </footer>
 	</body>
 
 	
