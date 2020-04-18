@@ -143,19 +143,25 @@
 			<h1 class="text-center"><strong>Catégories</strong></h1>
 			<div class="row">
 				<div class="col-md-4 col-sm-12 text-center">
-					<a href="#">	<!-- Lien vers la page catalogue de la catégorie en question -->
+					<?php 
+	                    echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=1">'; 
+	                ?>
 						<h2>Ferraille et trésors</h2>
 						<img src="Images/imageFeraille.png" alt="imageFeraille" class="img-fluid">
 					</a>
 				</div>
 				<div class="col-md-4 col-sm-12  text-center">
-					<a href="#">	<!-- Lien vers la page catalogue de la catégorie en question -->
+					<?php 
+	                    echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=2">'; 
+	                ?>
 						<h2>Bon pour le musée</h2>
 						<img src="Images/imageMusee.png" alt="imageMusee" class="img-fluid">
 					</a>
 				</div>
 				<div class="col-md-4 col-sm-12 text-center">
-					<a href="#">	<!-- Lien vers la page catalogue de la catégorie en question -->
+					<?php 
+	                    echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=3">'; 
+	                ?>
 						<h2>Accessoires VIP</h2>
 						<img src="Images/imageVIP.png" alt="imageVIP" class="img-fluid">
 					</a>
