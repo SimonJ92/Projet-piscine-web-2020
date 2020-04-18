@@ -255,7 +255,7 @@
 										</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="creationAmericanExpress" id="creationAmericanExpress" value="option1" checked>
+										<input class="form-check-input" type="radio" name="creationAmericanExpress" id="creationAmericanExpress" value="option1">
 										<label class="form-check-label" for="gridRadios1">
 										American Express
 										</label>
@@ -266,7 +266,6 @@
 										PayPal
 										</label>
 									</div>
-									
 								</div>
 						</div>
 					</fieldset>
