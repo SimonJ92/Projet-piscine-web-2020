@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 18, 2020 at 10:33 AM
+-- Generation Time: Apr 18, 2020 at 10:36 AM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -245,7 +245,7 @@ INSERT INTO `produit` (`Numero`, `Nom`, `Photo1`, `Photo2`, `Photo3`, `Photo4`, 
 (2, 'Buste de Victor Hugo', 'Images/Images-produits/Buste_de_Victor_Hugo.png', NULL, NULL, NULL, NULL, 'Negoce', '50000.00', 'Buste de Victor Hugo, par un artiste inconnu.', 'Victor Hugo est un poete, dramaturge, ecrivain, romancier et dessinateur romantique francais, ne le 7 ventose an X (26 fevrier 1802) a Besancon et mort le 22 mai 1885 à Paris. Il est considere comme l\'un des plus importants ecrivains de langue francaise. Il est aussi une personnalite politique et un intellectuel engage qui a eu un role ideologique majeur et occupe une place marquante dans l\'histoire des lettres francaises au XIXe siecle, dans des genres et des domaines d’une remarquable variéte.', 'Musee', 'Simon'),
 (3, 'Costume original de Darth Vader', 'Images/Images-produits/costume_original_Darth_Vador.png', NULL, NULL, NULL, NULL, 'Encheres', '500000.00', 'Costume original de Darth Vader de la saga Star Wars.', 'Il s\'agit du costume initial utilise au cours du tournage des films de la trilogie originale.', 'VIP', 'Sylvain'),
 (4, 'Fauteuil Louis XVI rouge', 'Images/Images-produits/fauteuil-Louis-XVI-rouge-rococo', NULL, NULL, NULL, NULL, 'Negoce', '120000.00', 'Fauteuil style Louis XVI de couleur rouge.', 'Fauteuil style Louis XVI de couleur rouge. Tres bon etat.', 'Ferraille', 'Vendeur 1'),
-(5, 'Nuit de Neige a Kambara - Hiroshige', 'Images/Images-produit/Hiroshige_nuit_de_neige_a_Kambara.png', NULL, NULL, NULL, NULL, 'Encheres', '500000.00', 'Tableau : \"Nuit de neige a Kambara\" par le dessinateur Hiroge. (1833)', 'Tableau : \"Nuit de neige a Kambara\" par le dessinateur Hiroge. (1833)', 'Musee', 'Aurele'),
+(5, 'Nuit de Neige a Kambara - Hiroshige', 'Images/Images-produits/Hiroshige_nuit_de_neige_a_Kambara.png', NULL, NULL, NULL, NULL, 'Encheres', '500000.00', 'Tableau : \"Nuit de neige a Kambara\" par le dessinateur Hiroge. (1833)', 'Tableau : \"Nuit de neige a Kambara\" par le dessinateur Hiroge. (1833)', 'Musee', 'Aurele'),
 (6, 'Horloge', 'Images/Images-produits/horloge.png', NULL, NULL, NULL, NULL, 'Negoce', '10000.00', 'Petite horloge ornee de dorures.', 'Petite horloge ornee de dorures.', 'Ferraille', 'Simon'),
 (7, 'Statuette de Bouddha en jade', 'Images/Images-produits/statuette-jade-bouddha.png', NULL, NULL, NULL, NULL, 'Negoce', '5000.00', 'Sculpture de Bouddha - jade. Artiste inconnu.', 'Sculpture de Bouddha -jade. Artiste inconnu.', 'Ferraille', 'Sylvain'),
 (8, 'Le Rigi bleu - William Turner', 'Images/Images-produits/william-turner-le_rigi-bleu', NULL, NULL, NULL, NULL, 'Encheres', '5400000.00', '\"Le Rigi Bleu\", peinture par William Turner.', '\"Le Rigi Bleu\", peinture par William Turner.', 'Musee', 'Vendeur 1');
