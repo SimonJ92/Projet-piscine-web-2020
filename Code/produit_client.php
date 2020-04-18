@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Paiement</title>
+		<title>Produit Client</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
@@ -9,15 +9,19 @@
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-
 		<link rel="stylesheet" href="Styles/style.css">
 		<link rel="stylesheet" href="Styles/MyFooter.css">
 		<link rel="stylesheet" href="Styles/bootstrap.min.css">  <!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
 		<link rel="stylesheet" href="Styles/nav_bar.css">
-		<link rel="stylesheet" type="text/css" href="Styles/paiement.css">
+		<link rel="stylesheet" href="Styles/produit_client.css">
+		<script src="Scripts/produit_client.js"></script>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 	</head>
 
-	<body>	
+	<body>
+		
 	<!-- 00 -->
 	<!-- TOP -->
 	<!-- 00 -->
@@ -67,95 +71,83 @@
 					<a href="#negociations">Négociations</a>
 				</div>
 			</div> 				
-		</div>
+		</div>  
 
-	<div id="wrapperGeneral">
-		<div>
-			<h1 id="titrePrincipal" align="center"><strong>Finalisation du paiement</strong></h1>
+
+	<!-- 00 -->
+	<!-- DIV -->
+	<!-- 00 -->
+	<div class="wrapper">
+		<div class="image">
+			<p>Image Produit 1</p>
 		</div>
-		<div class="row" id="wrapperInterieur">
-			<div class="col-md-6 col-sm-12">
-				<div class="row" id="infosClient" style="height: auto;">
-					<div class="col-12 container-fluid">
-						<h3 style="margin-bottom: 15px;">Informations de livraison</h3>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Nom : <input class="zoneInfo" type="text" name="Nom" style="width: 130px;" value="">
-								Prenom : <input class="zoneInfo" type="text" name="Prenom" style="width: 130px;" value="">
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Adresse ligne 1 : <input class="zoneInfo" type="text" name="AdresseLigne1" style="width: 180px;" value="">
-								Adresse ligne 2 : <input class="zoneInfo" type="text" name="AdresseLigne2" style="width: 180px;" value="">
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Ville : <input class="zoneInfo" type="text" name="Ville" style="width: 200px;" value="">
-								Code postal : <input class="zoneInfo" type="text" name="CodePostal" style="width: 75px;" value="">
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Pays : <input class="zoneInfo" type="text" name="Pays" style="width: 120px;" value="">
-								Numéro de téléphone : <input class="zoneInfo" type="text" name="NumeroTelephone" style="width: 100px;" value="">
-							</p>
-						</div>
+		<div class="descrip">
+			<h2> <b> Nom du produit</b> </h2>
+			<p>Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 </p>
+		</div>
+		<div class="vendeur">
+			<p>Vendeur A</p>
+		</div>
+		<div class="lienvendeur">
+			<p>Lien vers la page du vendeur A</p>
+		</div>
+	
+		<div class="option">
+			<!-- <p>Options d'achat</p> -->
+			<div class="col text-center">
+				<button class="btn btn-block btn-primary ">Achat Direct</button> <br><br>
+				<button class="btn btn-block btn-primary">Voir aux enchères</button> <br><br>
+				<button class="btn btn-block btn-primary">Proposer une meilleure offre</button> <br><br>
+			</div>
+		</div>
+		
+		<div class="suppr"> 
+		<!-- Attention le client ne peut pas supprimer de produit -->
+			<!-- <p>Bouton pour supprimer le produit de la base de données</p> -->
+			<button class="btn btn-sm btn-block btn-danger">Supprimer le produit de mon panier</button>
+		</div>
+		
+		<div class="simili">
+			<h3>Autres produits du vendeur</h3>
+			<div class="row">
+				<div class="col-4">
+					<div id="carrousel">
+					<ul>
+						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+					</ul>
+					<br>
 					</div>
 				</div>
-				<div class="row" id="infosCarte" style="height: auto;">
-					<div class="col-12 container-fluid">
-						<div class="row text-left" id="teteInfoCarte" style="margin-bottom: 15px;">
-							<h3 style="margin-bottom: 15px;">Informations de paiement</h3>
-							<button class="btn btn-sm btn-info col-lg-4 col-md-12" style="white-space: normal;">Insérer les informations de paiement enregistrées</button>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Type de carte: 
-								<label class="radio-inline">
-							      	<input type="radio" name="optradio" checked>Visa
-							    </label>
-							    <label class="radio-inline">
-							      	<input type="radio" name="optradio">Mastercard
-							    </label>
-							    <label class="radio-inline">
-							      	<input type="radio" name="optradio">American Express
-							    </label>
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Numéro de la carte : <input class="zoneInfo" type="text" name="NumeroCarte" style="width: 150px;" value="">
-								Titulaire : <input class="zoneInfo" type="text" name="Prenom" style="width: 150px;" value="">
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Date d'expiration : <input class="zoneInfo" type="text" name="MoisExpiration" style="width: 35px;margin-right: 0px;" value="MM"> / <input class="zoneInfo" type="text" name="AnneeExpiration" style="width: 35px;" value="AA">
-								Code de sécurité : <input class="zoneInfo" type="text" name="CodeSecurite" style="width: 55px;" value="">
-							</p>
-						</div>
+				<div class="col-4">
+					<div id="carrousel2">
+					<ul>
+						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+					</ul>
+					<br>
+					</div>
+				</div>
+				<div class="col-4">
+					<div id="carrousel3">
+					<ul>
+						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+					</ul>
+					<br>
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-1 col-md-1 col-xs-12" style="height: 30px;"></div>
-			<div class="col-md-5 col-sm-12">
-				<div class="row" style="height: auto;">
-					<div class="text-center" id="recap">
-						<p>Prix des produits : <strong>200000.00€</strong></p><br>
-						<p>Coût de la livraison : <strong>20.00€</strong></p><br>
-						<p>Total : <strong>200020.00€</strong></p>
-					</div>
-				</div>
-				<div class="row text-center" style="height: 50%;">
-					<button class="btn btn-warning btn-lg col-9 center" id="boutonPayer">
-						Payer
-					</button>
-				</div>
-			</div>
+		</div>
+		
+		<div class="fulldescrip">
+			<p>Description complète<p>
 		</div>
 	</div>
+
 	
 	<!-- 00 -->
 	<!-- FOOTER -->

@@ -51,7 +51,7 @@
                     $dataClient = mysqli_fetch_assoc($resultConnexionClient);
                     $_SESSION["typeConnected"] = 2;
                     $_SESSION["idConnected"] = $dataClient["IDAcheteur"];
-                    header('Location: http://localhost/Projet-piscine-web-2020/Code/accueil-client.php');
+                    header('Location: http://localhost/Projet-piscine-web-2020/Code/accueil_client.php');
                 }
             }elseif ($ecranConnexion == 1) {    //tentative de connexion d'un vendeur
                 $sqlVendeur = "SELECT * from vendeur where Pseudo like '%$identifiantConnexion%' and AdresseMail like '%$passwordConnexion%'";
@@ -77,6 +77,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link rel="icon" href="Images/favicon.ico" type="images/x-icon">
         <title>Connexion</title>
         <link rel="stylesheet" href="Styles/page_de_connection_css/bootstrap.min.css">
         <!--<link rel="stylesheet" href="Styles/page_de_connection_fonts/font-awesome.min.css"> -->  <!--Ne change rien à la page-->
@@ -88,26 +89,30 @@
 
     <body>
     	<nav class="navbar navbar-expand-md" role="main" >
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="#" style="margin-right: 15%;">
                 <img src="Images/logo.png" alt="" style="max-width: 150px;">
             </a>
             <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse text-center" style="width: 100%;">
+            <div class="collapse navbar-collapse text-center" style="width: 50%;">
                 <h1 style="margin: 0 auto;">Bienvenue sur Ebay-ECE</h1>
             </div>
-            <div class="collapse navbar-collapse" id="main-navigation" style="width: 150px;">
+            <div class="collapse navbar-collapse" id="main-navigation" style="width: 25%">
                 <div class="row">
-                    <div class="col-12 text-right">
-                        <a class="nav-link" href="#">Mon Compte</a>
-                    </div>
-                    <div class="col-12 text-right">
-                        <a class="nav-link" href="#">
-                            <img style="max-width:100px;" src="Images/paniers.png" alt="">
-                        </a>
-                    </div>  
+                    <form action="" method="post" class="form-inline text-center">
+                        <div class="col-12 text-right">
+                                <input type="submit" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">
+                                <input type="submit" name="toggleConnexion" value="Connexion" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">
+                        </div>
+                        <div class="col-12 text-center">
+                            <a class="nav-link" href="#">
+                                <img style="max-width:100px;" src="Images/paniers.png" alt="">
+                            </a>
+                        </div>
+                    </form>
                 </div>
+
             </div>
         </nav>
 

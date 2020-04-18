@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Page d'accueil Ebay ECE</title>
+		<title>Profil du vendeur</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">	<!-- ICI -->
+		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -13,6 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="Styles/myFooter.css">
 		<link rel="stylesheet" type="text/css" href="Styles/bootstrap.min.css">		<!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
 		<link rel="stylesheet" href="Styles/nav_bar.css">
+		<link rel="stylesheet" type="text/css" href="Styles/profil-vendeur-public.css">
 	</head>
 
 	<body>	
@@ -64,12 +65,38 @@
 		</div>
 
 	
-		<div style="height: 1000px;">
-	
-		<!-- 00 -->
-		<!-- DIV -->
-		<!-- 00 -->
-		
+		<div class="container-fluid" id="conteneur" style="background-image: url('Images/fond-profil1.jpg');">
+			<div class="row container-fluid" id="contenu">
+				<div class="row" id="infosVendeur">
+					<div class="col-md-4 col-sm-12 conteneurImage" style="height: 300px">
+						<img id="photoVendeur" src="Images/photo-vendeur1.jpg" class="imagesExemples">
+					</div>
+					<div class="col-md-1 col-sm-12" style="height: 50px;"></div>
+					<div class="col-md-7 col-sm-12" id="infosTexte">
+						<div class="container-fluid" style="height: 100%">
+							<div class="row" id="nomVendeur" style="height:50px;">
+								<h5 class="col-12">Nom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeur</h5>
+							</div>
+							<div class="row" id="description" style="height: 250px;">
+								<p>
+									Description du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeur
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row" id="exemplesProduits">
+					<div class="col-md-3 col-sm-12 conteneurImage">
+						<a href="#"><img src="Images/imageMusee.png" class="imagesExemples"></a>
+					</div>
+					<div class="col-md-3 col-sm-12 conteneurImage">
+						<a href="#"><img src="Images/imageFeraille.png" class="imagesExemples"></a>
+					</div>
+					<div class="col-md-3 col-sm-12 conteneurImage">
+						<a href="#"><img src="Images/imageVIP.png" class="imagesExemples"></a>
+					</div>
+				</div>
+			</div>
 		</div>
 	
 	<!-- 00 -->

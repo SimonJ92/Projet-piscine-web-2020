@@ -4,13 +4,14 @@
 		<title>Ebay ECE</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-		 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="Styles/style.css">
-		<link rel="stylesheet" type="text/css" href="Styles/myFooter.css">
-		<link rel="stylesheet" type="text/css" href="Styles/bootstrap.min.css">		<!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<link rel="stylesheet" href="Styles/style.css">
+		<link rel="stylesheet" href="Styles/MyFooter.css">
+		<link rel="stylesheet" href="Styles/bootstrap.min.css">  <!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		<link rel="stylesheet" type="text/css" href="Styles/accueil.css">
 	</head>
@@ -21,32 +22,35 @@
 	<!-- 00 -->
 		
 		<nav class="navbar navbar-expand-md" role="main" >
-			<a class="navbar-brand" href="#">
+			<a class="navbar-brand" href="#" style="margin-right: 15%;">
 				<img src="Images/logo.png" alt="" style="max-width: 150px;">
 			</a>
 		 	<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse text-center" style="width: 100%;">
+			<div class="collapse navbar-collapse text-center" style="width: 50%;">
 				<h1 style="margin: 0 auto;">Bienvenue sur Ebay-ECE</h1>
 			</div>
-			<div class="collapse navbar-collapse" id="main-navigation" style="width: 150px;">
+			<div class="collapse navbar-collapse" id="main-navigation" style="width: 25%">
 				<div class="row">
-					<div class="col-12 text-right">
-						<a class="nav-link" href="#">Mon Compte</a>
-					</div>
-					<div class="col-12 text-right">
-						<a class="nav-link" href="#">
-							<img style="max-width:100px;" src="Images/paniers.png" alt="">
-						</a>
-					</div>	
+					<form action="" method="post" class="form-inline text-center">
+						<div class="col-12 text-right">
+								<input type="submit" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">
+								<input type="submit" name="toggleConnexion" value="Connexion" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">
+						</div>
+						<div class="col-12 text-center">
+							<a class="nav-link" href="#">
+								<img style="max-width:100px;" src="Images/paniers.png" alt="">
+							</a>
+						</div>
+					</form>
 				</div>
+
 			</div>
 		</nav>
 
 		<div class="navbar sticky-top" role="sub" >
 			<a href="#accueil">Accueil</a>
-			<a href="#mesProduits">Mes Produits</a>
 			<div class="subnav">
 				<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
 				<div class="subnav-content">
@@ -56,16 +60,15 @@
 				</div>
 			</div>
 			<div class="subnav">
-				<button class="subnavbtn">Ventes<i class="fa fa-caret-down"></i></button>
+				<button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
 				<div class="subnav-content">
 					<a href="#encheres">Enchères</a>
 					<a href="#negociations">Négociations</a>
 				</div>
 			</div> 				
 		</div>
-
 	
-		<div class="container-fluid" id="conteneur">
+	<div class="container-fluid" id="conteneur">
 			<h3 id="sousTitre" align="center">À vendre en ce moment</h3>
 			<div class="row" id="contenu">
 				<div class="container-fluid">
@@ -115,8 +118,8 @@
 	<!-- 00 -->
 	<!-- FOOTER -->
 	<!-- 00 -->
-		
-		<footer class="page-footer">
+
+    	<footer class="page-footer">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-4 col-sm-12 text-center">
@@ -124,7 +127,7 @@
 	                    <ul>
 	                        <li><a href="#">Accueil</a></li>
 	                        <li><a href="#">Mon compte</a></li>
-	                        <li><a href="#">Vendre</a></li>
+	                        <li><a href="#">Acheter</a></li>
 	                        <li><a href="#">Conditions d&#39;utilisation</a></li>
 	                    </ul>
 					</div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Page d'accueil Ebay ECE</title>
+		<title>Produit Vendeur</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
@@ -13,9 +13,15 @@
 		<link rel="stylesheet" href="Styles/MyFooter.css">
 		<link rel="stylesheet" href="Styles/bootstrap.min.css">  <!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
 		<link rel="stylesheet" href="Styles/nav_bar.css">
+		<link rel="stylesheet" href="Styles/produit_vendeur.css">
+		<script src="Scripts/produit_vendeur.js"></script>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 	</head>
 
-	<body>	
+	<body>
+		
 	<!-- 00 -->
 	<!-- TOP -->
 	<!-- 00 -->
@@ -33,23 +39,19 @@
 			<div class="collapse navbar-collapse" id="main-navigation" style="width: 25%">
 				<div class="row">
 					<form action="" method="post" class="form-inline text-center">
-						<div class="col-12 text-right">
+						<div class="col-12 text-center">
 								<input type="submit" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">
 								<input type="submit" name="toggleConnexion" value="Connexion" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">
 						</div>
-						<div class="col-12 text-center">
-							<a class="nav-link" href="#">
-								<img style="max-width:100px;" src="Images/paniers.png" alt="">
-							</a>
-						</div>
+							<input type="submit" name="lienAdmin" value="Admin" class="col-12 btn btn-warning btn-lg" style="border: 1.5px solid black;margin-top: 20px;" align="center">
 					</form>
 				</div>
-
 			</div>
 		</nav>
 
 		<div class="navbar sticky-top" role="sub" >
 			<a href="#accueil">Accueil</a>
+			<a href="#mesProduits">Mes Produits</a>
 			<div class="subnav">
 				<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
 				<div class="subnav-content">
@@ -59,21 +61,89 @@
 				</div>
 			</div>
 			<div class="subnav">
-				<button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
+				<button class="subnavbtn">Ventes<i class="fa fa-caret-down"></i></button>
 				<div class="subnav-content">
 					<a href="#encheres">Enchères</a>
 					<a href="#negociations">Négociations</a>
 				</div>
 			</div> 				
 		</div>
-	
-	<div style="height: 1000px;">
-	
+
+
 	<!-- 00 -->
 	<!-- DIV -->
 	<!-- 00 -->
+	<div class="wrapper">
+		<div class="image">
+			<p>Image Produit 1</p>
+		</div>
+		<div class="descrip">
+			<h2> <b> Nom du produit</b> </h2>
+			<p>Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 </p>
+		</div>
+		<div class="vendeur">
+			<p>Vendeur A</p>
+		</div>
+		<div class="lienvendeur">
+			<p>Lien vers la page du vendeur A</p>
+		</div>
 	
+		<div class="option">
+			<!-- <p>Options d'achat</p> -->
+			<div class="col text-center">
+				<button class="btn btn-block btn-primary" disabled>Achat Direct</button> <br><br>
+				<button class="btn btn-block btn-primary" disabled>Voir aux enchères</button> <br><br>
+				<button class="btn btn-block btn-primary" disabled>Proposer une meilleure offre</button> <br><br>
+			</div>
+		</div>
+		
+		<div class="suppr"> 
+		<!-- Attention le client ne peut pas supprimer de produit -->
+			<!-- <p>Bouton pour supprimer le produit de la base de données</p> -->
+			<button class="btn btn-sm btn-block btn-danger" onclick="validation()">Supprimer le produit de la vente</button>
+		</div>
+		
+		<div class="simili">
+			<h3>Autres produits du vendeur</h3>
+			<div class="row">
+				<div class="col-4">
+					<div id="carrousel">
+					<ul>
+						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+					</ul>
+					<br>
+					</div>
+				</div>
+				<div class="col-4">
+					<div id="carrousel2">
+					<ul>
+						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+					</ul>
+					<br>
+					</div>
+				</div>
+				<div class="col-4">
+					<div id="carrousel3">
+					<ul>
+						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+					</ul>
+					<br>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="fulldescrip">
+			<p>Description complète<p>
+		</div>
 	</div>
+
 	
 	<!-- 00 -->
 	<!-- FOOTER -->

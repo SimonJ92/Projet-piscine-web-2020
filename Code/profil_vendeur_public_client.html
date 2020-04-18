@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Paiement</title>
+		<title>Profil du vendeur</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
@@ -9,12 +9,11 @@
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-
 		<link rel="stylesheet" href="Styles/style.css">
 		<link rel="stylesheet" href="Styles/MyFooter.css">
 		<link rel="stylesheet" href="Styles/bootstrap.min.css">  <!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
 		<link rel="stylesheet" href="Styles/nav_bar.css">
-		<link rel="stylesheet" type="text/css" href="Styles/paiement.css">
+		<link rel="stylesheet" type="text/css" href="Styles/profil-vendeur-public.css">
 	</head>
 
 	<body>	
@@ -68,94 +67,40 @@
 				</div>
 			</div> 				
 		</div>
-
-	<div id="wrapperGeneral">
-		<div>
-			<h1 id="titrePrincipal" align="center"><strong>Finalisation du paiement</strong></h1>
-		</div>
-		<div class="row" id="wrapperInterieur">
-			<div class="col-md-6 col-sm-12">
-				<div class="row" id="infosClient" style="height: auto;">
-					<div class="col-12 container-fluid">
-						<h3 style="margin-bottom: 15px;">Informations de livraison</h3>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Nom : <input class="zoneInfo" type="text" name="Nom" style="width: 130px;" value="">
-								Prenom : <input class="zoneInfo" type="text" name="Prenom" style="width: 130px;" value="">
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Adresse ligne 1 : <input class="zoneInfo" type="text" name="AdresseLigne1" style="width: 180px;" value="">
-								Adresse ligne 2 : <input class="zoneInfo" type="text" name="AdresseLigne2" style="width: 180px;" value="">
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Ville : <input class="zoneInfo" type="text" name="Ville" style="width: 200px;" value="">
-								Code postal : <input class="zoneInfo" type="text" name="CodePostal" style="width: 75px;" value="">
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Pays : <input class="zoneInfo" type="text" name="Pays" style="width: 120px;" value="">
-								Numéro de téléphone : <input class="zoneInfo" type="text" name="NumeroTelephone" style="width: 100px;" value="">
-							</p>
+	
+	<div class="container-fluid" id="conteneur" style="background-image: url('Images/fond-profil1.jpg');">
+			<div class="row container-fluid" id="contenu">
+				<div class="row" id="infosVendeur">
+					<div class="col-md-4 col-sm-12 conteneurImage" style="height: 300px">
+						<img id="photoVendeur" src="Images/photo-vendeur1.jpg" class="imagesExemples">
+					</div>
+					<div class="col-md-1 col-sm-12" style="height: 50px;"></div>
+					<div class="col-md-7 col-sm-12" id="infosTexte">
+						<div class="container-fluid" style="height: 100%">
+							<div class="row" id="nomVendeur" style="height:50px;">
+								<h5 class="col-12">Nom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeur</h5>
+							</div>
+							<div class="row" id="description" style="height: 250px;">
+								<p>
+									Description du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeur
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row" id="infosCarte" style="height: auto;">
-					<div class="col-12 container-fluid">
-						<div class="row text-left" id="teteInfoCarte" style="margin-bottom: 15px;">
-							<h3 style="margin-bottom: 15px;">Informations de paiement</h3>
-							<button class="btn btn-sm btn-info col-lg-4 col-md-12" style="white-space: normal;">Insérer les informations de paiement enregistrées</button>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Type de carte: 
-								<label class="radio-inline">
-							      	<input type="radio" name="optradio" checked>Visa
-							    </label>
-							    <label class="radio-inline">
-							      	<input type="radio" name="optradio">Mastercard
-							    </label>
-							    <label class="radio-inline">
-							      	<input type="radio" name="optradio">American Express
-							    </label>
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Numéro de la carte : <input class="zoneInfo" type="text" name="NumeroCarte" style="width: 150px;" value="">
-								Titulaire : <input class="zoneInfo" type="text" name="Prenom" style="width: 150px;" value="">
-							</p>
-						</div>
-						<div class="row text-left" style="margin-bottom: 10px;">
-							<p class="col-12">
-								Date d'expiration : <input class="zoneInfo" type="text" name="MoisExpiration" style="width: 35px;margin-right: 0px;" value="MM"> / <input class="zoneInfo" type="text" name="AnneeExpiration" style="width: 35px;" value="AA">
-								Code de sécurité : <input class="zoneInfo" type="text" name="CodeSecurite" style="width: 55px;" value="">
-							</p>
-						</div>
+				<div class="row" id="exemplesProduits">
+					<div class="col-md-3 col-sm-12 conteneurImage">
+						<a href="#"><img src="Images/imageMusee.png" class="imagesExemples"></a>
+					</div>
+					<div class="col-md-3 col-sm-12 conteneurImage">
+						<a href="#"><img src="Images/imageFeraille.png" class="imagesExemples"></a>
+					</div>
+					<div class="col-md-3 col-sm-12 conteneurImage">
+						<a href="#"><img src="Images/imageVIP.png" class="imagesExemples"></a>
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-1 col-md-1 col-xs-12" style="height: 30px;"></div>
-			<div class="col-md-5 col-sm-12">
-				<div class="row" style="height: auto;">
-					<div class="text-center" id="recap">
-						<p>Prix des produits : <strong>200000.00€</strong></p><br>
-						<p>Coût de la livraison : <strong>20.00€</strong></p><br>
-						<p>Total : <strong>200020.00€</strong></p>
-					</div>
-				</div>
-				<div class="row text-center" style="height: 50%;">
-					<button class="btn btn-warning btn-lg col-9 center" id="boutonPayer">
-						Payer
-					</button>
-				</div>
-			</div>
 		</div>
-	</div>
 	
 	<!-- 00 -->
 	<!-- FOOTER -->
