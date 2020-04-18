@@ -1,3 +1,20 @@
+<?php 
+	//En tête
+    session_start();
+
+    $db_handle = mysqli_connect('localhost', 'root', ''); 
+    $db_found = mysqli_select_db($db_handle, "ebay_ece");
+
+    $typeConnected=(isset($_SESSION['typeConnected']))?(int) $_SESSION['typeConnected']:1;
+    //visiteur : 1
+    //client : 2
+    //vendeur : 3
+    $idConnected=(isset($_SESSION['idConnected']))?(int) $_SESSION['idConnected']:0;
+    //id si client connecté
+    $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
+    //pseudo si vendeur connecté
+ ?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -162,38 +179,58 @@
 	<!-- 00 -->
 
     	<footer class="page-footer">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-4 col-sm-12 text-center">
-						<h3>Page</h3>
-	                    <ul>
-	                        <li><a href="#">Accueil</a></li>
-	                        <li><a href="#">Mon compte</a></li>
-	                        <li><a href="#">Acheter</a></li>
-	                        <li><a href="#">Conditions d&#39;utilisation</a></li>
-	                    </ul>
-					</div>
-					<div class="col-md-4 col-sm-12 text-center">
-						<h3>Partenaires</h3>
-						<ul>
-							<li><img src="Images/ECE.png"/></li><br>
-							<li><img src="Images/ECE_Tech.png"/></li>
-						</ul>
-					</div>
-					<div class="col-md-4 col-sm-12 text-center">
-						<h3>Nous contacter</h3>
-	                    <ul>
-	                    	<li><a href="mailto:aurele.duparc@edu.ece.fr">aurele.duparc@edu.ece.fr</a><br></li>
-		                    <li><a href="#">+33 1 23 45 67 89</a><br></li>
-		                    <li><a href="#">37 Quai de Grenelle<br>
-		                    Immeuble POLLUX<br>
-		                	75015 Paris</a></li>
-	                	</ul>
-					</div>
-				</div>
-				<div class="footer-copyright text-center">Copyright &copy; 2020 <strong>Ebay ECE</strong></div>
-			</div>
-		</footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12 text-center">
+                        <h3>Page</h3>
+                        <ul>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'">';
+                            	?>
+                            	Accueil</a>
+                            </li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"profil_vendeur_prive.php":(($typeConnected == 2)?"profil_client.php":"page_de_connexion.php")).'">';
+                            	?>
+                            	Mon compte</a>
+                            </li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"categories_vendeur.php":"categories_client.php").'">';
+                            	?>
+                            	Acheter</a>
+                            </li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"infos_vendeur.php":"infos_client.php").'">';
+                            	?>
+                            	Conditions d&#39;utilisation</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 col-sm-12 text-center">
+                        <h3>Partenaires</h3>
+                        <ul>
+                            <li><img src="Images/ECE.png"/></li><br>
+                            <li><img src="Images/ECE_Tech.png"/></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 col-sm-12 text-center">
+                          <h3>Nous contacter</h3>
+                         <ul>
+                            <li><a href="mailto:aurele.duparc@edu.ece.fr">aurele.duparc@edu.ece.fr</a><br></li>
+                            <li><a href="#">+33 1 23 45 67 89</a><br></li>
+                            <li><a href="#">37 Quai de Grenelle<br>
+                            Immeuble POLLUX<br>
+                            75015 Paris</a></li>
+                        </ul>
+                     </div>
+                </div>
+                <div class="footer-copyright text-center">Copyright &copy; 2020 <strong>Ebay ECE</strong></div>
+            </div>
+        </footer>
 	</body>
 
 	

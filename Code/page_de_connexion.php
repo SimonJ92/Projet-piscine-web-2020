@@ -16,8 +16,8 @@
 
     //Page
     $erreurIdentifiants = "";
-    if ($idConnected!=0) {
-        echo "erreur : vous êtes déjà connecté";
+    if ($typeConnected!=1) {
+        echo "erreur : vous êtes déjà connecté : ".$typeConnected;
     }
 
     $ecranConnexion = 0;
@@ -50,7 +50,6 @@
                     $_SESSION["typeConnected"] = 2;
                     $_SESSION["idConnected"] = $dataClient["IDAcheteur"];
                     header('Location: http://localhost/Projet-piscine-web-2020/Code/accueil_client.php');
-                    exit();
                 }
             }elseif ($ecranConnexion == 1) {    //tentative de connexion d'un vendeur
                 $sqlVendeur = "SELECT * from vendeur where Pseudo like '%$identifiantConnexion%' and AdresseMail like '%$passwordConnexion%'";
@@ -63,7 +62,6 @@
                     $_SESSION["typeConnected"] = 3;
                     $_SESSION["pseudoConnected"] = $dataVendeur["Pseudo"];
                     header('Location: http://localhost/Projet-piscine-web-2020/Code/accueil_vendeur.php');
-                    exit();
                 }
             }else{
                 echo "la variable 'ecranConnexion' est erronée";
@@ -107,7 +105,9 @@
                     <form action="" method="post" class="form-inline text-center">
                         <div class="col-12 text-right">
                                 <input type="submit" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">
-                                <input type="submit" name="toggleConnexion" value="Connexion" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">
+                                <?php 
+                                	echo '<input type="submit" name="toggleConnexion" value="'.(($typeConnected == 1)?"Connexion":"Déconnexion").'" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">';
+                                 ?>
                         </div>
                         <div class="col-12 text-center">
                             <a class="nav-link" href="#">
@@ -174,7 +174,7 @@
             </div>
 
 
-            <div style="padding: 60px;"></div>  <!-- Cette div sert à quelquechose ? -->
+            <div style="padding: 60px;"></div>
         </div>
 
 
@@ -188,13 +188,28 @@
                         <ul>
                             <li>
                             	<?php 
-                            		echo '<a href="'.($typeConnected == 3).'">'; 
+                            		echo '<a href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'">';
                             	?>
                             	Accueil</a>
                             </li>
-                            <li><a href="#">Mon compte</a></li>
-                            <li><a href="#">Acheter</a></li>
-                            <li><a href="#">Conditions d&#39;utilisation</a></li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"profil_vendeur_prive.php":(($typeConnected == 2)?"profil_client.php":"page_de_connexion.php")).'">';
+                            	?>
+                            	Mon compte</a>
+                            </li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"categories_vendeur.php":"categories_client.php").'">';
+                            	?>
+                            	Acheter</a>
+                            </li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.(($typeConnected == 3)?"infos_vendeur.php":"infos_client.php").'">';
+                            	?>
+                            	Conditions d&#39;utilisation</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="col-md-4 col-sm-12 text-center">
