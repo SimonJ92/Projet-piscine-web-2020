@@ -1,11 +1,9 @@
 <?php 
-    //En tête
+	//En tête
     session_start();
 
     $db_handle = mysqli_connect('localhost', 'root', ''); 
     $db_found = mysqli_select_db($db_handle, "ebay_ece");
-
-    
 
     $typeConnected=(isset($_SESSION['typeConnected']))?(int) $_SESSION['typeConnected']:1;
     //visiteur : 1
@@ -52,6 +50,7 @@
                     $_SESSION["typeConnected"] = 2;
                     $_SESSION["idConnected"] = $dataClient["IDAcheteur"];
                     header('Location: http://localhost/Projet-piscine-web-2020/Code/accueil_client.php');
+                    exit();
                 }
             }elseif ($ecranConnexion == 1) {    //tentative de connexion d'un vendeur
                 $sqlVendeur = "SELECT * from vendeur where Pseudo like '%$identifiantConnexion%' and AdresseMail like '%$passwordConnexion%'";
@@ -60,7 +59,11 @@
                     $erreurIdentifiants = "L'identifant ou le mot de passe est erroné";
                 }elseif(mysqli_num_rows($resultConnexionVendeur) == 1){
                     $erreurIdentifiants = "";
-                    $dataVendeur = 
+                    $dataVendeur = mysqli_fetch_assoc($resultConnexionVendeur);
+                    $_SESSION["typeConnected"] = 3;
+                    $_SESSION["pseudoConnected"] = $dataVendeur["Pseudo"];
+                    header('Location: http://localhost/Projet-piscine-web-2020/Code/accueil_vendeur.php');
+                    exit();
                 }
             }else{
                 echo "la variable 'ecranConnexion' est erronée";
@@ -183,7 +186,12 @@
                     <div class="col-md-4 col-sm-12 text-center">
                         <h3>Page</h3>
                         <ul>
-                            <li><a href="#">Accueil</a></li>
+                            <li>
+                            	<?php 
+                            		echo '<a href="'.($typeConnected == 3).'">'; 
+                            	?>
+                            	Accueil</a>
+                            </li>
                             <li><a href="#">Mon compte</a></li>
                             <li><a href="#">Acheter</a></li>
                             <li><a href="#">Conditions d&#39;utilisation</a></li>
