@@ -16,12 +16,13 @@
 	
 	//identifier le nom de base de données 
     $database = "ebay-ece"; 
-	$Noms = array();
-	$Photos = array();
-	$MethodeVentes = array();
-	$PrixDirects = array();
-	$Descriptions = array();
-	$Categories = array();
+	$Noms = "";
+	$Photos = "";
+	$MethodeVentes = "";
+	$PrixDirects = "";
+	$Descriptions = "";
+	$Categories = "";
+	$compteur = 0;
 
     //connectez-vous dans votre BDD 
     //Rappel : votre serveur = localhost | votre login = root | votre mot de pass = '' (rien) 
@@ -33,12 +34,25 @@
         $sql = "SELECT * FROM produit";
         $result = mysqli_query($db_handle, $sql); 
         while ($data = mysqli_fetch_assoc($result)) {
-			array_push ($Noms, $data['Nom']);
-			array_push ($Photos, $data['Photo1']);
-			array_push ($MethodeVentes, $data['MethodeVente']);
-			array_push ($PrixDirects, $data['PrixDirect']);
-			array_push ($Descriptions, $data['DescriptionLongue1']);
-			array_push ($Categories, $data['Categorie']);
+			$Noms .= $data['Nom'];
+			$Noms .= "%marrq%";
+			
+			$Photos .= $data['Photo1'];
+			$Photos .= "%marrq%";
+			
+			$MethodeVentes .= $data['MethodeVente'];
+			$MethodeVentes .= "%marrq%";
+			
+			$PrixDirects .= $data['PrixDirect'];
+			$PrixDirects .= "%marrq%";
+			
+			$Descriptions .= $data['DescriptionCourte'];
+			$Descriptions .= "%marrq%";
+			
+			$Categories .= $data['Categorie'];
+			$Categories .= "%marrq%";
+			
+			$compteur = $compteur + 1;
         }   //end while 
     }   //end if 
     else  //si le BDD n'existe pas 
@@ -46,7 +60,10 @@
         echo "Database not found"; 
 	}  
     //fermer la connection 
-    mysqli_close($db_handle); 
+    mysqli_close($db_handle);
+	
+	//echo $Photos;
+	
 ?>
 
 <!DOCTYPE html>
@@ -148,36 +165,7 @@
 		</div>
 		
 		
-		<div  id="galerie_mes_produit">
-			<div  id="objet" class = "objet">
-				<form>
-					<table>
-						<tr>
-							<td>
-								<img class="image" src="Images/Images-produits/costume_original_Darth_Vador.png">
-							</td>
-							<td>
-								<h4>
-									<?php echo $Noms[4] ?>
-								</h4>
-								<div class="description_objet">
-									<p> <?php echo $Descriptions[4] ?>  <p>
-								</div>
-								<p> Categorie: <?php echo $Categories[4] ?> </p>
-							</td>
-							<td>
-								<h5> methode de vente: </h5>
-								<h5><?php echo $PrixDirects[4] ?> € </h5>
-								<input type="button" id="achat_imediat" value="acheter maintenant">
-								<h5>ou </h5>
-								<p href="#encheres" id="encheres"> participer aux encheres </p>
-								<p href="#negociations" id="meilleur_offre"> debuter un negociation avec le vendeur </p>
-							</td>
-						</tr>						
-					</table>
-				</form>
-			</div >			
-		</div>
+		<div  id="galerie_mes_produit">	</div>
 		<button id="ajoute_produit" onclick="ouvre_form()"> ajouter un produit a la vente </button>
 		
 		<div class="pop_up" id="info_produit" >
@@ -241,87 +229,114 @@
 		</footer>
 		
 		<script> 
+			
+			var Noms = "<?php echo $Noms ?>";
+			var Photos = "<?php echo $Photos ?>";
+			var MethodeVentes = "<?php echo $MethodeVentes ?>";
+			var PrixDirects = "<?php echo $PrixDirects ?>";
+			//var Descriptions = "<?php echo $Descriptions ?>";
+			var Categories = "<?php echo $Categories ?>";
+			var nbProduit = "<?php echo $compteur ?>";
+			
+			var n = 0;
+			
 			var compteur = 0;
 			
-			for(compteur = 0; compteur < 2; ++compteur)
+			for(compteur = 0; compteur < nbProduit; ++compteur)
 			{
-				var objet = document.createElement("div"); // Création d'un élément li
-				objet.id = "objet" + compteur;//+ compteur; // Définition de son identifiant
+				var objet = document.createElement("div");
+				objet.id = "objet" + compteur;
 				objet.className = "objet";
 				document.getElementById("galerie_mes_produit").appendChild(objet);
 				
-				var form = document.createElement("form"); // Création d'un élément li
-				form.id = "form" + compteur; // Définition de son identifiant
+				var form = document.createElement("form"); 
+				form.id = "form" + compteur; 
 				document.getElementById("objet" + compteur).appendChild(form);
 				
-				var table = document.createElement("table"); // Création d'un élément li
-				table.id = "table" + compteur; // Définition de son identifiant
+				var table = document.createElement("table"); 
+				table.id = "table" + compteur; 
 				document.getElementById("form" + compteur).appendChild(table);
 				
-				var tr = document.createElement("tr"); // Création d'un élément li
-				tr.id = "tr" + compteur; // Définition de son identifiant
+				var tr = document.createElement("tr"); 
+				tr.id = "tr" + compteur; 
 				document.getElementById("table" + compteur).appendChild(tr);
 				
-				var td_1 = document.createElement("td"); // Création d'un élément li
-				td_1.id = "td_1" + compteur; // Définition de son identifiant
+				var td_1 = document.createElement("td"); 
+				td_1.id = "td_1" + compteur; 
 				document.getElementById("tr" + compteur).appendChild(td_1);
 				
-				var img = document.createElement("img"); // Création d'un élément li
+				var img = document.createElement("img"); 
+				
 				img.className = "image";
-				var str = "<?php echo $Photos[4] ?>".replace("4", "2");
-				//str = str.replace("", compteur);
-				img.src = str;
-				alert(str);
-				//alert(img.src);
+				n = Photos.search("%marrq%");
+				var adresseImage = Photos.slice(0, n);
+				img.src = adresseImage;
+				Photos = Photos.replace(adresseImage + "%marrq%", "");
 				document.getElementById("td_1" + compteur).appendChild(img);
 				
-				/*var td_2 = document.createElement("td"); // Création d'un élément li
-				td_2.id = "td_2" + compteur; // Définition de son identifiant
+				var td_2 = document.createElement("td"); 
+				td_2.id = "td_2" + compteur; 
 				document.getElementById("tr" + compteur).appendChild(td_2);
 				
-				var h4 = document.createElement("h4"); // Création d'un élément li
-				h4.textContent = "<?php echo $Noms[" + compteur + "] ?>"; // Définition de son identifiant
+				var h4 = document.createElement("h4"); 
+				n = Noms.search("%marrq%");
+				var Nom_objet = Noms.slice(0, n);
+				h4.textContent = Nom_objet;
+				Noms = Noms.replace(Nom_objet + "%marrq%", "");
 				document.getElementById("td_2" + compteur).appendChild(h4);		
 
-				var description = document.createElement("div"); // Création d'un élément li
-				description.id = "description" + compteur; // Définition de son identifiant
+				var description = document.createElement("div"); 
+				description.id = "description" + compteur; 
 				description.className = "description_objet";
 				document.getElementById("td_2" + compteur).appendChild(description);
 				
-				var p_1 = document.createElement("p"); // Création d'un élément li
-				p_1.textContent = "<?php echo $Descriptions[" + compteur + "] ?>";
-				document.getElementById("description" + compteur).appendChild(p_1);
+				/*var p_1 = document.createElement("p"); 
+				n = Descriptions.search("%marrq%");
+				var Description_objet = Descriptions.slice(0, n);
+				p_1.textContent = Description_objet;
+				Descriptions = Descriptions.replace(Description_objet + "%marrq%", "");
+				document.getElementById("description" + compteur).appendChild(p_1);*/
 				
-				var p_2 = document.createElement("p"); // Création d'un élément li
-				p_2.textContent = "Categorie: <?php echo $Categories[" + compteur + "] ?>";
+				var p_2 = document.createElement("p"); 
+				n = Categories.search("%marrq%");
+				var Categories_objet = Categories.slice(0, n);
+				p_2.textContent = "Categorie:" + Categories_objet;
+				Categories = Categories.replace(Categories_objet + "%marrq%", "");
 				document.getElementById("td_2" + compteur).appendChild(p_2);
 				
-				var td_3 = document.createElement("td"); // Création d'un élément li
-				td_3.id = "td_3" + compteur; // Définition de son identifiant
+				var td_3 = document.createElement("td"); 
+				td_3.id = "td_3" + compteur; 
 				document.getElementById("tr" + compteur).appendChild(td_3);
 				
-				var h5_1 = document.createElement("h5"); // Création d'un élément li
-				h5_1.textContent = "methode de vente:"; // Définition de son identifiant
+				var h5_1 = document.createElement("h5"); 
+				h5_1.textContent = "methode de vente:"; 
 				document.getElementById("td_3" + compteur).appendChild(h5_1);
 				
-				var h5_2 = document.createElement("h5"); // Création d'un élément li
-				h5_2.textContent = "<?php echo $PrixDirects[" + compteur + "] ?> €"; // Définition de son identifiant
+				var h5_2 = document.createElement("h5"); 
+				n = PrixDirects.search("%marrq%");
+				var PrixDirects_objet = PrixDirects.slice(0, n);
+				p_2.textContent = PrixDirects_objet + " €";
+				PrixDirects = PrixDirects.replace(PrixDirects_objet + "%marrq%", "");
 				document.getElementById("td_3" + compteur).appendChild(h5_2);
 				
-				var input = document.createElement("input"); // Création d'un élément li
-				input.id = "achat_imediat" + compteur; // Définition de son identifiant
+				var input = document.createElement("input"); 
+				input.id = "achat_imediat" + compteur; 
 				input.className = "achat_imediat";
 				input.type="button";
 				input.value="acheter maintenant";
 				document.getElementById("td_3" + compteur).appendChild(input);
 				
-				var h5_3 = document.createElement("h5"); // Création d'un élément li
-				h5_3.textContent = "OU"; // Définition de son identifiant
+				var h5_3 = document.createElement("h5"); 
+				h5_3.textContent = "OU"; 
 				document.getElementById("td_3" + compteur).appendChild(h5_3);
 				
-				var p_3 = document.createElement("p"); // Création d'un élément li
+				var p_3 = document.createElement("p"); 
+				n = MethodeVentes.search("%marrq%");
+				var MethodeVentes_objet = MethodeVentes.slice(0, n);
+				MethodeVentes = MethodeVentes.replace(MethodeVentes_objet + "%marrq%", "");
 				
-				if("Encheres" == <?php echo $MethodeVentes[4] ?>)
+				
+				if("Encheres" == MethodeVentes_objet)
 				{
 					p_3.textContent = "participer aux encheres";
 					p_3.href = "#encheres";
@@ -333,15 +348,10 @@
 				}
 				
 				p_3.className = "lien_methode_vente";
-				document.getElementById("td_3" + compteur).appendChild(p_3);*/
+				document.getElementById("td_3" + compteur).appendChild(p_3);
 			}
 		</script>
 	</body>
 	
 	
 </html>
- 
-<?php
-	//fermer la connection 
-    mysqli_close($db_handle); 
-?>
