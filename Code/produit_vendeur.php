@@ -32,7 +32,7 @@
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		<link rel="stylesheet" href="Styles/produit_vendeur.css">
 		<script src="Scripts/produit_vendeur.js"></script>
-		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+		<!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">   faisait bugger la barre supérieure. La mise en commentaire ne semble pas changer la page ...-->
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 	</head>
@@ -122,13 +122,13 @@
 		
 		<div class="simili">
 			<h3>Autres produits du vendeur</h3>
-			<div class="row">
+			<div class="row" align="center">
 				<div class="col-4">
 					<div id="carrousel">
 					<ul>
-						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
-						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
-						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
+						<li><img src="Images/imageFeraille.png" style="max-width: 200px;max-height: 200px;"/></li>
+						<li><img src="Images/imageVIP.png" style="max-width: 200px;max-height: 200px;"/></li>
+						<li><img src="Images/imageMusee.png" style="max-width: 200px;max-height: 200px;"/></li>
 					</ul>
 					<br>
 					</div>
@@ -136,9 +136,9 @@
 				<div class="col-4">
 					<div id="carrousel2">
 					<ul>
-						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
-						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
-						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
+						<li><img src="Images/imageMusee.png" style="max-width: 200px;max-height: 200px;"/></li>
+						<li><img src="Images/imageFeraille.png" style="max-width: 200px;max-height: 200px;"/></li>
+						<li><img src="Images/imageVIP.png" style="max-width: 200px;max-height: 200px;"/></li>
 					</ul>
 					<br>
 					</div>
@@ -146,9 +146,9 @@
 				<div class="col-4">
 					<div id="carrousel3">
 					<ul>
-						<li><img src="Images/imageVIP.png" width="200" height="200" /></li>
-						<li><img src="Images/imageMusee.png" width="200" height="200" /></li>
-						<li><img src="Images/imageFeraille.png" width="200" height="200" /></li>
+						<li><img src="Images/imageVIP.png" style="max-width: 200px;max-height: 200px;"/></li>
+						<li><img src="Images/imageMusee.png" style="max-width: 200px;max-height: 200px;"/></li>
+						<li><img src="Images/imageFeraille.png" style="max-width: 200px;max-height: 200px;"/></li>
 					</ul>
 					<br>
 					</div>

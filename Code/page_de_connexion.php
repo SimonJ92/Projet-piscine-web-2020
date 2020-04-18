@@ -15,6 +15,36 @@
     //pseudo si vendeur connecté
 
     //Page
+	if(isset($_POST["toggleConnexion"])){
+    	if($_POST["toggleConnexion"]){
+    		if($typeConnected == 1){
+    			header('Location: page_de_connexion.php');
+    		}
+    		if($typeConnected ==2 || $typeConnected == 3){
+    			$_SESSION['typeConnected'] = 1;
+    			$_SESSION['idConnected'] = 0;
+    			$_SESSION['pseudoConnected'] = '';
+    			header('Location: '.$_SERVER['REQUEST_URI']);
+    		}
+    	}
+    }
+
+	if(isset($_POST["boutonCompte"])){
+    	if($_POST["boutonCompte"]){
+    		if($typeConnected == 2){	//client connecté
+    			header('Location: profil_client.php');
+    			exit();
+    		}elseif ($typeConnected == 3){	//vendeur connecté
+    			header('Location: profil_vendeur_prive.php');
+    			exit();
+    		}
+    		else{
+    			echo "Erreur : type de connexion : $typeConnected";
+    		}
+    	}
+    }
+
+
     $erreurIdentifiants = "";
     if ($typeConnected!=1) {
         echo "erreur : vous êtes déjà connecté : ".$typeConnected;
@@ -49,7 +79,8 @@
                     $dataClient = mysqli_fetch_assoc($resultConnexionClient);
                     $_SESSION["typeConnected"] = 2;
                     $_SESSION["idConnected"] = $dataClient["IDAcheteur"];
-                    header('Location: http://localhost/Projet-piscine-web-2020/Code/accueil_client.php');
+                    header('Location: accueil_client.php');
+                    exit();
                 }
             }elseif ($ecranConnexion == 1) {    //tentative de connexion d'un vendeur
                 $sqlVendeur = "SELECT * from vendeur where Pseudo like '%$identifiantConnexion%' and AdresseMail like '%$passwordConnexion%'";
@@ -61,7 +92,8 @@
                     $dataVendeur = mysqli_fetch_assoc($resultConnexionVendeur);
                     $_SESSION["typeConnected"] = 3;
                     $_SESSION["pseudoConnected"] = $dataVendeur["Pseudo"];
-                    header('Location: http://localhost/Projet-piscine-web-2020/Code/accueil_vendeur.php');
+                    header('Location: accueil_vendeur.php');
+                    exit();
                 }
             }else{
                 echo "la variable 'ecranConnexion' est erronée";
@@ -86,7 +118,7 @@
         <link rel="stylesheet" href="Styles/MyFooter.css">
         <link rel="stylesheet" href="Styles/page_de_connection_css/Login-Form-Clean.css">
         <link rel="stylesheet" href="Styles/nav_bar.css">
-        <link rel="stylesheet" href="Styles/page_de_connection_css/styles.css">
+        <link rel="stylesheet" href="Styles/style.css">
     </head>
 
     <body>
@@ -104,7 +136,9 @@
                 <div class="row">
                     <form action="" method="post" class="form-inline text-center">
                         <div class="col-12 text-right">
-                                <input type="submit" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">
+                                <?php 
+                                	echo '<input type="'.(($typeConnected == 1)?"hidden":"submit").'" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">';
+                                 ?>
                                 <?php 
                                 	echo '<input type="submit" name="toggleConnexion" value="'.(($typeConnected == 1)?"Connexion":"Déconnexion").'" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">';
                                  ?>
@@ -123,9 +157,12 @@
         <div class="navbar sticky-top" role="sub" >
             <a href="#accueil">Accueil</a>
             <div class="subnav">
-                <button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
+                <input type="button" name="boutonCategories"class="subnavbtn" value='Catégories'>
                 <div class="subnav-content">
-                    <a href="#ferrailles">Ferrailles ou Trésors</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=1">'; 
+                    ?>
+                	Ferrailles ou Trésors</a>
                     <a href="#musee">Bon pour le Musée</a>
                     <a href="#vip">Accessoires VIP</a>  
                 </div>

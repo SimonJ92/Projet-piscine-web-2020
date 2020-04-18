@@ -15,7 +15,7 @@
     //id si client connecté
     $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
     //pseudo si vendeur connecté
-    echo "$idConnected";
+    echo "$typeConnected";
  ?>
 
 

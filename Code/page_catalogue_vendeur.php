@@ -13,12 +13,20 @@
     //id si client connecté
     $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
     //pseudo si vendeur connecté
- ?>
+
+    //page
+    $categorieProduit = isset($_GET['categorieProduit'])?$_GET['categorieProduit']:0; 
+    //0 - erreur
+    //1 - Ferraille et trésors
+    //2 - Bon pour le musée
+    //3 - Accesoires VIP
+
+?>
 
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Catalogue Ebay ECE</title>
+		<title>Catalogue</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
@@ -29,6 +37,7 @@
 		<link rel="stylesheet" href="Styles/style_catalogue.css">
 		<link rel="stylesheet" href="Styles/MyFooter.css">
 		<link rel="stylesheet" href="Styles/nav_bar.css">
+		<link rel="stylesheet" href="Styles/bootstrap.min.css">
 		
 		<script>
 			//fonction qui cache ou affiche l'option de trie pas date de fin d'enchere

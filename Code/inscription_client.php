@@ -51,6 +51,7 @@
 		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
 		<script src="Scripts/inscription_client.js"></script>
 		<link rel="stylesheet" type="text/css" href="Styles/inscription_client.css">
+		<link rel="stylesheet" href="Styles/bootstrap.min.css">
 	</head>
 
 	<body>
