@@ -13,6 +13,39 @@
     //id si client connecté
     $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
     //pseudo si vendeur connecté
+    
+	if(isset($_POST["toggleConnexion"])){
+    	if($_POST["toggleConnexion"]){
+    		if($typeConnected == 1){
+    			header('Location: page_de_connexion.php');
+    		}
+    		if($typeConnected ==2 || $typeConnected == 3){
+    			$_SESSION['typeConnected'] = 1;
+    			$_SESSION['idConnected'] = 0;
+    			$_SESSION['pseudoConnected'] = '';
+    			$_SESSION['boolAdmin'] = 0;
+    			header('Location: accueil_client.php');
+    		}
+    	}
+    }
+
+	if(isset($_POST["boutonCompte"])){
+    	if($_POST["boutonCompte"]){
+    		if($typeConnected == 2){	//client connecté
+    			header('Location: profil_client.php');
+    			exit();
+    		}elseif ($typeConnected == 3){	//vendeur connecté
+    			header('Location: profil_vendeur_prive.php');
+    			exit();
+    		}
+    		else{
+    			echo "Erreur : type de connexion : $typeConnected";
+    		}
+    	}
+    }
+
+
+	//Page
  ?>
 
 <!DOCTYPE html>
@@ -34,56 +67,73 @@
 	</head>
 
 	<body>	
-	<!-- 00 -->
-	<!-- TOP -->
-	<!-- 00 -->
-		
 		<nav class="navbar navbar-expand-md" role="main" >
-			<a class="navbar-brand" href="#" style="margin-right: 15%;">
-				<img src="Images/logo.png" alt="" style="max-width: 150px;">
-			</a>
-		 	<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse text-center" style="width: 50%;">
-				<h1 style="margin: 0 auto;">Bienvenue sur Ebay-ECE</h1>
-			</div>
-			<div class="collapse navbar-collapse" id="main-navigation" style="width: 25%">
-				<div class="row">
-					<form action="" method="post" class="form-inline text-center">
-						<div class="col-12 text-right">
-								<input type="submit" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">
-								<input type="submit" name="toggleConnexion" value="Connexion" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">
-						</div>
-						<div class="col-12 text-center">
-							<a class="nav-link" href="#">
-								<img style="max-width:100px;" src="Images/paniers.png" alt="">
-							</a>
-						</div>
-					</form>
-				</div>
+            <?php echo '<a class="navbar-brand" href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'" style="margin-right: 15%;">'; ?>
+                <img src="Images/logo.png" alt="" style="max-width: 150px;">
+            </a>
+            <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse text-center" style="width: 50%;">
+                <h1 style="margin: 0 auto;">Bienvenue sur Ebay-ECE</h1>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navigation" style="width: 25%">
+                <div class="row">
+                    <form action="" method="post" class="form-inline text-center">
+                        <div class="col-12 text-right">
+                                <?php 
+                                	echo '<input type="'.(($typeConnected == 1)?"hidden":"submit").'" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">';
+                                 ?>
+                                <?php 
+                                	echo '<input type="submit" name="toggleConnexion" value="'.(($typeConnected == 1)?"Connexion":"Déconnexion").'" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">';
+                                 ?>
+                        </div>
+                        <div class="col-12 text-center">
+                            <a class="nav-link" href="panier.php">
+                                <img style="max-width:100px;" src="Images/paniers.png">
+                            </a>
+                        </div>
+                    </form>
+                </div>
 
-			</div>
-		</nav>
+            </div>
+        </nav>
 
-		<div class="navbar sticky-top" role="sub" >
-			<a href="#accueil">Accueil</a>
-			<div class="subnav">
-				<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
-				<div class="subnav-content">
-					<a href="#ferrailles">Ferrailles ou Trésors</a>
-					<a href="#musee">Bon pour le Musée</a>
-					<a href="#vip">Accessoires VIP</a>	
-				</div>
-			</div>
-			<div class="subnav">
-				<button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
-				<div class="subnav-content">
-					<a href="#encheres">Enchères</a>
-					<a href="#negociations">Négociations</a>
-				</div>
-			</div> 				
-		</div>
+        <div class="navbar sticky-top" role="sub" >
+            <?php echo '<a href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'">Accueil</a>'; ?>
+            <div class="subnav">
+                <?php 
+					echo '<input type="button" name="boutonCategories" onclick="location.href='.(($typeConnected == 3)?'\'categories_vendeur.php\'':'\'categories_client.php\'').';" class="subnavbtn" value="Catégories">';
+                ?>
+                <div class="subnav-content">
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=1">'; 
+                    ?>
+                	Ferrailles ou Trésors</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=2">'; 
+                    ?>
+                	Bon pour le Musée</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=3">'; 
+                    ?>
+                	Accessoires VIP</a>  
+                </div>
+            </div>
+            <div class="subnav">
+                <button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
+                <div class="subnav-content">
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"enchere_vendeur.php":"enchere_client.php").'">';
+                    ?>
+                	Enchères</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"negoce_vendeur.php":"negoce_client.php").'">'; 
+                    ?>
+                	Négociations</a>
+                </div>
+            </div>              
+        </div>
 	
 		<div class="container-fluid">
 			<div class="row" id="contenu">
@@ -160,11 +210,6 @@
 				</div>
 			</div>
 		</div>
-
-	
-	<!-- 00 -->
-	<!-- FOOTER -->
-	<!-- 00 -->
 
     	<footer class="page-footer">
             <div class="container">

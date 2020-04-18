@@ -13,8 +13,7 @@
     //id si client connecté
     $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
     //pseudo si vendeur connecté
-
-    //Page
+    
 	if(isset($_POST["toggleConnexion"])){
     	if($_POST["toggleConnexion"]){
     		if($typeConnected == 1){
@@ -24,7 +23,8 @@
     			$_SESSION['typeConnected'] = 1;
     			$_SESSION['idConnected'] = 0;
     			$_SESSION['pseudoConnected'] = '';
-    			header('Location: '.$_SERVER['REQUEST_URI']);
+    			$_SESSION['boolAdmin'] = 0;
+    			header('Location: accueil_client.php');
     		}
     	}
     }
@@ -45,6 +45,7 @@
     }
 
 
+	//Page
     $erreurIdentifiants = "";
     if ($typeConnected!=1) {
         echo "erreur : vous êtes déjà connecté : ".$typeConnected;
@@ -79,6 +80,7 @@
                     $dataClient = mysqli_fetch_assoc($resultConnexionClient);
                     $_SESSION["typeConnected"] = 2;
                     $_SESSION["idConnected"] = $dataClient["IDAcheteur"];
+                    $_SESSION["boolAdmin"] = 0;
                     header('Location: accueil_client.php');
                     exit();
                 }
@@ -92,6 +94,7 @@
                     $dataVendeur = mysqli_fetch_assoc($resultConnexionVendeur);
                     $_SESSION["typeConnected"] = 3;
                     $_SESSION["pseudoConnected"] = $dataVendeur["Pseudo"];
+                    $_SESSION['boolAdmin'] = isset($dataVendeur["Admin"])?$dataVendeur["Admin"]:0;
                     header('Location: accueil_vendeur.php');
                     exit();
                 }
@@ -123,7 +126,7 @@
 
     <body>
     	<nav class="navbar navbar-expand-md" role="main" >
-            <a class="navbar-brand" href="#" style="margin-right: 15%;">
+            <?php echo '<a class="navbar-brand" href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'" style="margin-right: 15%;">'; ?>
                 <img src="Images/logo.png" alt="" style="max-width: 150px;">
             </a>
             <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
@@ -144,8 +147,8 @@
                                  ?>
                         </div>
                         <div class="col-12 text-center">
-                            <a class="nav-link" href="#">
-                                <img style="max-width:100px;" src="Images/paniers.png" alt="">
+                            <a class="nav-link" href="panier.php">
+                                <img style="max-width:100px;" src="Images/paniers.png">
                             </a>
                         </div>
                     </form>
@@ -155,28 +158,40 @@
         </nav>
 
         <div class="navbar sticky-top" role="sub" >
-            <a href="#accueil">Accueil</a>
+            <?php echo '<a href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'">Accueil</a>'; ?>
             <div class="subnav">
-                <input type="button" name="boutonCategories"class="subnavbtn" value='Catégories'>
+                <?php 
+					echo '<input type="button" name="boutonCategories" onclick="location.href='.(($typeConnected == 3)?'\'categories_vendeur.php\'':'\'categories_client.php\'').';" class="subnavbtn" value="Catégories">';
+                ?>
                 <div class="subnav-content">
                     <?php 
                     	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=1">'; 
                     ?>
                 	Ferrailles ou Trésors</a>
-                    <a href="#musee">Bon pour le Musée</a>
-                    <a href="#vip">Accessoires VIP</a>  
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=2">'; 
+                    ?>
+                	Bon pour le Musée</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=3">'; 
+                    ?>
+                	Accessoires VIP</a>  
                 </div>
             </div>
             <div class="subnav">
                 <button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
                 <div class="subnav-content">
-                    <a href="#encheres">Enchères</a>
-                    <a href="#negociations">Négociations</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"enchere_vendeur.php":"enchere_client.php").'">';
+                    ?>
+                	Enchères</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"negoce_vendeur.php":"negoce_client.php").'">'; 
+                    ?>
+                	Négociations</a>
                 </div>
             </div>              
         </div>
-
-
     	
     	<div class="login-clean" style="padding: 0px;">
             <!--<div style="height: 3px;background-color: #369fe0;"></div>      Cette barre n'est pas sur les autres pages, donc soit on la retire, soit on l'ajoute partout-->
@@ -213,9 +228,6 @@
 
             <div style="padding: 60px;"></div>
         </div>
-
-
-
 
         <footer class="page-footer">
             <div class="container">

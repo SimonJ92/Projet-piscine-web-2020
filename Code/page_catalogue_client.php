@@ -13,8 +13,39 @@
     //id si client connecté
     $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
     //pseudo si vendeur connecté
+    
+	if(isset($_POST["toggleConnexion"])){
+    	if($_POST["toggleConnexion"]){
+    		if($typeConnected == 1){
+    			header('Location: page_de_connexion.php');
+    		}
+    		if($typeConnected ==2 || $typeConnected == 3){
+    			$_SESSION['typeConnected'] = 1;
+    			$_SESSION['idConnected'] = 0;
+    			$_SESSION['pseudoConnected'] = '';
+    			$_SESSION['boolAdmin'] = 0;
+    			header('Location: accueil_client.php');
+    		}
+    	}
+    }
 
-    //page
+	if(isset($_POST["boutonCompte"])){
+    	if($_POST["boutonCompte"]){
+    		if($typeConnected == 2){	//client connecté
+    			header('Location: profil_client.php');
+    			exit();
+    		}elseif ($typeConnected == 3){	//vendeur connecté
+    			header('Location: profil_vendeur_prive.php');
+    			exit();
+    		}
+    		else{
+    			echo "Erreur : type de connexion : $typeConnected";
+    		}
+    	}
+    }
+
+
+	//Page
     $categorieProduit = isset($_GET['categorieProduit'])?$_GET['categorieProduit']:0; 
     //0 - erreur
     //1 - Ferraille et trésors
@@ -83,142 +114,159 @@
 		 </script> 
 	</head>
 
-	<body>	
-	<!-- 00 -->
-	<!-- TOP -->
-	<!-- 00 -->
-		
+	<body>
 		<nav class="navbar navbar-expand-md" role="main" >
-			<a class="navbar-brand" href="#" style="margin-right: 15%;">
-				<img src="Images/logo.png" alt="" style="max-width: 150px;">
-			</a>
-		 	<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse text-center" style="width: 50%;">
-				<h1 style="margin: 0 auto;">Bienvenue sur Ebay-ECE</h1>
-			</div>
-			<div class="collapse navbar-collapse" id="main-navigation" style="width: 25%">
-				<div class="row">
-					<form action="" method="post" class="form-inline text-center">
-						<div class="col-12 text-right">
-								<input type="submit" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">
-								<input type="submit" name="toggleConnexion" value="Connexion" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">
-						</div>
-						<div class="col-12 text-center">
-							<a class="nav-link" href="#">
-								<img style="max-width:100px;" src="Images/paniers.png" alt="">
-							</a>
-						</div>
-					</form>
-				</div>
+            <?php echo '<a class="navbar-brand" href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'" style="margin-right: 15%;">'; ?>
+                <img src="Images/logo.png" alt="" style="max-width: 150px;">
+            </a>
+            <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse text-center" style="width: 50%;">
+                <h1 style="margin: 0 auto;">Bienvenue sur Ebay-ECE</h1>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navigation" style="width: 25%">
+                <div class="row">
+                    <form action="" method="post" class="form-inline text-center">
+                        <div class="col-12 text-right">
+                                <?php 
+                                	echo '<input type="'.(($typeConnected == 1)?"hidden":"submit").'" name="boutonCompte" value="Mon compte" class="btn btn-default" style="font-size: 1.5em;display:inline-block; margin-right: 10px;">';
+                                 ?>
+                                <?php 
+                                	echo '<input type="submit" name="toggleConnexion" value="'.(($typeConnected == 1)?"Connexion":"Déconnexion").'" class="btn btn-danger" style="border: 1.5px solid black;display:inline-block;">';
+                                 ?>
+                        </div>
+                        <div class="col-12 text-center">
+                            <a class="nav-link" href="panier.php">
+                                <img style="max-width:100px;" src="Images/paniers.png">
+                            </a>
+                        </div>
+                    </form>
+                </div>
 
-			</div>
-		</nav>
+            </div>
+        </nav>
 
-		<div class="navbar sticky-top" role="sub" >
-			<a href="#accueil">Accueil</a>
-			<div class="subnav">
-				<button class="subnavbtn">Catégories<i class="fa fa-caret-down"></i></button>
-				<div class="subnav-content">
-					<a href="#ferrailles">Ferrailles ou Trésors</a>
-					<a href="#musee">Bon pour le Musée</a>
-					<a href="#vip">Accessoires VIP</a>	
-				</div>
-			</div>
-			<div class="subnav">
-				<button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
-				<div class="subnav-content">
-					<a href="#encheres">Enchères</a>
-					<a href="#negociations">Négociations</a>
-				</div>
-			</div> 				
-		</div>
+        <div class="navbar sticky-top" role="sub" >
+            <?php echo '<a href="'.(($typeConnected == 3)?"accueil_vendeur.php":"accueil_client.php").'">Accueil</a>'; ?>
+            <div class="subnav">
+                <?php 
+					echo '<input type="button" name="boutonCategories" onclick="location.href='.(($typeConnected == 3)?'\'categories_vendeur.php\'':'\'categories_client.php\'').';" class="subnavbtn" value="Catégories">';
+                ?>
+                <div class="subnav-content">
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=1">'; 
+                    ?>
+                	Ferrailles ou Trésors</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=2">'; 
+                    ?>
+                	Bon pour le Musée</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"page_catalogue_vendeur.php":"page_catalogue_client.php").'?categorieProduit=3">'; 
+                    ?>
+                	Accessoires VIP</a>  
+                </div>
+            </div>
+            <div class="subnav">
+                <button class="subnavbtn">Achats<i class="fa fa-caret-down"></i></button>
+                <div class="subnav-content">
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"enchere_vendeur.php":"enchere_client.php").'">';
+                    ?>
+                	Enchères</a>
+                    <?php 
+                    	echo '<a href="'.(($typeConnected == 3)?"negoce_vendeur.php":"negoce_client.php").'">'; 
+                    ?>
+                	Négociations</a>
+                </div>
+            </div>              
+        </div>
 	
 	<!-- 00 -->
 	<!-- DIV -->
 	<!-- 00 -->
 	
-	<div class="page">
-		<form>
-			<table>
-				<tr>
-					<td>
-						<div class="recherche">
-							<h3> Filtre </h3>
-							<div class="filtre">
-								<p> chercher un objet par son nom :</p> 
-								<p> <input type="text" id="nom_objet"> </p>
+		<div class="page">
+			<form>
+				<table>
+					<tr>
+						<td>
+							<div class="recherche">
+								<h3> Filtre </h3>
+								<div class="filtre">
+									<p> chercher un objet par son nom :</p> 
+									<p> <input type="text" id="nom_objet"> </p>
+								</div>
+								<div class="filtre">
+									<p> chercher un objet par son vendeur : </p>
+									<p> <input type="text" id="nom_vendeur"> </p>
+								</div>
+								
+								<div class="filtre">
+									<p> ne garder que les objet entre </p>
+									<p><input style="width: 50px;" type="int" id="prix_min"> € et <input style="width: 50px;" type="int" id="prix_max">€ </p>
+								</div>
+								<div class="filtre">
+									<p> filtrer par par type de vente proposée </p>
+									<p> <select id="type_vente" size=1>
+											<option id="options_type_vente">toute</option>
+											<option id="options_type_vente">meilleur offre</option>
+											<option id="options_type_vente">vente aux encheres</option>
+										</select> </p>
+								</div>
+								<div class="filtre">
+									<p> trier par </p>
+									<p> <select id="type_trie" size=1>
+											<option>ordre alphabetique</option>
+											<option>prix d'achat direct croissant</option>
+											<option>prix d'achat direct decroissant</option>
+											<option id="trie_encheres">date de fin d'encheres</option>
+										</select> </p>
+								</div>
+								<input type="button" id="valider" value="valider la recherche">
 							</div>
-							<div class="filtre">
-								<p> chercher un objet par son vendeur : </p>
-								<p> <input type="text" id="nom_vendeur"> </p>
+						</td>
+						<td>
+							<div class="titre">
+								<h1> Catalogue :  </h1>
 							</div>
-							
-							<div class="filtre">
-								<p> ne garder que les objet entre </p>
-								<p><input style="width: 50px;" type="int" id="prix_min"> € et <input style="width: 50px;" type="int" id="prix_max">€ </p>
-							</div>
-							<div class="filtre">
-								<p> filtrer par par type de vente proposée </p>
-								<p> <select id="type_vente" size=1>
-										<option id="options_type_vente">toute</option>
-										<option id="options_type_vente">meilleur offre</option>
-										<option id="options_type_vente">vente aux encheres</option>
-									</select> </p>
-							</div>
-							<div class="filtre">
-								<p> trier par </p>
-								<p> <select id="type_trie" size=1>
-										<option>ordre alphabetique</option>
-										<option>prix d'achat direct croissant</option>
-										<option>prix d'achat direct decroissant</option>
-										<option id="trie_encheres">date de fin d'encheres</option>
-									</select> </p>
-							</div>
-							<input type="button" id="valider" value="valider la recherche">
-						</div>
-					</td>
-					<td>
-						<div class="titre">
-							<h1> Catalogue :  </h1>
-						</div>
-						<div class="galerie">
-							<div class="objet">
-								<form>
-									<table>
+							<div class="galerie">
+								<div class="objet">
+									<form>
+										<table>
 
-										<tr>
-											<td>
-												<img class="image" src="Images/Hiroshige_nuit_de_neige_à_Kambara.png">
-											</td>
-											<td>
-												<h4>Nuit de neige à Kambara</h4>
-												<div class="description_objet">
-													<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis.  <p>
-												</div>
-												<p> objet mit en vente par: </p>
-											</td>
-											<td>
-												<h5> methode de vente: </h5>
-												<h5>199.99€ </h5>
-												<input type="button" id="achat_imediat" value="acheter maintenant">
-												<h5>ou </h5>
-												<p href="#encheres" id="encheres"> participer aux ensheres </p>
-												<p href="#negociations" id="meilleur_offre"> debuter un negociation avec le vendeur </p>
-											</td>
-										</tr>
+											<tr>
+												<td>
+													<img class="image" src="Images/Hiroshige_nuit_de_neige_à_Kambara.png">
+												</td>
+												<td>
+													<h4>Nuit de neige à Kambara</h4>
+													<div class="description_objet">
+														<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis.  <p>
+													</div>
+													<p> objet mit en vente par: </p>
+												</td>
+												<td>
+													<h5> methode de vente: </h5>
+													<h5>199.99€ </h5>
+													<input type="button" id="achat_imediat" value="acheter maintenant">
+													<h5>ou </h5>
+													<p href="#encheres" id="encheres"> participer aux ensheres </p>
+													<p href="#negociations" id="meilleur_offre"> debuter un negociation avec le vendeur </p>
+												</td>
+											</tr>
 
-									</table>
-								</form>
+										</table>
+									</form>
+								</div>
 							</div>
-						</div>
-					</td>
-				</tr>						
-			</table>
-		</form>
-	
-	</div>
+						</td>
+					</tr>						
+				</table>
+			</form>
+		
+		</div>
 	
 	<!-- 00 -->
 	<!-- FOOTER -->
