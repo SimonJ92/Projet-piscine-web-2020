@@ -6,6 +6,8 @@
 	if (isset($_POST["boutonCreation"])) {
 		if($_POST["boutonCreation"] && $db_found){
 			
+			//Information Générales Clients
+			
 			$creationPrenom = isset($_POST["creationPrenom"])? $_POST["creationPrenom"]:"";
 			$creationNom = isset($_POST["creationNom"])? $_POST["creationNom"]:"";
 			$creationMail = isset($_POST["creationMail"])? $_POST["creationMail"]:"";
@@ -18,7 +20,15 @@
 			$creationPhone = isset($_POST["creationPhone"])? $_POST["creationPhone"]:"";
 			$creationNumber = isset($_POST["creationNumber"])? $_POST["creationNumber"]:"";
 			
-			if($creationPrenom=="" || $creationNom=="" || $creationMail=="" || $creationMdp=="" || $creationAdresse1=="" || $creationVille=="" || $creationZip=="" || $creationPays=="" || $creationPhone=="" || $creationNumber=="") {
+			//Informations Bancaires
+			
+			$creationTitulaire = isset($_POST["creationTitulaire"])? $_POST["creationTitulaire"]:"";
+			$creationTypeCarte = isset($_POST["creationradio"])? $_POST["creationradio"]:"";
+			$creationME = isset($_POST["creationME"])? $_POST["creationME"]:"";
+			$creationAE = isset($_POST["creationAE"])? $_POST["creationAE"]:"";
+			$creationSecurite = isset($_POST["creationSecurite"])? $_POST["creationSecurite"]:"";
+			
+			if($creationPrenom=="" || $creationNom=="" || $creationMail=="" || $creationMdp=="" || $creationAdresse1=="" || $creationVille=="" || $creationZip=="" || $creationPays=="" || $creationPhone=="" || $creationNumber=="" || $creationTitulaire=="" || $creationTypeCarte=="" || $creationME=="" || $creationAE=="" || $creationSecurite=="") {
 				$erreurCreation= "Tous les champs doivent être remplis";
 			}else{
 				$sqlTestCreation = "SELECT * FROM acheteur WHERE AdresseMail like '%$creationMail%'";
@@ -26,10 +36,14 @@
 				if(mysqli_num_rows($resultTestCreation) != 0){
 					$erreurCreation = "Cette email est déjà utilisé";
 				}else{
-					$sqlCreation = "INSERT INTO acheteur (Prenom,Nom,AdresseMail,AdresseLigne1,AdresseLigne2,Ville,CodePostal,Pays,Telephone,MotDePasse,NumeroCarte) VALUES ('$creationPrenom','$creationNom','$creationMail','$creationAdresse1','$creationAdresse2','$creationVille','$creationZip','$creationPays','$creationPhone','$creationMdp','$creationNumber')";
+					$sqlCreation = "INSERT INTO acheteur (Prenom,Nom,AdresseMail,AdresseLigne1,AdresseLigne2,Ville,CodePostal,Pays,Telephone,MotDePasse) VALUES ('$creationPrenom','$creationNom','$creationMail','$creationAdresse1','$creationAdresse2','$creationVille','$creationZip','$creationPays','$creationPhone','$creationMdp')";
+					$sqlCreationBancaire = "INSERT INTO carte (NumeroCarte,NomTitulaire,TypeCarte,MoisExpiration,AnneeExpiration,CodeSecurite,Solde) VALUES ('$creationNumber','$creationTitulaire','$creationTypeCarte','$creationME','$creationAE','$creationSecurite','1000')";
+					
 					$resultCreation = mysqli_query($db_handle,$sqlCreation);
 					echo "resultat : ".$resultCreation;
+					$resultCreationBancaire = mysqli_query($db_handle,$sqlCreationBancaire);
 					$erreurCreation  = "Profil créé";
+					$erreurCreationBancaire = "Information Bancaire enregistré";
 				}
 			}
 		}
@@ -233,6 +247,7 @@
 						<p>    </p>
 					</div>
 					<?php echo "	$erreurCreation"; ?>
+					<?php echo "    $erreurCreationBancaire"; ?>
 				</form>
 			</div>
 		</div>
