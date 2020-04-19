@@ -347,6 +347,9 @@
         </footer>
 		
 		<script> 
+			//////////////////////////////////////////////////////////
+			//ajout automatique des produits depui la base de donnee//
+			//////////////////////////////////////////////////////////
 			
 			var Numero = "<?php echo $Numero ?>";
 			var Noms = "<?php echo $Noms ?>";
