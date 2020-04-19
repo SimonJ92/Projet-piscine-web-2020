@@ -58,7 +58,7 @@
     }
 
     //Page
-	
+	$erreurAjout = "";
 	//identifier le nom de base de données 
 	$Numero = "";
 	$Noms = "";
@@ -77,7 +77,7 @@
 
     //si le BDD existe, faire le traitement 
     if ($db_found) { 
-        $sql = "SELECT * FROM produit WHERE PseudoVendeur LIKE 'Simon'";
+        $sql = "SELECT * FROM produit WHERE PseudoVendeur LIKE 'Sylvain'";
         $result = mysqli_query($db_handle, $sql); 
         while ($data = mysqli_fetch_assoc($result)) {
 			$Numero .= $data['Numero'];
@@ -110,29 +110,30 @@
 	}  
 	
 	
-	/*if (isset($_POST["boutonAjout"])) {
+	if (isset($_POST["boutonAjout"])) {
 		if($_POST["boutonAjout"] && $db_found) {
 			$ajoutNom = isset($_POST["ajoutNom"])?$_POST["ajoutNom"]:"";
 			$ajoutDescription = isset($_POST["ajoutDescription"])?$_POST["ajoutDescription"]:"";
 			$ajoutImage = isset($_POST["ajoutImage"])?$_POST["ajoutImage"]:"";
 			$ajoutCategorie = isset($_POST["ajoutCategorie"])?$_POST["ajoutCategorie"]:"";
 			$ajoutPrix = isset($_POST["ajoutPrix"])?$_POST["ajoutPrix"]:"";
-			$pseudoVendeur = isset($_POST["$pseudoConnected"])?$_POST["$pseudoConnected"]:"";
+			$methodVente = "Encheres";
+			$pseudoVendeur = "Sylvain";//isset($_POST["$pseudoConnected"])?$_POST["$pseudoConnected"]:"";
 			if ($ajoutNom=="" || $ajoutDescription=="" || $ajoutImage=="" || $ajoutCategorie=="" || $ajoutPrix=="") {
 			$erreurAjout = "Tous les champs doivent être remplis";
 			}else{
-				$sqlTestAjout = "SELECT * FROM produit where Nom like '%$ajoutNom%'";
+				$sqlTestAjout = "SELECT * FROM produit where Nom like '$ajoutNom'";
 				$resultTestAjout = mysqli_query($db_handle,$sqlTestAjout) or die (mysqli_error($db_handle));
 				if(mysqli_num_rows($resultTestAjout) != 0){
 					$erreurAjout = "Le produit existe déjà";
 				}else{
-					$sqlAjout = "insert into vendeur (nom, image, prix, description, categorie) values('$ajoutNom','$ajoutImage', '$ajoutPrix','$ajoutDescription','$ajoutCategorie')";
+					$sqlAjout = "insert into produit (Nom, Photo1, MethodeVente, PrixDirect, DescriptionCourte, DescriptionLongue1, Categorie, PseudoVendeur) values('$ajoutNom','$ajoutImage', '$methodVente', '$ajoutPrix','$ajoutDescription', $ajoutDescription','$ajoutCategorie', '$pseudoVendeur')";
 					$resultatAjout = mysqli_query($db_handle,$sqlAjout);
 					$erreurAjout = "Ajouté";
 				}
 			}
 		}
-	}*/
+	}
 	
     //fermer la connection 
     mysqli_close($db_handle);
@@ -263,10 +264,11 @@
 		
 		
 		<div  id="galerie_mes_produit">	</div>
+
 		<button id="ajoute_produit" onclick="ouvre_form()"> ajouter un produit a la vente </button>
 		
-		<div class="pop_up" id="info_produit" >
-		  <form action="mes_produits.php" class="info_form" >
+		<div class="pop_up" id="info_produit" > 
+		  <form action="page_mes_produits.php" method="post" class="info_form" >
 			<h1>ajouter un nouveau produit</h1>
 
 			<label for="titre"><b>Titre</b></label>
@@ -283,8 +285,9 @@
 			
 			<label for="categorie"><b>prix d'achat direct</b></label>
 			<input type="text" name="ajoutPrix" id="prix">
-
-			<button type="button" class="btn" id="btn_ajout">ajouter</button>
+			
+			<input type="submit" name="boutonAjout" id="btn_ajout" class="btn" value="Ajouter">
+			<?php echo "   $erreurAjout"; ?>
 			<button type="button" class="btn fermer" onclick="ferme_form()">fermer</button>
 		  </form>
 		</div>
@@ -477,7 +480,7 @@
 					else
 					{
 						button.textContent = "etat actuel des negociations";
-						button.onclick = "location.href='negoce_vendeur.php?numeroProduit='" + Numero_objet;
+						button.onclick = "location.href=\'negoce_vendeur.php\''?'\'numeroProduit=\'" + Numero_objet;
 					}
 					document.getElementById("td_3" + compteur).appendChild(button);
 				}
