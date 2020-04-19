@@ -111,7 +111,7 @@
 	
 	
 	/*if (isset($_POST["boutonAjout"])) {
-		if($_POST["boutonAjout"] && $db_found) {ajoutNom ajoutDescription ajoutImage ajoutCategorie ajoutPrix
+		if($_POST["boutonAjout"] && $db_found) {
 			$ajoutNom = isset($_POST["ajoutNom"])?$_POST["ajoutNom"]:"";
 			$ajoutDescription = isset($_POST["ajoutDescription"])?$_POST["ajoutDescription"]:"";
 			$ajoutImage = isset($_POST["ajoutImage"])?$_POST["ajoutImage"]:"";
@@ -460,9 +460,9 @@
 					MethodeVentes = MethodeVentes.replace(MethodeVentes_objet + "%marrq%", "");
 					
 					
-					var href = document.createElement("a");
-					href.id = "href" + compteur;
-					href.textContent = "plop";
+					var button = document.createElement("button"); 
+					button.id = "achat_par_methode" + compteur; 
+					button.className = "button_achat";
 					
 					
 					n = Numero.search("%marrq%");
@@ -471,15 +471,15 @@
 					
 					if("Encheres" == MethodeVentes_objet)
 					{
-						href.textContent = "etat actuel des encheres";
-						href.href = "enchere_vendeur.php?numeroProduit=" + Numero_objet;
+						button.textContent = "etat actuel des encheres";
+						button.onclick = "location.href='enchere_vendeur.php?numeroProduit='" + Numero_objet;
 					}
 					else
 					{
-						href.textContent = "etat actuel des negociations";
-						href.href = "negoce_vendeur.php?numeroProduit=" + Numero_objet;
+						button.textContent = "etat actuel des negociations";
+						button.onclick = "location.href='negoce_vendeur.php?numeroProduit='" + Numero_objet;
 					}
-					document.getElementById("td_3" + compteur).appendChild(href);
+					document.getElementById("td_3" + compteur).appendChild(button);
 				}
 			}
 		</script>
