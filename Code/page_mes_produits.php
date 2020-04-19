@@ -147,7 +147,6 @@
 		<title>Catalogue Ebay ECE</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -461,10 +460,10 @@
 					MethodeVentes = MethodeVentes.replace(MethodeVentes_objet + "%marrq%", "");
 					
 					
-					var input_2 = document.createElement("input"); 
-					input_2.id = "achat_par_methode" + compteur; 
-					input_2.type="button";
-					input_2.className = "button_achat";
+					var href = document.createElement("a");
+					href.id = "href" + compteur;
+					href.textContent = "plop";
+					
 					
 					n = Numero.search("%marrq%");
 					var Numero_objet = Numero.slice(0, n);
@@ -472,15 +471,15 @@
 					
 					if("Encheres" == MethodeVentes_objet)
 					{
-						input_2.value = "etat actuel des encheres";
-						input_2.href = "enchere_vendeur.php?numeroProduit=" + Numero_objet;
+						href.textContent = "etat actuel des encheres";
+						href.href = "enchere_vendeur.php?numeroProduit=" + Numero_objet;
 					}
 					else
 					{
-						input_2.value = "etat actuel des negociations";
-						input_2.href = "negoce_vendeur.php?numeroProduit=" + Numero_objet;
+						href.textContent = "etat actuel des negociations";
+						href.href = "negoce_vendeur.php?numeroProduit=" + Numero_objet;
 					}
-					document.getElementById("td_3" + compteur).appendChild(input_2);
+					document.getElementById("td_3" + compteur).appendChild(href);
 				}
 			}
 		</script>
