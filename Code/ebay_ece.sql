@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 19, 2020 at 09:58 PM
+-- Generation Time: Apr 19, 2020 at 11:22 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `carte` (
   `MoisExpiration` int(2) UNSIGNED ZEROFILL NOT NULL,
   `AnneeExpiration` int(2) UNSIGNED ZEROFILL NOT NULL,
   `CodeSecurite` int(4) NOT NULL,
-  `Solde` decimal(10,2) NOT NULL,
+  `Solde` decimal(15,2) NOT NULL,
   PRIMARY KEY (`NumeroCarte`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `carte` (
 
 INSERT INTO `carte` (`NumeroCarte`, `TypeCarte`, `NomTitulaire`, `MoisExpiration`, `AnneeExpiration`, `CodeSecurite`, `Solde`) VALUES
 ('1', 'Visa', 'Duparc Aurele', 05, 22, 111, '1000000.00'),
-('2', 'Mastercard', 'Jolly Simon', 10, 20, 222, '10000000.00'),
+('2', 'Mastercard', 'Jolly Simon', 10, 20, 222, '1000000000.00'),
 ('3', 'American Express', 'Louche Sylvain', 06, 21, 333, '5000000.00');
 
 -- --------------------------------------------------------

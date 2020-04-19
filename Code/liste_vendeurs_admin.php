@@ -224,7 +224,7 @@
 													<div class="checkbox">
 														<label id="adminUser"><input type="checkbox" name="adminUser" id="checkAdmin" '.($dataVendeurs["Admin"]?"checked":"unchecked").' disabled>Admin</label>
 													</div>
-													<form id="formSupprimer" class="form-inline" action="liste vendeurs - admin.php" method="post">
+													<form id="formSupprimer" class="form-inline" action="liste_vendeurs_admin.php" method="post">
 														<input type="hidden" name="supprimerPseudo" value="'.$dataVendeurs["Pseudo"].'">
 														<input id="supprimerUser" type="submit" class="btn btn-danger" name="supprimerUser" value="Supprimer">
 													</form>
@@ -245,7 +245,7 @@
 						<div class="col-md-1 col-sm-12"></div>
 						<div class="col-md-10 col-sm-12 container" id="ligneAjout">
 							<h3>Ajouter un vendeur </h3>
-							<form action="liste vendeurs - admin.php" method="post" id="formAjout" class="form-inline">
+							<form action="liste_vendeurs_admin.php" method="post" id="formAjout" class="form-inline">
 								<input type="text" name="ajoutNom" class="form-control" placeholder="Nom" id="fieldAjout">
 								<input type="text" name="ajoutPseudo" class="form-control" placeholder="Pseudo" id="fieldAjout">
 								<input type="email" name="ajoutMail" class="form-control" placeholder="E-mail" id="fieldAjout">

@@ -139,6 +139,30 @@
         }
     }
     $prixTotalPaiement = $prixTotalPanier + $prixLivraison;
+
+    $erreurPaiement = "";
+    if(isset($_POST["boutonPayer"])){
+        if($_POST["boutonPayer"]){
+            $verifNom = isset($_POST["Nom"])?$_POST["Nom"]:"";
+            $verifPrenom = isset($_POST["Prenom"])?$_POST["Prenom"]:"";
+            $verifAdresseLigne1 = isset($_POST["AdresseLigne1"])?$_POST["AdresseLigne1"]:"";
+            $verifAdresseLigne2 = isset($_POST["AdresseLigne2"])?$_POST["AdresseLigne2"]:"";
+            $verifVille = isset($_POST["Ville"])?$_POST["Ville"]:"";
+            $verifCodePostal = isset($_POST["CodePostal"])?$_POST["CodePostal"]:"";
+            $verifPays = isset($_POST["Pays"])?$_POST["Pays"]:"";
+            $verifNumeroTelephone = isset($_POST["NumeroTelephone"])?$_POST["NumeroTelephone"]:"";
+            $verifTypeCarte = isset($_POST["TypeCarte"])?$_POST["TypeCarte"]:"";
+            $verifNumeroCarte = isset($_POST["NumeroCarte"])?$_POST["NumeroCarte"]:"";
+            $verifNomTitulaire = isset($_POST["NomTitulaire"])?$_POST["NomTitulaire"]:"";
+            $verifMoisExpiration = isset($_POST["MoisExpiration"])?$_POST["MoisExpiration"]:"";
+            $verifAnneeExpiration = isset($_POST["AnneeExpiration"])?$_POST["AnneeExpiration"]:"";
+            $verifCodeSecurite = isset($_POST["CodeSecurite"])?$_POST["CodeSecurite"]:"";
+
+            if($verifNom == "" || $verifPrenom == "" || $verifAdresseLigne1 == "" || $verifVille == "" || $verifCodePostal == "" || $verifPays == "" || $verifNumeroTelephone == "" || $verifTypeCarte == "" || $verifNumeroCarte == "" || $verifNomTitulaire == "" || $verifMoisExpiration == "" || $verifAnneeExpiration == "" || $verifCodeSecurite == ""){
+                $erreurPaiement = "Tous les champs doivent être remplis ! (excepté la ligne 2 de l'adresse)";
+            }
+        }
+    }
  ?>
 
 <!DOCTYPE html>
@@ -246,30 +270,47 @@
     					<div class="row" id="infosClient" style="height: auto;">
     						<div class="col-12 container-fluid">
     							<h3 style="margin-bottom: 15px;">Informations de livraison</h3>
-    							<div class="row text-left" style="margin-bottom: 10px;">
-    								<p class="col-12">
-    									Nom : <input class="zoneInfo" type="text" name="Nom" style="width: 130px;" value="">
-    									Prenom : <input class="zoneInfo" type="text" name="Prenom" style="width: 130px;" value="">
-    								</p>
-    							</div>
-    							<div class="row text-left" style="margin-bottom: 10px;">
-    								<p class="col-12">
-    									Adresse ligne 1 : <input class="zoneInfo" type="text" name="AdresseLigne1" style="width: 180px;" value="">
-    									Adresse ligne 2 : <input class="zoneInfo" type="text" name="AdresseLigne2" style="width: 180px;" value="">
-    								</p>
-    							</div>
-    							<div class="row text-left" style="margin-bottom: 10px;">
-    								<p class="col-12">
-    									Ville : <input class="zoneInfo" type="text" name="Ville" style="width: 200px;" value="">
-    									Code postal : <input class="zoneInfo" type="text" name="CodePostal" style="width: 75px;" value="">
-    								</p>
-    							</div>
-    							<div class="row text-left" style="margin-bottom: 10px;">
-    								<p class="col-12">
-    									Pays : <input class="zoneInfo" type="text" name="Pays" style="width: 120px;" value="">
-    									Numéro de téléphone : <input class="zoneInfo" type="text" name="NumeroTelephone" style="width: 100px;" value="">
-    								</p>
-    							</div>
+                                <?php 
+                                    // requête pour récupérer les informations du client
+                                    if($db_found){
+                                        $sqlRemplirInfosClient = "SELECT * from acheteur where IDAcheteur =".$idConnected;
+                                        $resultatRemplirInfosClient = mysqli_query($db_handle,$sqlRemplirInfosClient) or die (mysqli_error($db_handle));
+                                        if(mysqli_num_rows($resultatRemplirInfosClient) == 0){
+                                            echo "Erreur : client non trouvé dans la base de données";
+                                        }else{
+                                            $dataRemplirInfosClient = mysqli_fetch_assoc($resultatRemplirInfosClient);
+                                            echo '
+                                                <div class="row text-left" style="margin-bottom: 10px;">
+                                                    <p class="col-12">
+                                                        Nom : <input class="zoneInfo" type="text" name="Nom" style="width: 130px;" value="'.$dataRemplirInfosClient["Nom"].'">
+                                                        Prenom : <input class="zoneInfo" type="text" name="Prenom" style="width: 130px;" value="'.$dataRemplirInfosClient["Prenom"].'">
+                                                    </p>
+                                                </div>
+                                                <div class="row text-left" style="margin-bottom: 10px;">
+                                                    <p class="col-12">
+                                                        Adresse ligne 1 : <input class="zoneInfo" type="text" name="AdresseLigne1" style="width: 180px;" value="'.$dataRemplirInfosClient["AdresseLigne1"].'">
+                                                        Adresse ligne 2 : <input class="zoneInfo" type="text" name="AdresseLigne2" style="width: 180px;" value="'.$dataRemplirInfosClient["AdresseLigne2"].'">
+                                                    </p>
+                                                </div>
+                                                <div class="row text-left" style="margin-bottom: 10px;">
+                                                    <p class="col-12">
+                                                        Ville : <input class="zoneInfo" type="text" name="Ville" style="width: 200px;" value="'.$dataRemplirInfosClient["Ville"].'">
+                                                        Code postal : <input class="zoneInfo" type="text" name="CodePostal" style="width: 75px;" value="'.$dataRemplirInfosClient["CodePostal"].'">
+                                                    </p>
+                                                </div>
+                                                <div class="row text-left" style="margin-bottom: 10px;">
+                                                    <p class="col-12">
+                                                        Pays : <input class="zoneInfo" type="text" name="Pays" style="width: 120px;" value="'.$dataRemplirInfosClient["Pays"].'">
+                                                        Numéro de téléphone : <input class="zoneInfo" type="text" name="NumeroTelephone" style="width: 120px;" value="'.$dataRemplirInfosClient["Telephone"].'">
+                                                    </p>
+                                                </div>
+                                            ';
+                                        }
+                                        
+                                    }else{
+                                        echo "Erreur de connexion à la base de données";
+                                    }
+                                 ?>
     						</div>
     					</div>
     					<div class="row" id="infosCarte" style="height: auto;">
@@ -278,32 +319,106 @@
     								<h3 style="margin-bottom: 15px;">Informations de paiement</h3>
     								<input type="submit" name="InformationsCarteAuto" class="btn btn-sm btn-info col-lg-4 col-md-12" style="white-space: normal;" value="Insérer les informations de paiement enregistrées">
     							</div>
-    							<div class="row text-left" style="margin-bottom: 10px;">
-    								<p class="col-12">
-    									Type de carte: 
-    									<label class="radio-inline">
-    								      	<input type="radio" name="optradio" checked>Visa
-    								    </label>
-    								    <label class="radio-inline">
-    								      	<input type="radio" name="optradio">Mastercard
-    								    </label>
-    								    <label class="radio-inline">
-    								      	<input type="radio" name="optradio">American Express
-    								    </label>
-    								</p>
-    							</div>
-    							<div class="row text-left" style="margin-bottom: 10px;">
-    								<p class="col-12">
-    									Numéro de la carte : <input class="zoneInfo" type="text" name="NumeroCarte" style="width: 150px;" value="">
-    									Titulaire : <input class="zoneInfo" type="text" name="Prenom" style="width: 150px;" value="">
-    								</p>
-    							</div>
-    							<div class="row text-left" style="margin-bottom: 10px;">
-    								<p class="col-12">
-    									Date d'expiration : <input class="zoneInfo" type="text" name="MoisExpiration" style="width: 35px;margin-right: 0px;" value="MM"> / <input class="zoneInfo" type="text" name="AnneeExpiration" style="width: 35px;" value="AA">
-    									Code de sécurité : <input class="zoneInfo" type="text" name="CodeSecurite" style="width: 55px;" value="">
-    								</p>
-    							</div>
+                                <?php 
+                                    if(isset($_POST["InformationsCarteAuto"]) ){
+                                        if ($_POST["InformationsCarteAuto"] && $db_found){
+                                            //requête pour récupérer les infos de la carte
+                                            $sqlRemplirInfosCarte = "SELECT A.* from carte A join acheteur B on A.NumeroCarte = B.NumeroCarte where B.IDAcheteur =".$idConnected;
+                                            $resultatRemplirInfosCarte = mysqli_query($db_handle,$sqlRemplirInfosCarte) or die (mysqli_error($db_handle));
+                                            if(mysqli_num_rows($resultatRemplirInfosCarte) == 0){   //On ne trouve pas de carte qui corresponde au client connecté
+                                                echo "Erreur : pas de carte trouvée\n";
+                                                echo '
+                                                    <div class="row text-left" style="margin-bottom: 10px;">
+                                                        <p class="col-12">
+                                                            Type de carte: 
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="TypeCarte" value="Visa" checked>Visa
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="TypeCarte" value="Mastercard">Mastercard
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="TypeCarte" value="American Express">American Express
+                                                            </label>
+                                                        </p>
+                                                    </div>
+                                                    <div class="row text-left" style="margin-bottom: 10px;">
+                                                        <p class="col-12">
+                                                            Numéro de la carte : <input class="zoneInfo" type="text" name="NumeroCarte" style="width: 150px;" value="">
+                                                            Titulaire : <input class="zoneInfo" type="text" name="NomTitulaire" style="width: 150px;" value="">
+                                                        </p>
+                                                    </div>
+                                                    <div class="row text-left" style="margin-bottom: 10px;">
+                                                        <p class="col-12">
+                                                            Date d\'expiration : <input class="zoneInfo" type="text" name="MoisExpiration" style="width: 35px;margin-right: 0px;" value="MM"> / <input class="zoneInfo" type="text" name="AnneeExpiration" style="width: 35px;" value="AA">
+                                                            Code de sécurité : <input class="zoneInfo" type="text" name="CodeSecurite" style="width: 55px;" value="">
+                                                        </p>
+                                                    </div>
+                                                ';
+                                            }else{
+                                                $dataRemplirInfosCarte = mysqli_fetch_assoc($resultatRemplirInfosCarte);
+                                                echo '
+                                                    <div class="row text-left" style="margin-bottom: 10px;">
+                                                        <p class="col-12">
+                                                            Type de carte: 
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="TypeCarte" value="Visa" '.(($dataRemplirInfosCarte["TypeCarte"] == "Visa")?"checked":"").'>Visa
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="TypeCarte" value="Mastercard" '.(($dataRemplirInfosCarte["TypeCarte"] == "Mastercard")?"checked":"").'>Mastercard
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="TypeCarte" value="American Express" '.(($dataRemplirInfosCarte["TypeCarte"] == "American Express")?"checked":"").'>American Express
+                                                            </label>
+                                                        </p>
+                                                    </div>
+                                                    <div class="row text-left" style="margin-bottom: 10px;">
+                                                        <p class="col-12">
+                                                            Numéro de la carte : <input class="zoneInfo" type="text" name="NumeroCarte" style="width: 150px;" value="'.$dataRemplirInfosCarte["NumeroCarte"].'">
+                                                            Titulaire : <input class="zoneInfo" type="text" name="NomTitulaire" style="width: 150px;" value="'.$dataRemplirInfosCarte["NomTitulaire"].'">
+                                                        </p>
+                                                    </div>
+                                                    <div class="row text-left" style="margin-bottom: 10px;">
+                                                        <p class="col-12">
+                                                            Date d\'expiration : <input class="zoneInfo" type="text" name="MoisExpiration" style="width: 35px;margin-right: 0px;" value="'.$dataRemplirInfosCarte["MoisExpiration"].'"> / <input class="zoneInfo" type="text" name="AnneeExpiration" style="width: 35px;" value="'.$dataRemplirInfosCarte["AnneeExpiration"].'">
+                                                            Code de sécurité : <input class="zoneInfo" type="text" name="CodeSecurite" style="width: 55px;" value="'.$dataRemplirInfosCarte["CodeSecurite"].'">
+                                                        </p>
+                                                    </div>
+                                                ';
+                                            }   
+                                        }
+                                    }else{
+                                            echo '
+                                                <div class="row text-left" style="margin-bottom: 10px;">
+                                                    <p class="col-12">
+                                                        Type de carte: 
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="TypeCarte" value="Visa" checked>Visa
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="TypeCarte" value="Mastercard">Mastercard
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" name="TypeCarte" value="American Express">American Express
+                                                        </label>
+                                                    </p>
+                                                </div>
+                                                <div class="row text-left" style="margin-bottom: 10px;">
+                                                    <p class="col-12">
+                                                        Numéro de la carte : <input class="zoneInfo" type="text" name="NumeroCarte" style="width: 150px;" value="">
+                                                        Titulaire : <input class="zoneInfo" type="text" name="NomTitulaire" style="width: 150px;" value="">
+                                                    </p>
+                                                </div>
+                                                <div class="row text-left" style="margin-bottom: 10px;">
+                                                    <p class="col-12">
+                                                        Date d\'expiration : <input class="zoneInfo" type="text" name="MoisExpiration" style="width: 35px;margin-right: 0px;" value="MM"> / <input class="zoneInfo" type="text" name="AnneeExpiration" style="width: 35px;" value="AA">
+                                                        Code de sécurité : <input class="zoneInfo" type="text" name="CodeSecurite" style="width: 55px;" value="">
+                                                    </p>
+                                                </div>
+                                            ';
+                                    }
+                                 ?>
+    							
     						</div>
     					</div>
                     </form>
@@ -319,9 +434,11 @@
 						</div>
 					</div>
 					<?php 
+
                         if($prixTotalPaiement == $prixLivraison){       //Il y a eu une erreur lors de la récupération des données et le prix des produits vaut 0
                             echo "Il y a eu une erreur dans le calcul du prix";
                         }else{
+                            echo "$erreurPaiement";
                             echo '
                                 <div class="row text-center" style="height: 50%;">
                                     <input form="formPaiement" type="submit" name="boutonPayer" class="btn btn-warning btn-lg col-9 center" id="boutonPayer" value="Payer">
