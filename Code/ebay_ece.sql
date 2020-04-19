@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 18, 2020 at 10:36 AM
+-- Generation Time: Apr 19, 2020 at 02:19 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -83,9 +83,9 @@ INSERT INTO `acheteur` (`IDAcheteur`, `Prenom`, `Nom`, `AdresseMail`, `AdresseLi
 
 DROP TABLE IF EXISTS `carte`;
 CREATE TABLE IF NOT EXISTS `carte` (
-  `NumeroCarte` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `TypeCarte` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `NomTitulaire` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `NumeroCarte` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `TypeCarte` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `NomTitulaire` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `MoisExpiration` int(2) UNSIGNED ZEROFILL NOT NULL,
   `AnneeExpiration` int(2) UNSIGNED ZEROFILL NOT NULL,
   `CodeSecurite` int(4) NOT NULL,
@@ -134,7 +134,7 @@ DROP TABLE IF EXISTS `negociation`;
 CREATE TABLE IF NOT EXISTS `negociation` (
   `NumeroNegociation` int(10) NOT NULL AUTO_INCREMENT,
   `IDAcheteur` int(10) NOT NULL,
-  `PseudoVendeur` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `PseudoVendeur` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `NumeroProduit` int(10) NOT NULL,
   `Prop1` decimal(10,2) UNSIGNED DEFAULT NULL,
   `Prop2` decimal(10,2) UNSIGNED DEFAULT NULL,
@@ -146,6 +146,7 @@ CREATE TABLE IF NOT EXISTS `negociation` (
   `Prop8` decimal(10,2) UNSIGNED DEFAULT NULL,
   `Prop9` decimal(10,2) UNSIGNED DEFAULT NULL,
   `Prop10` decimal(10,2) UNSIGNED DEFAULT NULL,
+  `Accepted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`NumeroNegociation`),
   KEY `IDAcheteur` (`IDAcheteur`),
   KEY `PseudoVendeur` (`PseudoVendeur`),
@@ -156,8 +157,8 @@ CREATE TABLE IF NOT EXISTS `negociation` (
 -- Dumping data for table `negociation`
 --
 
-INSERT INTO `negociation` (`NumeroNegociation`, `IDAcheteur`, `PseudoVendeur`, `NumeroProduit`, `Prop1`, `Prop2`, `Prop3`, `Prop4`, `Prop5`, `Prop6`, `Prop7`, `Prop8`, `Prop9`, `Prop10`) VALUES
-(1, 7, 'Simon', 2, '10000.00', '40000.00', '15000.00', '37500.00', '25000.00', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `negociation` (`NumeroNegociation`, `IDAcheteur`, `PseudoVendeur`, `NumeroProduit`, `Prop1`, `Prop2`, `Prop3`, `Prop4`, `Prop5`, `Prop6`, `Prop7`, `Prop8`, `Prop9`, `Prop10`, `Accepted`) VALUES
+(1, 7, 'Simon', 2, '10000.00', '40000.00', '15000.00', '37500.00', '25000.00', NULL, NULL, NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -220,17 +221,17 @@ INSERT INTO `panier` (`NumeroProduit`, `IDClient`) VALUES
 DROP TABLE IF EXISTS `produit`;
 CREATE TABLE IF NOT EXISTS `produit` (
   `Numero` int(10) NOT NULL AUTO_INCREMENT,
-  `Nom` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `Photo1` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Photo2` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Photo3` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Photo4` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Photo5` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `MethodeVente` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `Nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Photo1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Photo2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Photo3` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Photo4` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Photo5` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `MethodeVente` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `PrixDirect` decimal(10,2) UNSIGNED NOT NULL,
-  `DescriptionCourte` text COLLATE utf8mb4_general_ci NOT NULL,
-  `DescriptionLongue1` text COLLATE utf8mb4_general_ci NOT NULL,
-  `Categorie` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `DescriptionCourte` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `DescriptionLongue1` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Categorie` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `PseudoVendeur` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`Numero`),
   KEY `PseudoVendeur` (`PseudoVendeur`)
@@ -258,12 +259,12 @@ INSERT INTO `produit` (`Numero`, `Nom`, `Photo1`, `Photo2`, `Photo3`, `Photo4`, 
 
 DROP TABLE IF EXISTS `vendeur`;
 CREATE TABLE IF NOT EXISTS `vendeur` (
-  `Pseudo` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `AdresseMail` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `Nom` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `Photo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ImageFond` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Description` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Pseudo` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `AdresseMail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ImageFond` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `Admin` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Pseudo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -273,9 +274,9 @@ CREATE TABLE IF NOT EXISTS `vendeur` (
 --
 
 INSERT INTO `vendeur` (`Pseudo`, `AdresseMail`, `Nom`, `Photo`, `ImageFond`, `Description`, `Admin`) VALUES
-('Aurele', 'aurele.duparc@edu.ece.fr', 'Duparc', 'Images/photo-aurele', 'Images/fond-aurele', 'Admin numero 1', 1),
-('Simon', 'simon.jolly@edu.ece.fr', 'Jolly', 'Images/photo-simon', 'Images/photo-sylvain', 'Admin numero 2', 1),
-('Sylvain', 'sylvain.louche@edu.ece.fr', 'Louche', 'Images/photo-sylvain', 'Images/fond-sylvain', 'Admin numero 3', 1),
+('Aurele', 'aurele.duparc@edu.ece.fr', 'Duparc', NULL, NULL, 'Admin numero 1', 1),
+('Simon', 'simon.jolly@edu.ece.fr', 'Jolly', NULL, NULL, 'Admin numero 2', 1),
+('Sylvain', 'sylvain.louche@edu.ece.fr', 'Louche', NULL, NULL, 'Admin numero 3', 1),
 ('Vendeur 1', 'vendeur1@edu.ece.fr', 'Durand', 'Images/photo-vendeur1.jpg', 'Images/fond-profil1.jpg', 'Premier vendeur non-admin ajouté à notre base de données', 0);
 
 --

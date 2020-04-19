@@ -43,6 +43,12 @@ h3{
   border-style: solid;
   border-color: black; 
 }
+
+.changerImage{
+  grid-column: 1 / 2;
+  grid-row: 4 / 5;
+}
+
 .option {
   grid-column: 2 / 3;
   grid-row: 4 / 6; 

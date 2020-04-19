@@ -53,12 +53,55 @@
     }
 
     //Page
+    $numeroProduitPage = isset($_GET["numeroProduit"])?$_GET["numeroProduit"]:0;	//numero du produit concerné sur la page
+    if ($numeroProduitPage == 0) {
+    	echo "Erreur : pas de produit spécifié";
+    }else{
+    	$sqlProduitPage = "SELECT * from produit where Numero = ".$numeroProduitPage;
+    	$resultatProduitPage = mysqli_query($db_handle,$sqlProduitPage);
+    	if(mysqli_num_rows($resultatProduitPage) ==0){
+    		echo "Erreur : produit non trouvé dans la base de données";
+    	}else{
+    		$dataProduitPage = mysqli_fetch_assoc($resultatProduitPage);
+    		$pseudoVendeurProduit = $dataProduitPage["PseudoVendeur"];
+    		$sqlPhotosVendeur = "SELECT * from produit where PseudoVendeur like '$pseudoVendeurProduit' limit 3";
+    		$resultatPhotosVendeur = mysqli_query($db_handle,$sqlPhotosVendeur) or die (mysqli_error($db_handle));
+    		$countPhotos = 1;
+    		while ($dataPhotos = mysqli_fetch_assoc($resultatPhotosVendeur)) {
+    			$_SESSION["PhotoPageProduit".$countPhotos] = $dataPhotos["Photo1"];
+    			$countPhotos = $countPhotos +1;
+    		}
+    	}
+    }
+
+    $_SESSION["numeroPhotoPageProduit"] = (isset($_SESSION["numeroPhotoPageProduit"]) && isset($dataProduitPage["Photo".(1 + $_SESSION["numeroPhotoPageProduit"])]))?$_SESSION["numeroPhotoPageProduit"]:1;
+
+    if(isset($_POST["boutonNextImage"])){
+    	if($_POST["boutonNextImage"] && isset($dataProduitPage["Photo".(1 + $_SESSION["numeroPhotoPageProduit"])])){
+    			$_SESSION["numeroPhotoPageProduit"] = $_SESSION["numeroPhotoPageProduit"] + 1;
+    	}
+    }
+    if(isset($_POST["boutonFormerImage"])){
+    	if($_POST["boutonFormerImage"] && $_SESSION["numeroPhotoPageProduit"]>1){
+    			$_SESSION["numeroPhotoPageProduit"] = (($_SESSION["numeroPhotoPageProduit"] -1));
+    	}
+    }
+
+    if(isset($_POST["supprimerObjet"])){
+    	if ($_POST["supprimerObjet"]) {
+    		$sqlSuppression = "DELETE from produit where Numero = ".$numeroProduitPage;
+    		$resultDelete = mysqli_query($db_handle,$sqlSuppression) or die (mysqli_error($db_handle));
+    		header('Location: accueil_vendeur.php');
+    	}
+    }
  ?>
 
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Produit Vendeur</title>
+		<?php 
+			echo '<title>'.$dataProduitPage["Nom"].'</title>';
+		 ?>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
@@ -150,33 +193,59 @@
 	<!-- 00 -->
 	<div class="wrapper">
 		<div class="image">
-			<p>Image Produit 1</p>
+			<?php echo '<img src="'.$dataProduitPage["Photo".$_SESSION["numeroPhotoPageProduit"]].'" style="max-width: 100%; max-height: 100%;">' ?>
 		</div>
 		<div class="descrip">
-			<h2> <b> Nom du produit</b> </h2>
-			<p>Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 Description brève du produit 1 </p>
+			<h2> <b><?php echo $dataProduitPage["Nom"]; ?></b> </h2>
+			<p> <?php echo (isset($dataProduitPage["DescriptionCourte"])?$dataProduitPage["DescriptionCourte"]:""); ?> </p>
 		</div>
 		<div class="vendeur">
-			<p>Vendeur A</p>
+			<p>Vendeur : <?php echo $dataProduitPage["PseudoVendeur"]; ?> </p>
 		</div>
 		<div class="lienvendeur">
-			<p>Lien vers la page du vendeur A</p>
-		</div>
-	
-		<div class="option">
-			<!-- <p>Options d'achat</p> -->
-			<div class="col text-center">
-				<button class="btn btn-block btn-primary" disabled>Achat Direct</button> <br><br>
-				<button class="btn btn-block btn-primary" disabled>Voir aux enchères</button> <br><br>
-				<button class="btn btn-block btn-primary" disabled>Proposer une meilleure offre</button> <br><br>
-			</div>
+			<?php echo '<a href="profil_vendeur_public_'.(($typeConnected == 3)?"vendeur":"client").'.php?pseudoVendeur=&quot;'.$dataProduitPage["PseudoVendeur"].'&quot;">'; ?>
+				<p>Voir le profil de <?php echo $dataProduitPage["PseudoVendeur"]; ?></p>
+			</a>
 		</div>
 		
-		<div class="suppr"> 
-		<!-- Attention le client ne peut pas supprimer de produit -->
-			<!-- <p>Bouton pour supprimer le produit de la base de données</p> -->
-			<button class="btn btn-sm btn-block btn-danger" onclick="validation()">Supprimer le produit de la vente</button>
+		<div class="changerImage">
+			<?php echo '<form action="produit_vendeur.php?numeroProduit='.$numeroProduitPage.'" method="post">' ?>
+				<input type="submit" name="boutonFormerImage" class="btn btn-block btn-warning" value="Image Précédente"> <br><br>
+				<input type="submit" name="boutonNextImage" class="btn btn-block btn-warning" value="Image Suivante"> <br><br>
+			</form>
 		</div>
+
+		<?php 
+			if ($typeConnected == 2) {
+				echo '
+					<div class="option">
+						<!-- <p>Options d\'achat</p> -->
+						<form action="produit_vendeur.php?numeroProduit='.$numeroProduitPage.'" method="post">
+							<div class="col text-center">
+								<input type="submit" name="boutonPanier" class="btn btn-block btn-primary" value="Ajouter au panier"> <br><br>
+								<input type="submit" name="boutonEncheres" class="btn btn-block btn-primary" value="Voir aux enchères"> <br><br>
+								<input type="submit" name="boutonNegoce" class="btn btn-block btn-primary" value="Proposer une meilleure offre"> <br><br>
+							</div>
+						</form>
+					</div>
+				';
+			}
+		 ?>
+		
+		
+		<?php 
+			if ($typeConnected == 3 && $pseudoVendeurProduit == $pseudoConnected) {
+				echo '
+					<div class="suppr"> 
+					<!-- Attention le client ne peut pas supprimer de produit -->
+						<!-- <p>Bouton pour supprimer le produit de la base de données</p> -->
+						<form action="produit_vendeur.php?numeroProduit='.$numeroProduitPage.'" method="post">
+							<input type="submit" name="supprimerObjet" class="btn btn-sm btn-block btn-danger" onclick="validation()" value="Supprimer le produit de la vente">
+						</form>
+					</div>
+				';
+			}
+		 ?>
 		
 		<div class="simili">
 			<h3>Autres produits du vendeur</h3>
@@ -184,9 +253,11 @@
 				<div class="col-4">
 					<div id="carrousel">
 					<ul>
-						<li><img src="Images/imageFeraille.png" style="max-width: 200px;max-height: 200px;"/></li>
-						<li><img src="Images/imageVIP.png" style="max-width: 200px;max-height: 200px;"/></li>
-						<li><img src="Images/imageMusee.png" style="max-width: 200px;max-height: 200px;"/></li>
+						<?php 
+							if($countPhotos > 1){echo '<li><img src="'.$_SESSION["PhotoPageProduit1"].'" style="max-width: 200px;max-height: 200px;"/></li>';}
+							if($countPhotos > 2){echo '<li><img src="'.$_SESSION["PhotoPageProduit2"].'" style="max-width: 200px;max-height: 200px;"/></li>';}
+							if($countPhotos > 3){echo '<li><img src="'.$_SESSION["PhotoPageProduit3"].'" style="max-width: 200px;max-height: 200px;"/></li>';}
+						 ?>
 					</ul>
 					<br>
 					</div>
@@ -194,9 +265,11 @@
 				<div class="col-4">
 					<div id="carrousel2">
 					<ul>
-						<li><img src="Images/imageMusee.png" style="max-width: 200px;max-height: 200px;"/></li>
-						<li><img src="Images/imageFeraille.png" style="max-width: 200px;max-height: 200px;"/></li>
-						<li><img src="Images/imageVIP.png" style="max-width: 200px;max-height: 200px;"/></li>
+						<?php 
+							if($countPhotos > 2){echo '<li><img src="'.$_SESSION["PhotoPageProduit2"].'" style="max-width: 200px;max-height: 200px;"/></li>';}
+							if($countPhotos > 3){echo '<li><img src="'.$_SESSION["PhotoPageProduit3"].'" style="max-width: 200px;max-height: 200px;"/></li>';}
+							if($countPhotos > 1){echo '<li><img src="'.$_SESSION["PhotoPageProduit1"].'" style="max-width: 200px;max-height: 200px;"/></li>';}
+						 ?>
 					</ul>
 					<br>
 					</div>
@@ -204,9 +277,11 @@
 				<div class="col-4">
 					<div id="carrousel3">
 					<ul>
-						<li><img src="Images/imageVIP.png" style="max-width: 200px;max-height: 200px;"/></li>
-						<li><img src="Images/imageMusee.png" style="max-width: 200px;max-height: 200px;"/></li>
-						<li><img src="Images/imageFeraille.png" style="max-width: 200px;max-height: 200px;"/></li>
+						<?php 
+							if($countPhotos > 3){echo '<li><img src="'.$_SESSION["PhotoPageProduit3"].'" style="max-width: 200px;max-height: 200px;"/></li>';}
+							if($countPhotos > 1){echo '<li><img src="'.$_SESSION["PhotoPageProduit1"].'" style="max-width: 200px;max-height: 200px;"/></li>';}
+							if($countPhotos > 2){echo '<li><img src="'.$_SESSION["PhotoPageProduit2"].'" style="max-width: 200px;max-height: 200px;"/></li>';}
+						 ?>
 					</ul>
 					<br>
 					</div>
@@ -215,7 +290,7 @@
 		</div>
 		
 		<div class="fulldescrip">
-			<p>Description complète<p>
+			<p> <b>Description complète</b> : <br><?php echo (isset($dataProduitPage["DescriptionLongue1"])?$dataProduitPage["DescriptionLongue1"]:""); ?> <p>
 		</div>
 	</div>
 
