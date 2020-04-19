@@ -60,6 +60,7 @@
     //Page
 	
 	//identifier le nom de base de données 
+	$Numero = "";
 	$Noms = "";
 	$Photos = "";
 	$MethodeVentes = "";
@@ -76,9 +77,12 @@
 
     //si le BDD existe, faire le traitement 
     if ($db_found) { 
-        $sql = "SELECT * FROM produit WHERE PseudoVendeur LIKE '$pseudoConnected'";
+        $sql = "SELECT * FROM produit WHERE PseudoVendeur LIKE 'Simon'";
         $result = mysqli_query($db_handle, $sql); 
         while ($data = mysqli_fetch_assoc($result)) {
+			$Numero .= $data['Numero'];
+			$Numero .= "%marrq%";
+			
 			$Noms .= $data['Nom'];
 			$Noms .= "%marrq%";
 			
@@ -151,7 +155,6 @@
 		<link rel="stylesheet" href="Styles/style_mes_produits.css">
 		<link rel="stylesheet" href="Styles/MyFooter.css">
 		<link rel="stylesheet" href="Styles/nav_bar.css">
-		<link rel="stylesheet" type="text/css" href="Styles/bootstrap.min.css">
 		
 		 <script>
 			
@@ -348,6 +351,7 @@
 		
 		<script> 
 			
+			var Numero = "<?php echo $Numero ?>";
 			var Noms = "<?php echo $Noms ?>";
 			var Photos = "<?php echo $Photos ?>";
 			var MethodeVentes = "<?php echo $MethodeVentes ?>";
@@ -408,12 +412,12 @@
 					td_2.id = "td_2" + compteur; 
 					document.getElementById("tr" + compteur).appendChild(td_2);
 					
-					var h4 = document.createElement("h4"); 
+					var h4_1 = document.createElement("h4"); 
 					n = Noms.search("%marrq%");
 					var Nom_objet = Noms.slice(0, n);
-					h4.textContent = Nom_objet;
+					h4_1.textContent = Nom_objet;
 					Noms = Noms.replace(Nom_objet + "%marrq%", "");
-					document.getElementById("td_2" + compteur).appendChild(h4);		
+					document.getElementById("td_2" + compteur).appendChild(h4_1);		
 
 					var description = document.createElement("div"); 
 					description.id = "description" + compteur; 
@@ -430,7 +434,7 @@
 					var p_2 = document.createElement("p"); 
 					n = Categories.search("%marrq%");
 					var Categories_objet = Categories.slice(0, n);
-					p_2.textContent = "Categorie:" + Categories_objet;
+					p_2.textContent = "Categorie : " + Categories_objet;
 					Categories = Categories.replace(Categories_objet + "%marrq%", "");
 					document.getElementById("td_2" + compteur).appendChild(p_2);
 					
@@ -438,27 +442,18 @@
 					td_3.id = "td_3" + compteur; 
 					document.getElementById("tr" + compteur).appendChild(td_3);
 					
-					var h5_1 = document.createElement("h5"); 
-					h5_1.textContent = "methode de vente:"; 
-					document.getElementById("td_3" + compteur).appendChild(h5_1);
 					
-					var h5_2 = document.createElement("h5"); 
+					
+					var h4_2 = document.createElement("h4"); 
 					n = PrixDirects.search("%marrq%");
 					var PrixDirects_objet = PrixDirects.slice(0, n);
-					p_2.textContent = PrixDirects_objet + " €";
+					h4_2.textContent = PrixDirects_objet + " €";
 					PrixDirects = PrixDirects.replace(PrixDirects_objet + "%marrq%", "");
-					document.getElementById("td_3" + compteur).appendChild(h5_2);
+					document.getElementById("td_3" + compteur).appendChild(h4_2);
 					
-					var input_1 = document.createElement("input"); 
-					input_1.id = "achat_imediat" + compteur; 
-					input_1.className = "button_achat";
-					input_1.type="button";
-					input_1.value="acheter maintenant";
-					document.getElementById("td_3" + compteur).appendChild(input_1);
-					
-					var h5_3 = document.createElement("h5"); 
-					h5_3.textContent = "OU"; 
-					document.getElementById("td_3" + compteur).appendChild(h5_3);
+					var h5 = document.createElement("h5"); 
+					h5.textContent = "methode de vente:"; 
+					document.getElementById("td_3" + compteur).appendChild(h5);
 					
 					var p_3 = document.createElement("p"); 
 					n = MethodeVentes.search("%marrq%");
@@ -474,13 +469,17 @@
 					
 					if("Encheres" == MethodeVentes_objet)
 					{
+						n = Numero.search("%marrq%");
+						var Numero_objet = Numero.slice(0, n);
+						Numero = Numero.replace(Numero_objet + "%marrq%", "");
+						
 						input_2.value = "etat actuel des encheres";
-						input_2.href = "#encheres";
+						input_2.href = "enchere_vendeur.php?numeroProduit=" + Numero_objet;
 					}
 					else
 					{
 						input_2.value = "etat actuel des negociations";
-						input_2.href = "#negociations";
+						input_2.href = "negoce_vendeur.php?numeroProduit=" + Numero_objet;
 					}
 					document.getElementById("td_3" + compteur).appendChild(input_2);
 				}
