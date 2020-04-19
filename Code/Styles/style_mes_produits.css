@@ -1,4 +1,4 @@
-/*source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_popup_form*/
+//source: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_popup_form
 
 body {
  padding: 0px;
@@ -112,11 +112,12 @@ h4{
   margin: auto;
   top: 15%;
   right: 10%;
-  bottom: 5%;
+  bottom: 7%;
   left: 10%;
   border: 3px solid #black;
   z-index: 999999;
   background-color: #369fe0;
+  height: 820px;
 }
 
 
