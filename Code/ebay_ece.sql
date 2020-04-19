@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 19, 2020 at 02:19 PM
+-- Generation Time: Apr 19, 2020 at 09:58 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `enchere` (
 --
 
 INSERT INTO `enchere` (`IDEnchere`, `DateFin`, `NumeroProduit`) VALUES
-(1, '2020-04-21 00:00:00', 1);
+(1, '2020-04-19 23:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -151,14 +151,15 @@ CREATE TABLE IF NOT EXISTS `negociation` (
   KEY `IDAcheteur` (`IDAcheteur`),
   KEY `PseudoVendeur` (`PseudoVendeur`),
   KEY `NumeroProduit` (`NumeroProduit`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `negociation`
 --
 
 INSERT INTO `negociation` (`NumeroNegociation`, `IDAcheteur`, `PseudoVendeur`, `NumeroProduit`, `Prop1`, `Prop2`, `Prop3`, `Prop4`, `Prop5`, `Prop6`, `Prop7`, `Prop8`, `Prop9`, `Prop10`, `Accepted`) VALUES
-(1, 7, 'Simon', 2, '10000.00', '40000.00', '15000.00', '37500.00', '25000.00', NULL, NULL, NULL, NULL, NULL, 0);
+(1, 7, 'Simon', 2, '10000.00', '40000.00', '15000.00', '37500.00', '25000.00', NULL, NULL, NULL, NULL, NULL, 0),
+(2, 4, 'Simon', 6, '10000.00', '100.00', '20000.00', '200.00', '30000.00', '300.00', NULL, NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -182,7 +183,9 @@ CREATE TABLE IF NOT EXISTS `offre` (
 --
 
 INSERT INTO `offre` (`IDEnchere`, `IDAcheteur`, `Valeur`, `DateOffre`) VALUES
-(1, 4, '2000000.00', '2020-04-17 11:00:00'),
+(1, 4, '2000000.00', '2020-04-01 11:00:00'),
+(1, 5, '2000000.00', '2020-04-15 00:00:00'),
+(1, 6, '2000000.00', '2020-04-14 00:00:00'),
 (1, 7, '1000000.00', '2020-04-17 00:00:00');
 
 -- --------------------------------------------------------

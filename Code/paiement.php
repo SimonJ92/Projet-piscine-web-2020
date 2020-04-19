@@ -52,15 +52,17 @@
     //2 - enchère => autre attribut pour idEnchère
     //3 - négoce => autre attribut pour numero produit (ajouter un champ à negoce pour dire si la négoce est conclue)
 
-    $produitPaye = isset($_GET["produit"])?$_GET["produit"]:"";
+    $produitPaye = isset($_GET["produitPaye"])?$_GET["produitPaye"]:"";
     //id du produit, si originaire d'enchères ou négoce
 
-    $prixTotalPanier = 0;
+    $prixTotalPanier = 0;   // prix des produits pour lesquels on va payer. Désigne aussi bien le panier que le produit gagné aux enchère, selon le cas.
     $prixLivraison = 45.50; //arbitraire, car pas d'étude de lieu de livraison
     if ($db_found) {
         if($typePaiement < 1 || $typePaiement > 3){
             echo "Erreur : le type de paiement n'existe pas (type = $typePaiement)";
         }elseif ($typePaiement == 1) {  //paiement depuis panier
+
+            //Requête pour retrouver la somme des prix des objets contenus dans le panier
             $sqlTotalPanier = "SELECT SUM(Pr.PrixDirect) as prixTotal from panier Pa join produit Pr on Pa.NumeroProduit = Pr.Numero where IDClient = $idConnected";
             $resultatTotal = mysqli_query($db_handle,$sqlTotalPanier) or die (mysqli_error($db_handle));
             if(mysqli_num_rows($resultatTotal) == 0){
@@ -68,16 +70,75 @@
             }else{
                 $dataTotalPanier = mysqli_fetch_assoc($resultatTotal);
                 $prixTotalPanier = $dataTotalPanier["prixTotal"];
-                $prixTotalPaiement = $prixTotalPanier + $prixLivraison;
             }
         }elseif($typePaiement == 2){    //paiement depuis enchère.
 
+            //Requête pour vérifier que le produit existe toujours
+            $sqlObjectExist = "SELECT * from produit where Numero = $produitPaye";
+            $resultatObjetExist = mysqli_query($db_handle,$sqlObjectExist) or die (mysqli_error($db_handle));
+            if(mysqli_num_rows($resultatObjetExist) == 0){
+               //L'objet n'existe pas 
+                header('Location: accueil_client.php');
+            }else{
 
+                //Requête pour trouver le participant ayant fait la meilleure offre
+                $sqlGagnantEnchere = "SELECT A.IDAcheteur as idGagnant,A.Valeur as montantGagnant,B.DateFin as dateFinEnchere from offre A join enchere B on A.IDEnchere = B.IDEnchere where B.IDEnchere = $produitPaye ORDER by A.Valeur desc,A.DateOffre asc limit 1;";
+                $resultatGagnantEnchere = mysqli_query($db_handle,$sqlGagnantEnchere) or die (mysqli_error($db_handle));
+
+                if(mysqli_num_rows($resultatGagnantEnchere) == 0){
+                    echo "Erreur : pas de vainqueur trouvé pour l'enchère de ce produit";
+                }else{
+                    $dataGagnantEnchere = mysqli_fetch_assoc($resultatGagnantEnchere);
+
+                    date_default_timezone_set('Europe/Paris');  //On va tester si l'enchère est bien terminée
+                    $date = date('m/d/Y h:i:s a', time());  
+
+                    if($dataGagnantEnchere["idGagnant"] == $idConnected && strtotime($date) > strtotime($dataGagnantEnchere["dateFinEnchere"])) { //Si c'est bien le client gagnant de l'enchère qui est connecté et si l'enchère est bien finie
+                        
+                        //Requête pour trouver le participant qui a fait la seconde meilleure offre
+                        $sqlSecond = "SELECT A.Valeur as montantSecond from offre A join enchere B on A.IDEnchere = B.IDEnchere where B.IDEnchere = $produitPaye ORDER by A.Valeur desc,A.DateOffre asc limit 1 offset 1";
+                        $resultatSecond = mysqli_query($db_handle,$sqlSecond) or die (mysqli_error($db_handle));
+                        $dataSecond = mysqli_fetch_assoc($resultatSecond);
+
+                        //Determination des prix
+                        if($dataSecond["montantSecond"] == 0){  //1 seul participant à l'enchère
+                            $prixTotalPanier = $dataGagnantEnchere["montantGagnant"];
+                        }elseif($dataGagnantEnchere["montantGagnant"]-$dataSecond["montantSecond"] < 1){    //si les valeurs des 2 montants ne sont espacées que de 1€
+                            $prixTotalPanier = $dataGagnantEnchere["montantGagnant"];
+                        }elseif ($dataSecond["montantSecond"] < $dataGagnantEnchere["montantGagnant"]) {    // On prend un prix 1 € supérieur à la 2e meilleure offre
+                            $prixTotalPanier = $dataSecond["montantSecond"] + 1;
+                        }else{
+                            echo "Erreur : le montant de l'enchère a mal été récupéré";
+                        }
+                    }elseif (strtotime($date) < strtotime($dataGagnantEnchere["dateFinEnchere"])) { //L'enchère n'est pas terminée
+                        echo "<script>alert(\"Vous n'avez pas le droit d'acheter ce produit aux enchères : l'enchère n'est pas terminée.\")</script>";
+                    }else{   //le client essaie de payer alors qu'il n'a pas gagné l'enchère
+                        echo "<script>alert(\"Vous n'avez pas le droit d'acheter ce produit aux enchères : un autre client a déjà gagné.\")</script>";
+                    }
+                }
+            }
         }elseif($typePaiement == 3){    //paiement depuis négociation
 
-            
+            //Requête pour trouver le tuple d'une négociation conclue, pour le bon produit et avec le bon acheteur
+            $sqlNegociation = "SELECT * from negociation where IDAcheteur = $idConnected and NumeroProduit = $produitPaye and Accepted != 0";
+            $resultatNegociation = mysqli_query($db_handle,$sqlNegociation) or die (mysqli_error($db_handle));
+            if(mysqli_num_rows($resultatNegociation) == 0){
+                echo "Erreur : Pas de négociation conclue trouvée pour ce produit";
+            }else{
+                $dataNegociation = mysqli_fetch_assoc($resultatNegociation);
+                //On veut trouver la dernière offre faite
+                $i=0;
+                do{
+                    $i++;
+                }while ($i < 9 && isset($dataNegociation["Prop".($i+1)]));
+                if($i == 9 && isset($dataNegociation["Prop".($i+1)])){  //on fait comme cela pour éviter de tester Prop11, qui n'est pas un champ
+                    $i=10;
+                }
+                $prixTotalPanier = $dataNegociation["Prop".$i];
+            }
         }
     }
+    $prixTotalPaiement = $prixTotalPanier + $prixLivraison;
  ?>
 
 <!DOCTYPE html>
@@ -179,71 +240,75 @@
 				<h1 id="titrePrincipal" align="center"><strong>Finalisation du paiement</strong></h1>
 			</div>
 			<div class="row" id="wrapperInterieur">
+                
 				<div class="col-md-6 col-sm-12">
-					<div class="row" id="infosClient" style="height: auto;">
-						<div class="col-12 container-fluid">
-							<h3 style="margin-bottom: 15px;">Informations de livraison</h3>
-							<div class="row text-left" style="margin-bottom: 10px;">
-								<p class="col-12">
-									Nom : <input class="zoneInfo" type="text" name="Nom" style="width: 130px;" value="">
-									Prenom : <input class="zoneInfo" type="text" name="Prenom" style="width: 130px;" value="">
-								</p>
-							</div>
-							<div class="row text-left" style="margin-bottom: 10px;">
-								<p class="col-12">
-									Adresse ligne 1 : <input class="zoneInfo" type="text" name="AdresseLigne1" style="width: 180px;" value="">
-									Adresse ligne 2 : <input class="zoneInfo" type="text" name="AdresseLigne2" style="width: 180px;" value="">
-								</p>
-							</div>
-							<div class="row text-left" style="margin-bottom: 10px;">
-								<p class="col-12">
-									Ville : <input class="zoneInfo" type="text" name="Ville" style="width: 200px;" value="">
-									Code postal : <input class="zoneInfo" type="text" name="CodePostal" style="width: 75px;" value="">
-								</p>
-							</div>
-							<div class="row text-left" style="margin-bottom: 10px;">
-								<p class="col-12">
-									Pays : <input class="zoneInfo" type="text" name="Pays" style="width: 120px;" value="">
-									Numéro de téléphone : <input class="zoneInfo" type="text" name="NumeroTelephone" style="width: 100px;" value="">
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="row" id="infosCarte" style="height: auto;">
-						<div class="col-12 container-fluid">
-							<div class="row text-left" id="teteInfoCarte" style="margin-bottom: 15px;">
-								<h3 style="margin-bottom: 15px;">Informations de paiement</h3>
-								<button class="btn btn-sm btn-info col-lg-4 col-md-12" style="white-space: normal;">Insérer les informations de paiement enregistrées</button>
-							</div>
-							<div class="row text-left" style="margin-bottom: 10px;">
-								<p class="col-12">
-									Type de carte: 
-									<label class="radio-inline">
-								      	<input type="radio" name="optradio" checked>Visa
-								    </label>
-								    <label class="radio-inline">
-								      	<input type="radio" name="optradio">Mastercard
-								    </label>
-								    <label class="radio-inline">
-								      	<input type="radio" name="optradio">American Express
-								    </label>
-								</p>
-							</div>
-							<div class="row text-left" style="margin-bottom: 10px;">
-								<p class="col-12">
-									Numéro de la carte : <input class="zoneInfo" type="text" name="NumeroCarte" style="width: 150px;" value="">
-									Titulaire : <input class="zoneInfo" type="text" name="Prenom" style="width: 150px;" value="">
-								</p>
-							</div>
-							<div class="row text-left" style="margin-bottom: 10px;">
-								<p class="col-12">
-									Date d'expiration : <input class="zoneInfo" type="text" name="MoisExpiration" style="width: 35px;margin-right: 0px;" value="MM"> / <input class="zoneInfo" type="text" name="AnneeExpiration" style="width: 35px;" value="AA">
-									Code de sécurité : <input class="zoneInfo" type="text" name="CodeSecurite" style="width: 55px;" value="">
-								</p>
-							</div>
-						</div>
-					</div>
+                    <?php echo '<form id="formPaiement" action="paiement.php?typePaiement='.$typePaiement.''.(isset($produitPaye)?"&produitPaye=".$produitPaye:"").'" method="post">'; ?>
+    					<div class="row" id="infosClient" style="height: auto;">
+    						<div class="col-12 container-fluid">
+    							<h3 style="margin-bottom: 15px;">Informations de livraison</h3>
+    							<div class="row text-left" style="margin-bottom: 10px;">
+    								<p class="col-12">
+    									Nom : <input class="zoneInfo" type="text" name="Nom" style="width: 130px;" value="">
+    									Prenom : <input class="zoneInfo" type="text" name="Prenom" style="width: 130px;" value="">
+    								</p>
+    							</div>
+    							<div class="row text-left" style="margin-bottom: 10px;">
+    								<p class="col-12">
+    									Adresse ligne 1 : <input class="zoneInfo" type="text" name="AdresseLigne1" style="width: 180px;" value="">
+    									Adresse ligne 2 : <input class="zoneInfo" type="text" name="AdresseLigne2" style="width: 180px;" value="">
+    								</p>
+    							</div>
+    							<div class="row text-left" style="margin-bottom: 10px;">
+    								<p class="col-12">
+    									Ville : <input class="zoneInfo" type="text" name="Ville" style="width: 200px;" value="">
+    									Code postal : <input class="zoneInfo" type="text" name="CodePostal" style="width: 75px;" value="">
+    								</p>
+    							</div>
+    							<div class="row text-left" style="margin-bottom: 10px;">
+    								<p class="col-12">
+    									Pays : <input class="zoneInfo" type="text" name="Pays" style="width: 120px;" value="">
+    									Numéro de téléphone : <input class="zoneInfo" type="text" name="NumeroTelephone" style="width: 100px;" value="">
+    								</p>
+    							</div>
+    						</div>
+    					</div>
+    					<div class="row" id="infosCarte" style="height: auto;">
+    						<div class="col-12 container-fluid">
+    							<div class="row text-left" id="teteInfoCarte" style="margin-bottom: 15px;">
+    								<h3 style="margin-bottom: 15px;">Informations de paiement</h3>
+    								<input type="submit" name="InformationsCarteAuto" class="btn btn-sm btn-info col-lg-4 col-md-12" style="white-space: normal;" value="Insérer les informations de paiement enregistrées">
+    							</div>
+    							<div class="row text-left" style="margin-bottom: 10px;">
+    								<p class="col-12">
+    									Type de carte: 
+    									<label class="radio-inline">
+    								      	<input type="radio" name="optradio" checked>Visa
+    								    </label>
+    								    <label class="radio-inline">
+    								      	<input type="radio" name="optradio">Mastercard
+    								    </label>
+    								    <label class="radio-inline">
+    								      	<input type="radio" name="optradio">American Express
+    								    </label>
+    								</p>
+    							</div>
+    							<div class="row text-left" style="margin-bottom: 10px;">
+    								<p class="col-12">
+    									Numéro de la carte : <input class="zoneInfo" type="text" name="NumeroCarte" style="width: 150px;" value="">
+    									Titulaire : <input class="zoneInfo" type="text" name="Prenom" style="width: 150px;" value="">
+    								</p>
+    							</div>
+    							<div class="row text-left" style="margin-bottom: 10px;">
+    								<p class="col-12">
+    									Date d'expiration : <input class="zoneInfo" type="text" name="MoisExpiration" style="width: 35px;margin-right: 0px;" value="MM"> / <input class="zoneInfo" type="text" name="AnneeExpiration" style="width: 35px;" value="AA">
+    									Code de sécurité : <input class="zoneInfo" type="text" name="CodeSecurite" style="width: 55px;" value="">
+    								</p>
+    							</div>
+    						</div>
+    					</div>
+                    </form>
 				</div>
+
 				<div class="col-lg-1 col-md-1 col-xs-12" style="height: 30px;"></div>
 				<div class="col-md-5 col-sm-12">
 					<div class="row" style="height: auto;">
@@ -253,11 +318,17 @@
 							<p>Total : <strong><?php echo $prixTotalPaiement." €"; ?></strong></p>
 						</div>
 					</div>
-					<div class="row text-center" style="height: 50%;">
-						<button class="btn btn-warning btn-lg col-9 center" id="boutonPayer">
-							Payer
-						</button>
-					</div>
+					<?php 
+                        if($prixTotalPaiement == $prixLivraison){       //Il y a eu une erreur lors de la récupération des données et le prix des produits vaut 0
+                            echo "Il y a eu une erreur dans le calcul du prix";
+                        }else{
+                            echo '
+                                <div class="row text-center" style="height: 50%;">
+                                    <input form="formPaiement" type="submit" name="boutonPayer" class="btn btn-warning btn-lg col-9 center" id="boutonPayer" value="Payer">
+                                </div>
+                            ';
+                        }
+                     ?>
 				</div>
 			</div>
 		</div>
