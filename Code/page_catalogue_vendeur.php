@@ -13,9 +13,8 @@
     //id si client connecté
     $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
     //pseudo si vendeur connecté
-    $boolAdmin=(isset($_SESSION['boolAdmin']))?$_SESSION['boolAdmin']:0;
-
-    if(isset($_POST["toggleConnexion"])){
+    
+	if(isset($_POST["toggleConnexion"])){
     	if($_POST["toggleConnexion"]){
     		if($typeConnected == 1){
     			header('Location: page_de_connexion.php');
@@ -45,21 +44,63 @@
     	}
     }
 
-    //Special vendeurs - admins
-    if(isset($_POST["lienAdmin"])){
-    	if ($_POST["lienAdmin"]) {
-    		header('Location: liste_vendeurs_admin.php');
-    	}
-    }
 
-    //Page
-    $categorieProduit = isset($_GET['categorieProduit'])?$_GET['categorieProduit']:0; 
+	//Page
+    $categorieProduit = "VIP";//isset($_GET['categorieProduit'])?$_GET['categorieProduit']:0; 
     //0 - erreur
     //1 - Ferraille et trésors
     //2 - Bon pour le musée
     //3 - Accesoires VIP
+	
+	$Numero = "";
+	$Noms = "";
+	$Photos = "";
+	$MethodeVentes = "";
+	$PrixDirects = "";
+	$Descriptions = "";
+	$Vendeur = "";
+	$compteur = 0;
+	
+	$chercheNom = "";
+	$chercheVendeur = "";
+	$maxPrix = "";
+	$minPrix = "";
+	
+	if ($db_found) { 
+		$sql = "SELECT * FROM produit WHERE Categorie LIKE '$categorieProduit'";
+        $result = mysqli_query($db_handle, $sql); 
+        while ($data = mysqli_fetch_assoc($result)) {
+			$Numero .= $data['Numero'];
+			$Numero .= "%marrq%";
+			
+			$Noms .= $data['Nom'];
+			$Noms .= "%marrq%";
+			
+			$Photos .= $data['Photo1'];
+			$Photos .= "%marrq%";
+			
+			$MethodeVentes .= $data['MethodeVente'];
+			$MethodeVentes .= "%marrq%";
+			
+			$PrixDirects .= $data['PrixDirect'];
+			$PrixDirects .= "%marrq%";
+			
+			$Descriptions .= $data['DescriptionLongue1'];
+			$Descriptions .= "%marrq%";
+			
+			$Vendeur .= $data['PseudoVendeur'];
+			$Vendeur .= "%marrq%";
+			
+			$compteur = $compteur + 1;
+        }   
+    }   
+    else  
+	{
+        echo "Database not found"; 
+	} 
+    
 
-?>
+ ?>
 
 <!DOCTYPE html>
 <html>
@@ -75,9 +116,10 @@
 		<link rel="stylesheet" href="Styles/style_catalogue.css">
 		<link rel="stylesheet" href="Styles/MyFooter.css">
 		<link rel="stylesheet" href="Styles/nav_bar.css">
+		<link rel="stylesheet" href="Styles/style.css">
 		<link rel="stylesheet" href="Styles/bootstrap.min.css">
 		
-		<script>
+		 <script>
 			//fonction qui cache ou affiche l'option de trie pas date de fin d'enchere
 			//si le cliant choisie de ne regarder que les meilleur offre
 			function masque_trie_enchere()
@@ -92,35 +134,32 @@
 					$("#trie_encheres").show();
 				}
 			}
-			
-			/*$(document).ready(function(){
-				 $("#options_type_vente").click(masque_trie_enchere());*/
 			 
-				$(document).ready(function(){
-					$("#valider").click(function(){
-						masque_trie_enchere();
-						var nom_objet = document.getElementById("nom_objet").value
-						var nom_vendeur = document.getElementById("nom_vendeur").value
-						var prix_min = document.getElementById("prix_min").value
-						var prix_max = document.getElementById("prix_max").value
-						var type_vente = document.getElementById("type_vente").value
-						var type_trie = document.getElementById("type_trie").value
+			$(document).ready(function(){
+				$("#valider").click(function(){
+					masque_trie_enchere();
+					var nom_objet = document.getElementById("nom_objet").value
+					var nom_vendeur = document.getElementById("nom_vendeur").value
+					var prix_min = document.getElementById("prix_min").value
+					var prix_max = document.getElementById("prix_max").value
+					var type_vente = document.getElementById("type_vente").value
+					var type_trie = document.getElementById("type_trie").value
 
-						//blindage
-						if(prix_min > prix_max)
-						{
-							var sauve = prix_min;
-							prix_min = prix_max;
-							prix_max = sauve;
-						}
+					//blindage
+					if(prix_min > prix_max)
+					{
+						var sauve = prix_min;
+						prix_min = prix_max;
+						prix_max = sauve;
+					}
 
-					});
-				}); 
-		 </script>
+				});
+			}); 
+		 </script> 
 	</head>
 
-	<body>	
-	<!-- 00 -->
+	<body>
+		<!-- 00 -->
 	<!-- TOP -->
 	<!-- 00 -->
 		
@@ -194,137 +233,63 @@
 	<!-- DIV -->
 	<!-- 00 -->
 	
-	<div class="page">
-		<form>
-			<table>
-				<tr>
-					<td>
-						<div class="recherche">
-							<h3> Filtre </h3>
-							<div class="filtre">
-								<p> chercher un objet par son nom :</p> 
-								<p> <input type="text" id="nom_objet"> </p>
-							</div>
-							<div class="filtre">
-								<p> chercher un objet par son vendeur : </p>
-								<p> <input type="text" id="nom_vendeur"> </p>
-							</div>
-							
-							<div class="filtre">
-								<p> ne garder que les objet entre </p>
-								<p><input style="width: 50px;" type="int" id="prix_min"> € et <input style="width: 50px;" type="int" id="prix_max">€ </p>
-							</div>
-							<div class="filtre">
-								<p> filtrer par par type de vente proposée </p>
-								<p> <select id="type_vente" size=1>
-										<option id="options_type_vente">toute</option>
-										<option id="options_type_vente">meilleur offre</option>
-										<option id="options_type_vente">vente aux encheres</option>
-									</select> </p>
-							</div>
-							<div class="filtre">
-								<p> trier par </p>
-								<p> <select id="type_trie" size=1>
-										<option>ordre alphabetique</option>
-										<option>prix d'achat direct croissant</option>
-										<option>prix d'achat direct decroissant</option>
-										<option id="trie_encheres">date de fin d'encheres</option>
-									</select> </p>
-							</div>
-							<input type="button" id="valider" value="valider la recherche">
-						</div>
-					</td>
-					<td>
-						<div class="titre">
-							<h1> Catalogue :  </h1>
-						</div>
-						<div class="galerie">
-							<div class="objet">
-								<form>
-									<table>
-										<tr>
-											<td>
-												<img class="image" src="Images/Hiroshige_nuit_de_neige_à_Kambara.png">
-											</td>
-											<td>
-												<h4>Nuit de neige à Kambara</h4>
-												<div class="description_objet">
-													<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis.  <p>
-												</div>
-												<p> objet mit en vente par: </p>
-											</td>
-											<td>
-												<h5> methode de vente: </h5>
-												<h5>199.99€ </h5>
-												<input type="button" id="achat_imediat" value="acheter maintenant">
-												<h5>ou </h5>
-												<p href="#encheres" id="encheres"> participer aux ensheres </p>
-												<p href="#negociations" id="meilleur_offre"> debuter un negociation avec le vendeur </p>
-											</td>
-										</tr>						
-									</table>
+		<div class="page">
+			<form>
+				<table>
+					<tr>
+						<td>
+							<div class="recherche">
+								<div class="filtre">
+									<p> filtrer par par type de vente proposée </p>
+									<p> <select id="type_vente" size=1>
+											<option id="options_type_vente">toute</option>
+											<option id="options_type_vente">meilleur offre</option>
+											<option id="options_type_vente">vente aux encheres</option>
+										</select> </p>
+								</div>
+								<div class="filtre">
+									<p> trier par </p>
+									<p> <select id="type_trie" size=1>
+											<option>ordre alphabetique</option>
+											<option>prix d'achat direct croissant</option>
+											<option>prix d'achat direct decroissant</option>
+											<option id="trie_encheres">date de fin d'encheres</option>
+										</select> </p>
+								</div>
+								<input type="button" id="valider" value="valider la recherche">
+								
+								
+								<form action="page_mes_produits.php" method="post" class="info_form" >
+									<h3> Filtre </h3>
+									
+									<div class="filtre">
+										<p> chercher un objet par son nom :</p> 
+										<p> <input type="text" name="chercheNom" id="nom"> </p> 
+									</div>
+									<div class="filtre">
+										<p> chercher un objet par son vendeur : </p>
+										<p> <input type="text" name="chercheVendeur" id="nom"> </p>
+									</div>
+									<div class="filtre">
+										<p> ne garder que les objet entre </p>
+										<p><input name="maxPrix" style="width: 50px;" type="int" id="prix_min"> € et <input name="minPrix" style="width: 50px;" type="int" id="prix_max">€ </p>
+									</div>
+																	
+									<input type="submit" name="boutonAjout" id="btn_ajout" class="btn" value="Ajouter">
 								</form>
 							</div>
-							<div class="objet">
-								<form>
-									<table>
-										<tr>
-											<td>
-												<img class="image" src="Images/Hiroshige_nuit_de_neige_à_Kambara.png">
-											</td>
-											<td>
-												<h4>Nuit de neige à Kambara</h4>
-												<div class="description_objet">
-													<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis.  <p>
-												</div>
-												<p> objet mit en vente par: </p>
-											</td>
-											<td>
-												<h5> methode de vente: </h5>
-												<h5>199.99€ </h5>
-												<input type="button" id="achat_imediat" value="acheter maintenant">
-												<h5>ou </h5>
-												<p href="#encheres" id="encheres"> participer aux ensheres </p>
-												<p href="#negociations" id="meilleur_offre"> debuter un negociation avec le vendeur </p>
-											</td>
-										</tr>						
-									</table>
-								</form>
+						</td>
+						<td>
+							<div class="titre">
+								<h1> Catalogue :  <?php echo $categorieProduit ?> </h1>
 							</div>
-							<div class="objet">
-								<form>
-									<table>
-										<tr>
-											<td>
-												<img class="image" src="Images/Hiroshige_nuit_de_neige_à_Kambara.png">
-											</td>
-											<td>
-												<h4>Nuit de neige à Kambara</h4>
-												<div class="description_objet">
-													<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet   dolor id sapien rutrum, id vulputate quam iaculis.  <p>
-												</div>
-												<p> objet mit en vente par: </p>
-											</td>
-											<td>
-												<h5> methode de vente: </h5>
-												<h5>199.99€ </h5>
-												<input type="button" id="achat_imediat" value="acheter maintenant">
-												<h5>ou </h5>
-												<p href="#encheres" id="encheres"> participer aux ensheres </p>
-												<p href="#negociations" id="meilleur_offre"> debuter un negociation avec le vendeur </p>
-											</td>
-										</tr>						
-									</table>
-								</form>
-							</div>
-							
-						</div>
-					</td>
-				</tr>						
-			</table>
-		</form>
-	
-	</div>
+							<div id="galerie">	</div>
+						</td>
+					</tr>						
+				</table>
+			</form>
+		
+		</div>
 	
 	<!-- 00 -->
 	<!-- FOOTER -->
@@ -383,7 +348,143 @@
                 <div class="footer-copyright text-center">Copyright &copy; 2020 <strong>Ebay ECE</strong></div>
             </div>
         </footer>
-	</body>
+		
+		<script> 
+			//////////////////////////////////////////////////////////
+			//ajout automatique des produits depui la base de donnee//
+			//////////////////////////////////////////////////////////
+			
+			var Numero = "<?php echo $Numero ?>";
+			var Noms = "<?php echo $Noms ?>";
+			var Photos = "<?php echo $Photos ?>";
+			var MethodeVentes = "<?php echo $MethodeVentes ?>";
+			var PrixDirects = "<?php echo $PrixDirects ?>";
+			var Descriptions = "<?php echo $Descriptions ?>";
+			var Vendeur = "<?php echo $Vendeur ?>";
+			var nbProduit = "<?php echo $compteur ?>";
+			
+			var n = 0;
+			var compteur = 0;
+			
+			if("" == Noms && "" == Photos && "" == MethodeVentes && "" == PrixDirects && "" == Descriptions && "" == Vendeur)
+			{
+				var objet = document.createElement("div");
+				objet.id = "objet";
+				objet.className = "objet";
+				document.getElementById("galerie_mes_produit").appendChild(objet);
+				
+				var h3 = document.createElement("h3");
+				h3.textContent = "il n'y a pas d'objet de cette categorie";
+				document.getElementById("objet").appendChild(h3);
+			}
+			else
+			{
+				for(compteur = 0; compteur < nbProduit; ++compteur)
+				{
+					var objet = document.createElement("div");
+					objet.id = "objet" + compteur;
+					objet.className = "objet";
+					document.getElementById("galerie").appendChild(objet);
+					
+					var form = document.createElement("form"); 
+					form.id = "form" + compteur; 
+					document.getElementById("objet" + compteur).appendChild(form);
+					
+					var table = document.createElement("table"); 
+					table.id = "table" + compteur; 
+					document.getElementById("form" + compteur).appendChild(table);
+					
+					var tr = document.createElement("tr"); 
+					tr.id = "tr" + compteur; 
+					document.getElementById("table" + compteur).appendChild(tr);
+					
+					var td_1 = document.createElement("td"); 
+					td_1.id = "td_1" + compteur; 
+					document.getElementById("tr" + compteur).appendChild(td_1);
+					
+					var img = document.createElement("img"); 
+					img.className = "image";
+					n = Photos.search("%marrq%");
+					var adresseImage = Photos.slice(0, n);
+					img.src = adresseImage;
+					Photos = Photos.replace(adresseImage + "%marrq%", "");
+					document.getElementById("td_1" + compteur).appendChild(img);
+					
+					var td_2 = document.createElement("td"); 
+					td_2.id = "td_2" + compteur; 
+					document.getElementById("tr" + compteur).appendChild(td_2);
+					
+					var h4_1 = document.createElement("h4"); 
+					n = Noms.search("%marrq%");
+					var Nom_objet = Noms.slice(0, n);
+					h4_1.textContent = Nom_objet;
+					Noms = Noms.replace(Nom_objet + "%marrq%", "");
+					document.getElementById("td_2" + compteur).appendChild(h4_1);		
 
-	
+					var description = document.createElement("div"); 
+					description.id = "description" + compteur; 
+					description.className = "description_objet";
+					document.getElementById("td_2" + compteur).appendChild(description);
+					
+					var p_1 = document.createElement("p"); 
+					n = Descriptions.search("%marrq%");
+					var Description_objet = Descriptions.slice(0, n);
+					p_1.textContent = Description_objet;
+					Descriptions = Descriptions.replace(Description_objet + "%marrq%", "");
+					document.getElementById("description" + compteur).appendChild(p_1);
+					
+					var p_2 = document.createElement("p"); 
+					n = Vendeur.search("%marrq%");
+					var Categories_objet = Vendeur.slice(0, n);
+					p_2.textContent = "objet mit en vente par : " + Categories_objet;
+					Vendeur = Vendeur.replace(Categories_objet + "%marrq%", "");
+					document.getElementById("td_2" + compteur).appendChild(p_2);
+					
+					var td_3 = document.createElement("td"); 
+					td_3.id = "td_3" + compteur; 
+					document.getElementById("tr" + compteur).appendChild(td_3);
+					
+					var h5_1 = document.createElement("h5"); 
+					h5_1.textContent = "Acheter:"; 
+					document.getElementById("td_3" + compteur).appendChild(h5_1);
+					
+					var h4_2 = document.createElement("h4"); 
+					n = PrixDirects.search("%marrq%");
+					var PrixDirects_objet = PrixDirects.slice(0, n);
+					h4_2.textContent = PrixDirects_objet + " €";
+					PrixDirects = PrixDirects.replace(PrixDirects_objet + "%marrq%", "");
+					document.getElementById("td_3" + compteur).appendChild(h4_2);
+					
+					var p_3 = document.createElement("p"); 
+					n = MethodeVentes.search("%marrq%");
+					var MethodeVentes_objet = MethodeVentes.slice(0, n);
+					MethodeVentes = MethodeVentes.replace(MethodeVentes_objet + "%marrq%", "");
+					if("Encheres" == MethodeVentes_objet)
+					{
+						p_3.textContent = "aussi disponible en ventes aux encheres";
+					}
+					else
+					{
+						p_3.textContent = "le prix peut etre negocier avec le vendeur";
+					}
+					document.getElementById("td_3" + compteur).appendChild(p_3);
+					
+					
+					n = Numero.search("%marrq%");
+					var Numero_objet = Numero.slice(0, n);
+					Numero = Numero.replace(Numero_objet + "%marrq%", "");
+					
+					
+					
+					var href = document.createElement("a"); 
+					href.textContent = "aller a la page du produit";
+					href.href = "produit_client.php?numeroProduit=" + Numero_objet;
+					document.getElementById("td_3" + compteur).appendChild(href);								
+				}
+			}
+		</script>
+	</body>	
 </html>
+
+
+
