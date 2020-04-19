@@ -41,7 +41,7 @@ h4{
 	padding-top: 25px;
 }
 
-.galerie_mes_produit{
+#galerie_mes_produit{
 	background-color: #369fe0;	
 	height: 900px;
 	width: 1400px;
@@ -65,6 +65,7 @@ h4{
 .image
 {
 	max-width: 420px;
+	max-height: 320px;
 	margin-top: 50px;
 	margin-left: 30px;
 }
