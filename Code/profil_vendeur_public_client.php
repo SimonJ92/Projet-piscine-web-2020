@@ -46,7 +46,18 @@
 
 
 	//Page
-    
+    $pseudoProfilVendeur = isset($_GET["pseudoVendeur"])?$_GET["pseudoVendeur"]:"";
+    if($pseudoProfilVendeur == ""){
+        echo "erreur : pas de vendeur spécifié";
+    }else{
+        $sqlProfilVendeur = "SELECT * from vendeur where Pseudo like ".$pseudoProfilVendeur;
+        $resultProfilVendeur = mysqli_query($db_handle,$sqlProfilVendeur) or die (mysqli_error($db_handle));
+        if(mysqli_num_rows($resultProfilVendeur) == 0){
+            echo "erreur : vendeur non trouvé";
+        }else{
+            $dataProfilVendeur = mysqli_fetch_assoc($resultProfilVendeur);
+        }
+    }
  ?>
 
 <!DOCTYPE html>
@@ -136,39 +147,43 @@
             </div>              
         </div>
 	
-		<div class="container-fluid" id="conteneur" style="background-image: url('Images/fond-profil1.jpg');">
-			<div class="row container-fluid" id="contenu">
-				<div class="row" id="infosVendeur">
-					<div class="col-md-4 col-sm-12 conteneurImage" style="height: 300px">
-						<img id="photoVendeur" src="Images/photo-vendeur1.jpg" class="imagesExemples">
-					</div>
-					<div class="col-md-1 col-sm-12" style="height: 50px;"></div>
-					<div class="col-md-7 col-sm-12" id="infosTexte">
-						<div class="container-fluid" style="height: 100%">
-							<div class="row" id="nomVendeur" style="height:50px;">
-								<h5 class="col-12">Nom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeur</h5>
-							</div>
-							<div class="row" id="description" style="height: 250px;">
-								<p>
-									Description du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeur
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row" id="exemplesProduits">
-					<div class="col-md-3 col-sm-12 conteneurImage">
-						<a href="#"><img src="Images/imageMusee.png" class="imagesExemples"></a>
-					</div>
-					<div class="col-md-3 col-sm-12 conteneurImage">
-						<a href="#"><img src="Images/imageFeraille.png" class="imagesExemples"></a>
-					</div>
-					<div class="col-md-3 col-sm-12 conteneurImage">
-						<a href="#"><img src="Images/imageVIP.png" class="imagesExemples"></a>
-					</div>
-				</div>
-			</div>
-		</div>
+		<?php echo '<div class="container-fluid" id="conteneur" style="background-image: url('.(isset($dataProfilVendeur["ImageFond"])?$dataProfilVendeur["ImageFond"]:"fond-profil-default.png").');">'; ?>
+            <div class="row container-fluid" id="contenu">
+                <div class="row" id="infosVendeur">
+                    <div class="col-md-4 col-sm-12 conteneurImage" style="height: 300px">
+                        <?php echo '
+                            <img id="photoVendeur" src="'.(isset($dataProfilVendeur["Photo"])?$dataProfilVendeur["Photo"]:"Images/photo-vendeur-default.jpg").'" class="imagesExemples">
+                        '; ?>
+                    </div>
+                    <div class="col-md-1 col-sm-12" style="height: 50px;"></div>
+                    <div class="col-md-7 col-sm-12" id="infosTexte">
+                        <div class="container-fluid" style="height: 100%">
+                            <div class="row" id="nomVendeur" style="height:50px;">
+                                <?php echo '<h5 class="col-12">'.$dataProfilVendeur["Nom"].'</h5>'; ?>
+                            </div>
+                            <div class="row" id="description" style="height: 250px;">
+                                <?php echo '<p class="col-12">'.(isset($dataProfilVendeur["Description"])?$dataProfilVendeur["Description"]:"").'</p>'; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="exemplesProduits">
+
+                    <?php 
+                        $sqlPhotos = "SELECT * from produit where PseudoVendeur like ".$pseudoProfilVendeur." LIMIT 3";
+                        $resultPhotos = mysqli_query($db_handle,$sqlPhotos) or die (mysqli_error($db_handle));
+                        while ($dataPhotos = mysqli_fetch_assoc($resultPhotos)) {   //adapter lien vers produits
+                            echo '
+                                <div class="col-md-3 col-sm-12 conteneurImage">
+                                    <a href="produit_vendeur.php?numeroProduit='.$dataPhotos["Numero"].'"><img src="'.$dataPhotos["Photo1"].'" class="imagesExemples"></a>    
+                                </div>
+                            ';
+                        }
+                     ?>
+                    
+                </div>
+            </div>
+        </div>
 
     	<footer class="page-footer">
             <div class="container">

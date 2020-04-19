@@ -173,11 +173,11 @@
 													<div class="produit">
 														<div class="row" style="height: auto;">
 															<div class="col-md-3 col-sm-12 img-fluid" style="height: 200px;">
-																<a href="produit_client.php?NumProduit='.$dataProduit["Numero"].'"><img class="imageProduit center"src="'.$dataProduit["Photo1"].'"></a>
+																<a href="produit_client.php?numeroProduit='.$dataProduit["Numero"].'"><img class="imageProduit center"src="'.$dataProduit["Photo1"].'"></a>
 															</div>
 															<div class="col-md-6 col-sm-12" >
 																<div class="row nomProduit text">
-																		<a href="produit_client.php?NumProduit='.$dataProduit["Numero"].'"><b>'.$dataProduit["Nom"].'</b></a>
+																		<a href="produit_client.php?numeroProduit='.$dataProduit["Numero"].'"><b>'.$dataProduit["Nom"].'</b></a>
 																</div>
 																<div class="row descriptionProduit">
 																	'.$dataProduit["DescriptionCourte"].'
