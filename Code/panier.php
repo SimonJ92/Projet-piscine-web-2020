@@ -46,6 +46,17 @@
 
 
 	//Page
+	if(isset($_POST["boutonSupprimer"])){
+		if($_POST["boutonSupprimer"] && $db_found){
+			$numeroSupprimer = isset($_POST["numeroSupprimer"])?$_POST["numeroSupprimer"]:"";
+			if($numeroSupprimer == ""){
+				echo "le pseudo n'a pas été transmis";
+			}else{
+				$sqlSupprimer = "DELETE from panier where NumeroProduit =".$numeroSupprimer;
+				$resultDelete = mysqli_query($db_handle,$sqlSupprimer) or die (mysqli_error($db_handle));
+			}
+		}
+	}
  ?>
 
 <!DOCTYPE html>
@@ -143,47 +154,64 @@
 						<div id="listeProduits" class="col-11 container-fluid">
 
 
-
-							<div class="produit">
-								<div class="row" style="height: auto;">
-									<div class="col-md-3 col-sm-12 img-fluid" style="height: 200px;">
-										<a href="#"><img class="imageProduit center"src="Images/imageMusee.png"></a>
-									</div>
-									<div class="col-md-6 col-sm-12" >
-										<div class="row nomProduit text">
-												<a href="#"><b>Nuit de neige à Kambara, HiroshigeNuit de neige à Kambara, HiroshigeNuit de neige à Kambara, HiroshigeNuit de neige à Kambara, Hiroshige</b></a>
-										</div>
-										<div class="row descriptionProduit">
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet dolor id sapien rutrum, id vulputate quam iaculis. Suspendisse consectetur mi id libero fringilla, in pharetra sem ullamcorper. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum quam odio, quis placerat ante luctus eu. Sed aliquet dolor id sapien rutrum, id vulputate quam iaculis. Suspendisse consectetur mi id libero fringilla, in pharetra sem ullamcorper.
-										</div>
-									</div>
-									<div class="col-md-3 col-sm-12">
-										<div class="row prixProduit">
-											<div class="container">
-												<h6 class="col-md-12 text-center">Prix d'achat immédiat</h6>
-												<p class="prix text-center"><span>120000.00</span>€</p>
-											</div>
-										</div>
-										<div class="row supprimerProduit">
-											<a href="#" class="btn btn-danger col-md-12 btn-lg" role="button">
-												<p class="center">Supprimer du panier</p>
-											</a>
-										</div>
-									</div>
-								</div>
-								<div class="row autreOption">
-									<h6 class="col-lg-3 col-md-4 col-sm-12">Autre option d'achat :</h6>
-									<a href="#" class="btn btn-info btn-lg col-md-6 col-sm-12" role="button" style="height: 50px; margin-bottom: 5px;">
-										<p class="center">Enchère</p>
-									</a>
-								</div>
-							</div>
-
-
-
-
-
-
+							<?php 
+								if ($db_found) {
+									$sqlPanier = "SELECT * from panier where IDClient like '%$idConnected%'";
+									$resultPanier = mysqli_query($db_handle,$sqlPanier);
+									if (mysqli_num_rows($resultPanier) == 0) {
+										echo "Votre panier est vide";
+									}else{
+										while ($dataPanier = mysqli_fetch_assoc($resultPanier)) {
+											$sqlProduit = "SELECT * from produit where Numero =".$dataPanier["NumeroProduit"];	//on pourrait transformer les 2 requêtes en 1 seule
+											$resultProduit = mysqli_query($db_handle,$sqlProduit);
+											if(mysqli_num_rows($resultProduit) == 0){
+												echo "Produit non trouvé";
+											}else
+											{
+												$dataProduit = mysqli_fetch_assoc($resultProduit);
+												echo '
+													<div class="produit">
+														<div class="row" style="height: auto;">
+															<div class="col-md-3 col-sm-12 img-fluid" style="height: 200px;">
+																<a href="produit_client.php?NumProduit='.$dataProduit["Numero"].'"><img class="imageProduit center"src="'.$dataProduit["Photo1"].'"></a>
+															</div>
+															<div class="col-md-6 col-sm-12" >
+																<div class="row nomProduit text">
+																		<a href="produit_client.php?NumProduit='.$dataProduit["Numero"].'"><b>'.$dataProduit["Nom"].'</b></a>
+																</div>
+																<div class="row descriptionProduit">
+																	'.$dataProduit["DescriptionCourte"].'
+																</div>
+															</div>
+															<div class="col-md-3 col-sm-12">
+																<div class="row prixProduit">
+																	<div class="container">
+																		<h6 class="col-md-12 text-center">Prix d\'achat immédiat</h6>
+																		<p class="prix text-center"><span>'.$dataProduit["PrixDirect"].'</span>€</p>
+																	</div>
+																</div>
+																<div class="row supprimerProduit">
+																	<form action="panier.php" method="post">
+																		<input type="hidden" name="numeroSupprimer" value="'.$dataProduit["Numero"].'">
+																		<input type="submit" name="boutonSupprimer" class="btn btn-danger col-md-12 btn-lg" value="Supprimer du panier">
+																	</form>
+																</div>
+															</div>
+														</div>
+														<div class="row autreOption">
+															<h6 class="col-lg-3 col-md-4 col-sm-12">Autre option d\'achat :</h6>
+															<a href="'.(($dataProduit["MethodeVente"] == "Encheres")?"enchere_client.php?numeroProduit=".$dataProduit["Numero"]:(($dataProduit["MethodeVente"] == "Negoce")?"negoce_client.php?numeroProduit=".$dataProduit["Numero"]:"!")).'" class="btn btn-info btn-lg col-md-6 col-sm-12" role="button" style="height: 50px; margin-bottom: 5px;">
+																<p class="center">'.$dataProduit["MethodeVente"].'</p>
+															</a>
+														</div>
+													</div>
+												';
+											}
+										}
+									}
+								}
+							 ?>
+						
 
 						</div>
 					</div>
@@ -193,17 +221,39 @@
 					<div class="container-fluid">
 						<p><h3 align="center"><strong>Récapitulatif</strong></h3></p>
 						<div class="row">
-							<p>Nombre d'objets</p>
-							<p><span id="NombreObjets">0</span></p>
+							<?php 
+								$sqlNbObjets = "SELECT count(*) as nbObjets from panier where IDClient =".$idConnected;
+								$resultCount = mysqli_query($db_handle,$sqlNbObjets);
+								if (mysqli_num_rows($resultCount) == 0) {
+									echo "erreur comptage objets";
+								}else{
+									$dataCount = mysqli_fetch_assoc($resultCount);
+									echo '
+										<p>Nombre d\'objets</p>
+										<p><span id="NombreObjets">'.$dataCount["nbObjets"].'</span></p>
+									';
+								}
+							 ?>
 						</div>
 						<div class="row">
-							<p>Prix total :</p>
-							<p><span id="prixTotal">0.00</span> €</p>
+							<?php 
+								$sqlTotalPrix = "SELECT Sum(A.PrixDirect) as totalPrix from produit A join panier B on A.Numero = B.NumeroProduit where B.IDClient =".$idConnected;
+								$resultTotalPrix = mysqli_query($db_handle,$sqlTotalPrix);
+								if (mysqli_num_rows($resultTotalPrix) == 0) {
+									echo "erreur comptage du prix total";
+								}else{
+									$dataTotalPrix = mysqli_fetch_assoc($resultTotalPrix);
+									echo '
+										<p>Prix total :</p>
+										<p><span id="prixTotal">'.$dataTotalPrix["totalPrix"].'</span> €</p>
+									';
+								}
+							 ?>
 						</div>
 						<br>
 						<div class="row" id="valider">
 							<div class="col-12">
-								<a href="#" class="btn btn-warning col-12 btn-lg" role="button">Valider le panier</a>
+								<a href="paiement.php?typePaiement=1" class="btn btn-warning col-12 btn-lg" role="button">Valider le panier</a>
 							</div>
 						</div>
 					</div>

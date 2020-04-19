@@ -46,6 +46,11 @@
 
 
 	//Page
+    $typePaiement = isset($_GET["typePaiement"])?$_GET["typePaiement"]:0;
+    //0 - erreur
+    //1 - panier
+    //2 - enchère => autre attribut pour idEnchère
+    //3 - négoce => autre attribut pour numero produit (ajouter un champ à negoce pour dire si la négoce est conclue)
  ?>
 
 <!DOCTYPE html>
