@@ -76,7 +76,7 @@
 				if(mysqli_num_rows($resultTestAjout) != 0){
 					$erreurAjout = "Le vendeur existe déjà";
 				}else{
-					$sqlAjout = "insert into vendeur (pseudo,AdresseMail,Nom,Admin) values('$ajoutPseudo','$ajoutMail','$ajoutNom','$ajoutCheckAdmin')";
+					$sqlAjout = "INSERT into vendeur (pseudo,AdresseMail,Nom,Admin) values('$ajoutPseudo','$ajoutMail','$ajoutNom','$ajoutCheckAdmin')";
 					$resultatAjout = mysqli_query($db_handle,$sqlAjout);
 					$erreurAjout = "Ajouté";
 				}

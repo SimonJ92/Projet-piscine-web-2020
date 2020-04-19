@@ -56,7 +56,7 @@
     $numeroProduitPage = isset($_GET["numeroProduit"])?$_GET["numeroProduit"]:0;	//numero du produit concerné sur la page
     if ($numeroProduitPage == 0) {
     	echo "Erreur : pas de produit spécifié";
-    }else{
+    }elseif($db_found){
     	$sqlProduitPage = "SELECT * from produit where Numero = ".$numeroProduitPage;
     	$resultatProduitPage = mysqli_query($db_handle,$sqlProduitPage);
     	if(mysqli_num_rows($resultatProduitPage) ==0){
@@ -74,20 +74,22 @@
     	}
     }
 
-    $_SESSION["numeroPhotoPageProduit"] = (isset($_SESSION["numeroPhotoPageProduit"]) && isset($dataProduitPage["Photo".(1 + $_SESSION["numeroPhotoPageProduit"])]))?$_SESSION["numeroPhotoPageProduit"]:1;
+    if($db_found){
+    	$_SESSION["numeroPhotoPageProduit"] = (isset($_SESSION["numeroPhotoPageProduit"]) && isset($dataProduitPage["Photo".(1 + $_SESSION["numeroPhotoPageProduit"])]))?$_SESSION["numeroPhotoPageProduit"]:1;
+    }
 
-    if(isset($_POST["boutonNextImage"])){
+    if($db_found && isset($_POST["boutonNextImage"])){
     	if($_POST["boutonNextImage"] && isset($dataProduitPage["Photo".(1 + $_SESSION["numeroPhotoPageProduit"])])){
     			$_SESSION["numeroPhotoPageProduit"] = $_SESSION["numeroPhotoPageProduit"] + 1;
     	}
     }
-    if(isset($_POST["boutonFormerImage"])){
+    if($db_found && isset($_POST["boutonFormerImage"])){
     	if($_POST["boutonFormerImage"] && $_SESSION["numeroPhotoPageProduit"]>1){
     			$_SESSION["numeroPhotoPageProduit"] = (($_SESSION["numeroPhotoPageProduit"] -1));
     	}
     }
 
-    if(isset($_POST["supprimerObjet"])){
+    if($db_found && isset($_POST["supprimerObjet"])){
     	if ($_POST["supprimerObjet"]) {
     		$sqlSuppression = "DELETE from produit where Numero = ".$numeroProduitPage;
     		$resultDelete = mysqli_query($db_handle,$sqlSuppression) or die (mysqli_error($db_handle));

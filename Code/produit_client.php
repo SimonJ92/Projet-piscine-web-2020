@@ -49,7 +49,7 @@
     $numeroProduitPage = isset($_GET["numeroProduit"])?$_GET["numeroProduit"]:0;    //numero du produit concerné sur la page
     if ($numeroProduitPage == 0) {
         echo "Erreur : pas de produit spécifié";
-    }else{
+    }elseif ($db_found) {
         $sqlProduitPage = "SELECT * from produit where Numero = ".$numeroProduitPage;
         $resultatProduitPage = mysqli_query($db_handle,$sqlProduitPage);
         if(mysqli_num_rows($resultatProduitPage) ==0){
@@ -67,21 +67,45 @@
         }
     }
 
-    $_SESSION["numeroPhotoPageProduit"] = (isset($_SESSION["numeroPhotoPageProduit"]) && isset($dataProduitPage["Photo".(1 + $_SESSION["numeroPhotoPageProduit"])]))?$_SESSION["numeroPhotoPageProduit"]:1;
+    if($db_found)
+    {
+        $_SESSION["numeroPhotoPageProduit"] = (isset($_SESSION["numeroPhotoPageProduit"]) && isset($dataProduitPage["Photo".(1 + $_SESSION["numeroPhotoPageProduit"])]))?$_SESSION["numeroPhotoPageProduit"]:1;
+    }
 
-    if(isset($_POST["boutonNextImage"])){
+    if($db_found && isset($_POST["boutonNextImage"])){
         if($_POST["boutonNextImage"] && isset($dataProduitPage["Photo".(1 + $_SESSION["numeroPhotoPageProduit"])])){
                 $_SESSION["numeroPhotoPageProduit"] = $_SESSION["numeroPhotoPageProduit"] + 1;
         }
     }
-    if(isset($_POST["boutonFormerImage"])){
+    if($db_found && isset($_POST["boutonFormerImage"])){
         if($_POST["boutonFormerImage"] && $_SESSION["numeroPhotoPageProduit"]>1){
                 $_SESSION["numeroPhotoPageProduit"] = (($_SESSION["numeroPhotoPageProduit"] -1));
         }
     }
 
     //achats
-
+    if($db_found && isset($_POST["boutonPanier"])){
+        if($_POST["boutonPanier"]){
+            $sqlVerifPanier = "SELECT * from panier where NumeroProduit = $numeroProduitPage and IDClient = $idConnected";
+            $resultTestPanier = mysqli_query($db_handle,$sqlVerifPanier) or die (mysqli_error($db_handle));
+            if(mysqli_num_rows($resultTestPanier) != 0){
+                echo "<script>alert(\"L'objet est déjà dans votre panier\")</script>";
+            }else{
+                $sqlAjouterPanier = "INSERT into panier (NumeroProduit, IDClient) values ('$numeroProduitPage','$idConnected')";
+                $resulatInsertionPanier = mysqli_query($db_handle,$sqlAjouterPanier) or die (mysqli_error($db_handle));
+            }
+        }
+    }
+    if($db_found && isset($_POST["boutonEncheres"])){
+        if($_POST["boutonEncheres"]){
+            header('Location: enchere_client.php?numeroProduit='.$numeroProduitPage);
+        }
+    }
+    if($db_found && isset($_POST["boutonNegoce"])){
+        if($_POST["boutonNegoce"]){
+            header('Location: negoce_client.php?numeroProduit='.$numeroProduitPage);
+        }
+    }
  ?>
 
 <!DOCTYPE html>
@@ -212,7 +236,7 @@
                             <div class="col text-center">
                                 <input type="submit" name="boutonPanier" class="btn btn-block btn-primary" value="Ajouter au panier"> <br><br>
                                 <input type="submit" name="boutonEncheres" class="btn btn-block btn-primary" value="Voir aux enchères"> <br><br>
-                                <input type="submit" name="boutonNegoce" class="btn btn-block btn-primary" value="Proposer une meilleure offre"> <br><br>
+                                <input type="submit" name="boutonNegoce" class="btn btn-block btn-primary" value="Négocier une meilleure offre"> <br><br>
                             </div>
                         </form>
                     </div>
