@@ -70,9 +70,9 @@
 	$Categories = "";
 	$compteur = 0;
 
-    //si le BDD existe, faire le traitement 
+    
     if ($db_found) { 
-        $sql = "SELECT * FROM produit WHERE PseudoVendeur LIKE 'Sylvain'";
+        $sql = "SELECT * FROM produit WHERE PseudoVendeur LIKE '$pseudoConnected'";
         $result = mysqli_query($db_handle, $sql); 
         while ($data = mysqli_fetch_assoc($result)) {
 			$Numero .= $data['Numero'];
@@ -112,8 +112,8 @@
 			$ajoutImage = isset($_POST["ajoutImage"])?$_POST["ajoutImage"]:"";
 			$ajoutCategorie = isset($_POST["ajoutCategorie"])?$_POST["ajoutCategorie"]:"";
 			$ajoutPrix = isset($_POST["ajoutPrix"])?$_POST["ajoutPrix"]:"";
-			$methodVente = "Encheres";
-			$pseudoVendeur = "Sylvain";//isset($_POST["$pseudoConnected"])?$_POST["$pseudoConnected"]:"";
+			$ajoutMethodeVente = isset($_POST["ajoutMethodeVente"])?$_POST["ajoutMethodeVente"]:"";
+			$pseudoVendeur = isset($_POST["$pseudoConnected"])?$_POST["$pseudoConnected"]:"";
 			if ($ajoutNom=="" || $ajoutDescription=="" || $ajoutImage=="" || $ajoutCategorie=="" || $ajoutPrix=="") {
 			$erreurAjout = "Tous les champs doivent être remplis";
 			}else{
@@ -122,9 +122,10 @@
 				if(mysqli_num_rows($resultTestAjout) != 0){
 					$erreurAjout = "Le produit existe déjà";
 				}else{
-					$sqlAjout = "INSERT  INTO produit (Nom, Photo1, MethodeVente, PrixDirect, DescriptionCourte, DescriptionLongue1, Categorie, PseudoVendeur) VALUES('$ajoutNom', '$ajoutImage', '$methodVente', '$ajoutPrix', '$ajoutDescription', '$ajoutDescription','$ajoutCategorie', '$pseudoVendeur')";
+					$sqlAjout = "INSERT  INTO produit (Nom, Photo1, MethodeVente, PrixDirect, DescriptionCourte, DescriptionLongue1, Categorie, PseudoVendeur) VALUES('$ajoutNom', '$ajoutImage', '$ajoutMethodeVente', '$ajoutPrix', '$ajoutDescription', '$ajoutDescription','$ajoutCategorie', '$pseudoVendeur')";
 					$resultatAjout = mysqli_query($db_handle,$sqlAjout);
 					$erreurAjout = "Ajouté";
+					header("Refresh:0");
 				}
 			}
 		}
@@ -278,11 +279,13 @@
 			<label for="categorie"><b>categorie</b></label>
 			<input type="text" name="ajoutCategorie" id="categorie">
 			
-			<label for="categorie"><b>prix d'achat direct</b></label>
+			<label for="prix"><b>prix d'achat direct</b></label>
 			<input type="text" name="ajoutPrix" id="prix">
 			
+			<label for="methode"><b>Methode de vente</b></label>
+			<input type="text" name="ajoutMethodeVente" id="methode">
+			
 			<input type="submit" name="boutonAjout" id="btn_ajout" class="btn" value="Ajouter">
-			<?php echo "etat:   $sqlAjout"; ?>
 			<button type="button" class="btn fermer" onclick="ferme_form()">fermer</button>
 		  </form>
 		</div>
