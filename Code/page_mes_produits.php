@@ -104,6 +104,32 @@
 	{
         echo "Database not found"; 
 	}  
+	
+	
+	/*if (isset($_POST["boutonAjout"])) {
+		if($_POST["boutonAjout"] && $db_found) {ajoutNom ajoutDescription ajoutImage ajoutCategorie ajoutPrix
+			$ajoutNom = isset($_POST["ajoutNom"])?$_POST["ajoutNom"]:"";
+			$ajoutDescription = isset($_POST["ajoutDescription"])?$_POST["ajoutDescription"]:"";
+			$ajoutImage = isset($_POST["ajoutImage"])?$_POST["ajoutImage"]:"";
+			$ajoutCategorie = isset($_POST["ajoutCategorie"])?$_POST["ajoutCategorie"]:"";
+			$ajoutPrix = isset($_POST["ajoutPrix"])?$_POST["ajoutPrix"]:"";
+			$pseudoVendeur = isset($_POST["$pseudoConnected"])?$_POST["$pseudoConnected"]:"";
+			if ($ajoutNom=="" || $ajoutDescription=="" || $ajoutImage=="" || $ajoutCategorie=="" || $ajoutPrix=="") {
+			$erreurAjout = "Tous les champs doivent être remplis";
+			}else{
+				$sqlTestAjout = "SELECT * FROM produit where Nom like '%$ajoutNom%'";
+				$resultTestAjout = mysqli_query($db_handle,$sqlTestAjout) or die (mysqli_error($db_handle));
+				if(mysqli_num_rows($resultTestAjout) != 0){
+					$erreurAjout = "Le produit existe déjà";
+				}else{
+					$sqlAjout = "insert into vendeur (nom, image, prix, description, categorie) values('$ajoutNom','$ajoutImage', '$ajoutPrix','$ajoutDescription','$ajoutCategorie')";
+					$resultatAjout = mysqli_query($db_handle,$sqlAjout);
+					$erreurAjout = "Ajouté";
+				}
+			}
+		}
+	}*/
+	
     //fermer la connection 
     mysqli_close($db_handle);
 	
@@ -241,16 +267,19 @@
 			<h1>ajouter un nouveau produit</h1>
 
 			<label for="titre"><b>Titre</b></label>
-			<input type="text" id="nom">
+			<input type="text" name="ajoutNom" id="nom">
 
 			<label for="description"><b>Description</b></label>
-			<input type="text" id="description">
+			<input type="text" name="ajoutDescription" id="description"> 
 			
 			<label for="image"><b>Image</b></label>
-			<input type="text" id="image">
+			<input type="text" name="ajoutImage" id="image">
 			
 			<label for="categorie"><b>categorie</b></label>
-			<input type="text" id="categorie">
+			<input type="text" name="ajoutCategorie" id="categorie">
+			
+			<label for="categorie"><b>prix d'achat direct</b></label>
+			<input type="text" name="ajoutPrix" id="prix">
 
 			<button type="button" class="btn" id="btn_ajout">ajouter</button>
 			<button type="button" class="btn fermer" onclick="ferme_form()">fermer</button>
