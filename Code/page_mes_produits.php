@@ -59,6 +59,7 @@
 
     //Page
 	$erreurAjout = "";
+	$sqlAjout = "";
 	//identifier le nom de base de données 
 	$Numero = "";
 	$Noms = "";
@@ -127,7 +128,7 @@
 				if(mysqli_num_rows($resultTestAjout) != 0){
 					$erreurAjout = "Le produit existe déjà";
 				}else{
-					$sqlAjout = "insert into produit (Nom, Photo1, MethodeVente, PrixDirect, DescriptionCourte, DescriptionLongue1, Categorie, PseudoVendeur) values('$ajoutNom','$ajoutImage', '$methodVente', '$ajoutPrix','$ajoutDescription', $ajoutDescription','$ajoutCategorie', '$pseudoVendeur')";
+					$sqlAjout = "INSERT  INTO produit (Nom, Photo1, MethodeVente, PrixDirect, DescriptionCourte, DescriptionLongue1, Categorie, PseudoVendeur) VALUES('$ajoutNom', '$ajoutImage', '$methodVente', '$ajoutPrix', '$ajoutDescription', '$ajoutDescription','$ajoutCategorie', '$pseudoVendeur')";
 					$resultatAjout = mysqli_query($db_handle,$sqlAjout);
 					$erreurAjout = "Ajouté";
 				}
@@ -287,7 +288,7 @@
 			<input type="text" name="ajoutPrix" id="prix">
 			
 			<input type="submit" name="boutonAjout" id="btn_ajout" class="btn" value="Ajouter">
-			<?php echo "   $erreurAjout"; ?>
+			<?php echo "etat:   $sqlAjout"; ?>
 			<button type="button" class="btn fermer" onclick="ferme_form()">fermer</button>
 		  </form>
 		</div>
