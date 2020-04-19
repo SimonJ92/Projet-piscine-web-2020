@@ -53,6 +53,18 @@
     }
 
     //Page
+    $pseudoProfilVendeur = isset($_GET["pseudoVendeur"])?$_GET["pseudoVendeur"]:"";
+    if($pseudoProfilVendeur == ""){
+        echo "erreur : pas de vendeur spécifié";
+    }else{
+        $sqlProfilVendeur = "SELECT * from vendeur where Pseudo like".$pseudoProfilVendeur;
+        $resultProfilVendeur = mysqli_query($db_handle,$sqlProfilVendeur);
+        if($resultProfilVendeur == 0){
+            echo "erreur : vendeur non trouvé";
+        }else{
+            $dataProfilClient = mysqli_fetch_assoc($resultProfilVendeur);
+        }
+    }
  ?>
 
 <!DOCTYPE html>
