@@ -51,6 +51,9 @@
     //1 - panier
     //2 - enchère => autre attribut pour idEnchère
     //3 - négoce => autre attribut pour numero produit (ajouter un champ à negoce pour dire si la négoce est conclue)
+
+    $produitPaye = isset($_GET["produit"])?$_GET["produit"]:"";
+    //id du produit, si originaire d'enchères ou négoce
  ?>
 
 <!DOCTYPE html>
@@ -99,9 +102,11 @@
                                  ?>
                         </div>
                         <div class="col-12 text-center">
-                            <a class="nav-link" href="panier.php">
-                                <img style="max-width:100px;" src="Images/paniers.png">
-                            </a>
+                            <?php echo ($typeConnected == 1)?"":
+                                '<a class="nav-link" href="panier.php">
+                                    <img style="max-width:100px;" src="Images/paniers.png">
+                                </a>';
+                             ?>
                         </div>
                     </form>
                 </div>

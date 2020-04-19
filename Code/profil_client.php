@@ -173,9 +173,11 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                  ?>
                         </div>
                         <div class="col-12 text-center">
-                            <a class="nav-link" href="panier.php">
-                                <img style="max-width:100px;" src="Images/paniers.png">
-                            </a>
+                            <?php echo ($typeConnected == 1)?"":
+                                '<a class="nav-link" href="panier.php">
+                                    <img style="max-width:100px;" src="Images/paniers.png">
+                                </a>';
+                             ?>
                         </div>
                     </form>
                 </div>
