@@ -70,12 +70,6 @@
 	$Categories = "";
 	$compteur = 0;
 
-	/*	Déplacé en haut de la page
-    //connectez-vous dans votre BDD 
-    //Rappel : votre serveur = localhost | votre login = root | votre mot de pass = '' (rien) 
-    $db_handle = mysqli_connect('localhost', 'root', '' ); 
-    $db_found = mysqli_select_db($db_handle, $database);*/
-
     //si le BDD existe, faire le traitement 
     if ($db_found) { 
         $sql = "SELECT * FROM produit WHERE PseudoVendeur LIKE 'Sylvain'";
@@ -103,9 +97,9 @@
 			$Categories .= "%marrq%";
 			
 			$compteur = $compteur + 1;
-        }   //end while 
-    }   //end if 
-    else  //si le BDD n'existe pas 
+        }   
+    }   
+    else  
 	{
         echo "Database not found"; 
 	}  
