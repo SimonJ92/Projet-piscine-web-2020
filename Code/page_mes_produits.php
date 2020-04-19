@@ -466,13 +466,12 @@
 					input_2.type="button";
 					input_2.className = "button_achat";
 					
+					n = Numero.search("%marrq%");
+					var Numero_objet = Numero.slice(0, n);
+					Numero = Numero.replace(Numero_objet + "%marrq%", "");
 					
 					if("Encheres" == MethodeVentes_objet)
 					{
-						n = Numero.search("%marrq%");
-						var Numero_objet = Numero.slice(0, n);
-						Numero = Numero.replace(Numero_objet + "%marrq%", "");
-						
 						input_2.value = "etat actuel des encheres";
 						input_2.href = "enchere_vendeur.php?numeroProduit=" + Numero_objet;
 					}
