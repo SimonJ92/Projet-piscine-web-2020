@@ -143,49 +143,76 @@
 	
 		<div class="container-fluid" id="conteneur">
 			<h3 id="sousTitre" align="center">À vendre en ce moment</h3>
-			<div class="row" id="contenu">
-				<div class="container-fluid">
-					<div class="row categorie">
-						<h2 class="col-12 titreCategorie">Ferraille et trésors</h2>
-						<div class="col-md-3 col-sm-12 conteneurImage">
-							<img src="Images/Images-produits/fauteuil-Louis-XVI-rouge-rococo.png" class="imageExemples">
-						</div>
-						<div class="col-md-3 col-sm-12 conteneurImage">
-							<img src="Images/Images-produits/horloge.png" class="imageExemples">
-						</div>
-						<div class="col-md-3 col-sm-12 conteneurImage">
-							<img src="Images/Images-produits/statuette-jade-bouddha.png" class="imageExemples">
-						</div>
-					</div>
-					<div class="row categorie">
-						<h2 class="col-12 titreCategorie">Bon pour le musée</h2>
-						<div class="col-md-3 col-sm-12 conteneurImage">
-							<img src="Images/Images-produits/Buste_de_Victor_Hugo.png" class="imageExemples">
-						</div>
-						<div class="col-md-3 col-sm-12 conteneurImage">
-							<img src="Images/Images-produits/Hiroshige_nuit_de_neige_a_Kambara.png" class="imageExemples">
-						</div>
-						<div class="col-md-3 col-sm-12 conteneurImage">
-							<img src="Images/Images-produits/william-turner-le_rigi-bleu.png" class="imageExemples">
-						</div>
-					</div>
-					<div class="row categorie">
-						<h2 class="col-12 titreCategorie">Accessoires VIP</h2>
-						<div class="col-md-3 col-sm-12 conteneurImage">
-							<img src="Images/Images-produits/Bugatti_La_Voiture_Noire_2019.png" class="imageExemples">
-						</div>
-						<div class="col-md-3 col-sm-12 conteneurImage">
-							<img src="Images/Images-produits/costume_original_Darth_Vador.png" class="imageExemples">
-						</div>
-					</div>
-				</div>
+            <div class="row" id="contenu">
+                <div class="container-fluid">
+                    <a href="page_catalogue_vendeur.php?categorieProduit=1" style="text-decoration: none;color: black;">
+                        <div class="row categorie">
+                            <h2 class="col-12 titreCategorie">Ferraille et trésors</h2>
+                            <?php 
+                                if($db_found){
+                                    $sqlCategorie1 = "SELECT * from produit where Categorie like 'Ferraille' limit 3";
+                                    $resultCategorie1 = mysqli_query($db_handle,$sqlCategorie1) or die (mysqli_error($db_handle));
+                                    while ($dataCategorie1 = mysqli_fetch_assoc($resultCategorie1)) {
+                                        echo '
+                                            <div class="col-md-3 col-sm-12 conteneurImage">
+                                                <img src="'.$dataCategorie1["Photo1"].'" class="imageExemples">
+                                            </div>
+                                        ';
+                                    }
+                                }else{
+                                    echo "Echec de connexion à la base de données";
+                                }
+                             ?>
+                        </div>
+                    </a>
+                    <a href="page_catalogue_vendeur.php?categorieProduit=2" style="text-decoration: none;color: black;">
+                        <div class="row categorie">
+                            <h2 class="col-12 titreCategorie">Bon pour le musée</h2>
+                            <?php 
+                                if($db_found){
+                                    $sqlCategorie2 = "SELECT * from produit where Categorie like 'Musee' limit 3";
+                                    $resultCategorie2 = mysqli_query($db_handle,$sqlCategorie2) or die (mysqli_error($db_handle));
+                                    while ($dataCategorie2 = mysqli_fetch_assoc($resultCategorie2)) {
+                                        echo '
+                                            <div class="col-md-3 col-sm-12 conteneurImage">
+                                                <img src="'.$dataCategorie2["Photo1"].'" class="imageExemples">
+                                            </div>
+                                        ';
+                                    }
+                                }else{
+                                    echo "Echec de connexion à la base de données";
+                                }
+                             ?>
+                        </div>
+                    </a>
+                    <a href="page_catalogue_vendeur.php?categorieProduit=3" style="text-decoration: none;color: black;">
+                        <div class="row categorie">
+                            <h2 class="col-12 titreCategorie">Accessoires VIP</h2>
+                            <?php 
+                                if($db_found){
+                                    $sqlCategorie3 = "SELECT * from produit where Categorie like 'VIP' limit 3";
+                                    $resultCategorie3 = mysqli_query($db_handle,$sqlCategorie3) or die (mysqli_error($db_handle));
+                                    while ($dataCategorie3 = mysqli_fetch_assoc($resultCategorie3)) {
+                                        echo '
+                                            <div class="col-md-3 col-sm-12 conteneurImage">
+                                                <img src="'.$dataCategorie3["Photo1"].'" class="imageExemples">
+                                            </div>
+                                        ';
+                                    }
+                                }else{
+                                    echo "Echec de connexion à la base de données";
+                                }
+                             ?>
+                        </div>
+                    </a>
+                </div>
 			</div>	
 			<div class="text-center" id="info">
-				<p>
-					Ebay-ECE est un site web de vente en ligne pour la communauté ECE Paris.
-				</p>
-				<bouton type="submit" class="btn btn-warning" name="lienInfos">En savoir plus</bouton>
-			</div>
+                <p>
+                    Ebay-ECE est un site web de vente en ligne pour la communauté ECE Paris.
+                </p>
+                <a href="infos_vendeur.php"><bouton class="btn btn-warning" name="lienInfos">En savoir plus</bouton></a>
+            </div>
 		</div>
 	
 	<!-- 00 -->
