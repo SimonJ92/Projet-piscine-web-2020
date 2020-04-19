@@ -54,6 +54,30 @@
 
     $produitPaye = isset($_GET["produit"])?$_GET["produit"]:"";
     //id du produit, si originaire d'enchères ou négoce
+
+    $prixTotalPanier = 0;
+    $prixLivraison = 45.50; //arbitraire, car pas d'étude de lieu de livraison
+    if ($db_found) {
+        if($typePaiement < 1 || $typePaiement > 3){
+            echo "Erreur : le type de paiement n'existe pas (type = $typePaiement)";
+        }elseif ($typePaiement == 1) {  //paiement depuis panier
+            $sqlTotalPanier = "SELECT SUM(Pr.PrixDirect) as prixTotal from panier Pa join produit Pr on Pa.NumeroProduit = Pr.Numero where IDClient = $idConnected";
+            $resultatTotal = mysqli_query($db_handle,$sqlTotalPanier) or die (mysqli_error($db_handle));
+            if(mysqli_num_rows($resultatTotal) == 0){
+                echo "Erreur : le panier est vide";
+            }else{
+                $dataTotalPanier = mysqli_fetch_assoc($resultatTotal);
+                $prixTotalPanier = $dataTotalPanier["prixTotal"];
+                $prixTotalPaiement = $prixTotalPanier + $prixLivraison;
+            }
+        }elseif($typePaiement == 2){    //paiement depuis enchère.
+
+
+        }elseif($typePaiement == 3){    //paiement depuis négociation
+
+            
+        }
+    }
  ?>
 
 <!DOCTYPE html>
@@ -224,9 +248,9 @@
 				<div class="col-md-5 col-sm-12">
 					<div class="row" style="height: auto;">
 						<div class="text-center" id="recap">
-							<p>Prix des produits : <strong>200000.00€</strong></p><br>
-							<p>Coût de la livraison : <strong>20.00€</strong></p><br>
-							<p>Total : <strong>200020.00€</strong></p>
+							<p>Prix des produits : <strong><?php echo $prixTotalPanier." €"; ?></strong></p><br>
+							<p>Coût de la livraison : <strong><?php echo $prixLivraison." €"; ?></strong></p><br>
+							<p>Total : <strong><?php echo $prixTotalPaiement." €"; ?></strong></p>
 						</div>
 					</div>
 					<div class="row text-center" style="height: 50%;">

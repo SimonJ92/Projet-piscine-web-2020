@@ -57,6 +57,8 @@
 			}
 		}
 	}
+
+    $panierVide = 1;
  ?>
 
 <!DOCTYPE html>
@@ -162,7 +164,9 @@
 									$resultPanier = mysqli_query($db_handle,$sqlPanier);
 									if (mysqli_num_rows($resultPanier) == 0) {
 										echo "Votre panier est vide";
+                                        $panierVide=1;
 									}else{
+                                        $panierVide=0;
 										while ($dataPanier = mysqli_fetch_assoc($resultPanier)) {
 											$sqlProduit = "SELECT * from produit where Numero =".$dataPanier["NumeroProduit"];	//on pourrait transformer les 2 requêtes en 1 seule
 											$resultProduit = mysqli_query($db_handle,$sqlProduit);
@@ -255,7 +259,7 @@
 						<br>
 						<div class="row" id="valider">
 							<div class="col-12">
-								<a href="paiement.php?typePaiement=1" class="btn btn-warning col-12 btn-lg" role="button">Valider le panier</a>
+								<?php echo ($panierVide)?"":'<a href="paiement.php?typePaiement=1" class="btn btn-warning col-12 btn-lg" role="button">Valider le panier</a>'; ?>
 							</div>
 						</div>
 					</div>

@@ -222,7 +222,7 @@
                     </div>
                     <a class="forgot" href="#" style="color: rgb(0,0,0);font-size: 14px;background-color: rgba(255,255,255,0);"></a>
                     <p class="text-center" style="font-size: 14px;color: rgb(0,0,0);">
-                        Nouveau sur ECE-Ebay ?<a class="forgot" href="#" style="color: rgb(52,2,255);font-size: 14px;background-color: rgba(255,255,255,0);">Créez un compte<br></a>
+                        Nouveau sur ECE-Ebay ?<a class="forgot" href="inscription_client.php" style="color: rgb(52,2,255);font-size: 14px;background-color: rgba(255,255,255,0);">Créez un compte<br></a>
                     </p>
                 </form>
             </div>
