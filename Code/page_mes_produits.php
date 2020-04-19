@@ -60,7 +60,6 @@
     //Page
 	
 	//identifier le nom de base de données 
-    /*$database = "ebay-ece"; 			Déplacé en haut de la page*/
 	$Noms = "";
 	$Photos = "";
 	$MethodeVentes = "";
@@ -77,7 +76,7 @@
 
     //si le BDD existe, faire le traitement 
     if ($db_found) { 
-        $sql = "SELECT * FROM produit";
+        $sql = "SELECT * FROM produit WHERE PseudoVendeur LIKE '$pseudoConnected'";
         $result = mysqli_query($db_handle, $sql); 
         while ($data = mysqli_fetch_assoc($result)) {
 			$Noms .= $data['Nom'];
@@ -92,7 +91,7 @@
 			$PrixDirects .= $data['PrixDirect'];
 			$PrixDirects .= "%marrq%";
 			
-			$Descriptions .= $data['DescriptionCourte'];
+			$Descriptions .= $data['DescriptionLongue1'];
 			$Descriptions .= "%marrq%";
 			
 			$Categories .= $data['Categorie'];
@@ -323,121 +322,138 @@
 			var Photos = "<?php echo $Photos ?>";
 			var MethodeVentes = "<?php echo $MethodeVentes ?>";
 			var PrixDirects = "<?php echo $PrixDirects ?>";
-			//var Descriptions = "<?php echo $Descriptions ?>";
+			var Descriptions = "<?php echo $Descriptions ?>";
 			var Categories = "<?php echo $Categories ?>";
 			var nbProduit = "<?php echo $compteur ?>";
 			
 			var n = 0;
 			
 			var compteur = 0;
-			
-			for(compteur = 0; compteur < nbProduit; ++compteur)
+			if("" == Noms && "" == Photos && "" == MethodeVentes && "" == PrixDirects && "" == Descriptions && "" == Categories)
 			{
 				var objet = document.createElement("div");
-				objet.id = "objet" + compteur;
+				objet.id = "objet";
 				objet.className = "objet";
 				document.getElementById("galerie_mes_produit").appendChild(objet);
 				
-				var form = document.createElement("form"); 
-				form.id = "form" + compteur; 
-				document.getElementById("objet" + compteur).appendChild(form);
-				
-				var table = document.createElement("table"); 
-				table.id = "table" + compteur; 
-				document.getElementById("form" + compteur).appendChild(table);
-				
-				var tr = document.createElement("tr"); 
-				tr.id = "tr" + compteur; 
-				document.getElementById("table" + compteur).appendChild(tr);
-				
-				var td_1 = document.createElement("td"); 
-				td_1.id = "td_1" + compteur; 
-				document.getElementById("tr" + compteur).appendChild(td_1);
-				
-				var img = document.createElement("img"); 
-				
-				img.className = "image";
-				n = Photos.search("%marrq%");
-				var adresseImage = Photos.slice(0, n);
-				img.src = adresseImage;
-				Photos = Photos.replace(adresseImage + "%marrq%", "");
-				document.getElementById("td_1" + compteur).appendChild(img);
-				
-				var td_2 = document.createElement("td"); 
-				td_2.id = "td_2" + compteur; 
-				document.getElementById("tr" + compteur).appendChild(td_2);
-				
-				var h4 = document.createElement("h4"); 
-				n = Noms.search("%marrq%");
-				var Nom_objet = Noms.slice(0, n);
-				h4.textContent = Nom_objet;
-				Noms = Noms.replace(Nom_objet + "%marrq%", "");
-				document.getElementById("td_2" + compteur).appendChild(h4);		
+				var h3 = document.createElement("h3");
+				h3.textContent = "vous n'avez pas de produit en vente actuelement";
+				document.getElementById("objet").appendChild(h3);
+			}
+			else
+			{
+				for(compteur = 0; compteur < nbProduit; ++compteur)
+				{
+					var objet = document.createElement("div");
+					objet.id = "objet" + compteur;
+					objet.className = "objet";
+					document.getElementById("galerie_mes_produit").appendChild(objet);
+					
+					var form = document.createElement("form"); 
+					form.id = "form" + compteur; 
+					document.getElementById("objet" + compteur).appendChild(form);
+					
+					var table = document.createElement("table"); 
+					table.id = "table" + compteur; 
+					document.getElementById("form" + compteur).appendChild(table);
+					
+					var tr = document.createElement("tr"); 
+					tr.id = "tr" + compteur; 
+					document.getElementById("table" + compteur).appendChild(tr);
+					
+					var td_1 = document.createElement("td"); 
+					td_1.id = "td_1" + compteur; 
+					document.getElementById("tr" + compteur).appendChild(td_1);
+					
+					var img = document.createElement("img"); 
+					
+					img.className = "image";
+					n = Photos.search("%marrq%");
+					var adresseImage = Photos.slice(0, n);
+					img.src = adresseImage;
+					Photos = Photos.replace(adresseImage + "%marrq%", "");
+					document.getElementById("td_1" + compteur).appendChild(img);
+					
+					var td_2 = document.createElement("td"); 
+					td_2.id = "td_2" + compteur; 
+					document.getElementById("tr" + compteur).appendChild(td_2);
+					
+					var h4 = document.createElement("h4"); 
+					n = Noms.search("%marrq%");
+					var Nom_objet = Noms.slice(0, n);
+					h4.textContent = Nom_objet;
+					Noms = Noms.replace(Nom_objet + "%marrq%", "");
+					document.getElementById("td_2" + compteur).appendChild(h4);		
 
-				var description = document.createElement("div"); 
-				description.id = "description" + compteur; 
-				description.className = "description_objet";
-				document.getElementById("td_2" + compteur).appendChild(description);
-				
-				/*var p_1 = document.createElement("p"); 
-				n = Descriptions.search("%marrq%");
-				var Description_objet = Descriptions.slice(0, n);
-				p_1.textContent = Description_objet;
-				Descriptions = Descriptions.replace(Description_objet + "%marrq%", "");
-				document.getElementById("description" + compteur).appendChild(p_1);*/
-				
-				var p_2 = document.createElement("p"); 
-				n = Categories.search("%marrq%");
-				var Categories_objet = Categories.slice(0, n);
-				p_2.textContent = "Categorie:" + Categories_objet;
-				Categories = Categories.replace(Categories_objet + "%marrq%", "");
-				document.getElementById("td_2" + compteur).appendChild(p_2);
-				
-				var td_3 = document.createElement("td"); 
-				td_3.id = "td_3" + compteur; 
-				document.getElementById("tr" + compteur).appendChild(td_3);
-				
-				var h5_1 = document.createElement("h5"); 
-				h5_1.textContent = "methode de vente:"; 
-				document.getElementById("td_3" + compteur).appendChild(h5_1);
-				
-				var h5_2 = document.createElement("h5"); 
-				n = PrixDirects.search("%marrq%");
-				var PrixDirects_objet = PrixDirects.slice(0, n);
-				p_2.textContent = PrixDirects_objet + " €";
-				PrixDirects = PrixDirects.replace(PrixDirects_objet + "%marrq%", "");
-				document.getElementById("td_3" + compteur).appendChild(h5_2);
-				
-				var input = document.createElement("input"); 
-				input.id = "achat_imediat" + compteur; 
-				input.className = "achat_imediat";
-				input.type="button";
-				input.value="acheter maintenant";
-				document.getElementById("td_3" + compteur).appendChild(input);
-				
-				var h5_3 = document.createElement("h5"); 
-				h5_3.textContent = "OU"; 
-				document.getElementById("td_3" + compteur).appendChild(h5_3);
-				
-				var p_3 = document.createElement("p"); 
-				n = MethodeVentes.search("%marrq%");
-				var MethodeVentes_objet = MethodeVentes.slice(0, n);
-				MethodeVentes = MethodeVentes.replace(MethodeVentes_objet + "%marrq%", "");
-				
-				
-				if("Encheres" == MethodeVentes_objet)
-				{
-					p_3.textContent = "participer aux encheres";
-					p_3.href = "#encheres";
+					var description = document.createElement("div"); 
+					description.id = "description" + compteur; 
+					description.className = "description_objet";
+					document.getElementById("td_2" + compteur).appendChild(description);
+					
+					var p_1 = document.createElement("p"); 
+					n = Descriptions.search("%marrq%");
+					var Description_objet = Descriptions.slice(0, n);
+					p_1.textContent = Description_objet;
+					Descriptions = Descriptions.replace(Description_objet + "%marrq%", "");
+					document.getElementById("description" + compteur).appendChild(p_1);
+					
+					var p_2 = document.createElement("p"); 
+					n = Categories.search("%marrq%");
+					var Categories_objet = Categories.slice(0, n);
+					p_2.textContent = "Categorie:" + Categories_objet;
+					Categories = Categories.replace(Categories_objet + "%marrq%", "");
+					document.getElementById("td_2" + compteur).appendChild(p_2);
+					
+					var td_3 = document.createElement("td"); 
+					td_3.id = "td_3" + compteur; 
+					document.getElementById("tr" + compteur).appendChild(td_3);
+					
+					var h5_1 = document.createElement("h5"); 
+					h5_1.textContent = "methode de vente:"; 
+					document.getElementById("td_3" + compteur).appendChild(h5_1);
+					
+					var h5_2 = document.createElement("h5"); 
+					n = PrixDirects.search("%marrq%");
+					var PrixDirects_objet = PrixDirects.slice(0, n);
+					p_2.textContent = PrixDirects_objet + " €";
+					PrixDirects = PrixDirects.replace(PrixDirects_objet + "%marrq%", "");
+					document.getElementById("td_3" + compteur).appendChild(h5_2);
+					
+					var input_1 = document.createElement("input"); 
+					input_1.id = "achat_imediat" + compteur; 
+					input_1.className = "button_achat";
+					input_1.type="button";
+					input_1.value="acheter maintenant";
+					document.getElementById("td_3" + compteur).appendChild(input_1);
+					
+					var h5_3 = document.createElement("h5"); 
+					h5_3.textContent = "OU"; 
+					document.getElementById("td_3" + compteur).appendChild(h5_3);
+					
+					var p_3 = document.createElement("p"); 
+					n = MethodeVentes.search("%marrq%");
+					var MethodeVentes_objet = MethodeVentes.slice(0, n);
+					MethodeVentes = MethodeVentes.replace(MethodeVentes_objet + "%marrq%", "");
+					
+					
+					var input_2 = document.createElement("input"); 
+					input_2.id = "achat_par_methode" + compteur; 
+					input_2.type="button";
+					input_2.className = "button_achat";
+					
+					
+					if("Encheres" == MethodeVentes_objet)
+					{
+						input_2.value = "etat actuel des encheres";
+						input_2.href = "#encheres";
+					}
+					else
+					{
+						input_2.value = "etat actuel des negociations";
+						input_2.href = "#negociations";
+					}
+					document.getElementById("td_3" + compteur).appendChild(input_2);
 				}
-				else
-				{
-					p_3.textContent = "debuter un negociation avec le vendeur";
-					p_3.href = "#negociations";
-				}
-				
-				p_3.className = "lien_methode_vente";
-				document.getElementById("td_3" + compteur).appendChild(p_3);
 			}
 		</script>
 	</body>
