@@ -51,8 +51,7 @@
     //1 - Ferraille et trésors
     //2 - Bon pour le musée
     //3 - Accesoires VIP
-	
-	$nbRecherche = 0;
+
 	
 	$rechercheNom = "";
 	$rechercheVendeur = "";
@@ -178,7 +177,7 @@
 	<!-- 00 -->
 	
 		<div class="page">
-			<h1> Catalogue :  <?php echo $categorieProduit ?> </h1>
+			<h1> Catalogue :  <?php echo (($categorieProduit == 1)?"Ferraille et trésors":(($categorieProduit == 2)?"Bon pour le musée":"Accessoires VIP")); ?> </h1>
 			
 			
 			<div class="titre">
@@ -190,9 +189,9 @@
 						<div class="col-12 container" id="recherche">
 							<form action="" method="post" id="formRecherche" class="form-inline">
 								<div style="margin: 0px auto;">
-									<h4> recherche :</h4> 
-									<input type="text" name="rechercheNom" class="form-control" placeholder="un produit pas sont nom" id="barreRecherche">
-									<input type="text" name="rechercheVendeur" class="form-control" placeholder="les produit d'un vendeur" id="barreRecherche">
+									<h4> Rechercher :</h4> 
+									<input type="text" name="rechercheNom" class="form-control" placeholder="un produit par son nom" id="barreRecherche">
+									<input type="text" name="rechercheVendeur" class="form-control" placeholder="les produits d'un vendeur" id="barreRecherche">
 									<h5 style="text-align: center;"> ne garder que les objet entre </h5>
 									<p><input name="minPrix" style="width: 50px;" type="int" id="prix_min"> € et <input name="maxPrix" style="width: 50px;" type="int" id="prix_max">€ </p>
 									<input type="submit" name="boutonRecherche" id="boutonRecherche" class="btn btn-default" value="Rechercher">
@@ -206,67 +205,34 @@
 						<?php 
 							if ($db_found) 
 							{
-								$sql = "Select * from produit";
+								$sql = "Select * from produit ";
+								if($categorieProduit == 0){
+									$sql .= "where 0";
+								}elseif($categorieProduit == 1) {
+									$sql .= "where Categorie like 'Ferraille'";
+								}elseif($categorieProduit == 2) {
+									$sql .= "where Categorie like 'Musee'";
+								}elseif ($categorieProduit == 3) {
+									$sql .= "where Categorie like 'VIP'";
+								}
 								if($rechercheNom != ""){
-									$sql .= " where Nom like '%$rechercheNom%'";
-									$nbRecherche = $nbRecherche + 1;
+									$sql .= " AND Nom like '%$rechercheNom%'";
 								}
 								if($rechercheVendeur != ""){
-									if(1 == $nbRecherche)
-									{
-										$sql .= " AND ";
-										$nbRecherche = 0;
-									}
-									else
-									{
-										$sql .= " where";
-									}
-									$sql .= " PseudoVendeur like '%$rechercheVendeur%'";
-									$nbRecherche = $nbRecherche + 1;
+									$sql .= " AND PseudoVendeur like '%$rechercheVendeur%'";
 								}
 								if(($maxPrix != "") &&($minPrix != ""))
 								{
-									
-									if(1 == $nbRecherche)
-									{
-										$sql .= " AND ";
-										$nbRecherche = 0;
-									}
-									else
-									{
-										$sql .= " where ";
-									}
-									$sql .= "(PrixDirect < '$maxPrix' AND (NOT PrixDirect < '$minPrix'))";
-									$nbRecherche = $nbRecherche + 1;
+									$sql .= " AND (PrixDirect < '$maxPrix' AND (NOT PrixDirect < '$minPrix'))";
 								}
 								else if($maxPrix != ""){
-									if(1 == $nbRecherche)
-									{
-										$sql .= " AND ";
-										$nbRecherche = 0;
-									}
-									else
-									{
-										$sql .= " where ";
-									}
-									$sql .= "PrixDirect < '$maxPrix'";
-									$nbRecherche = $nbRecherche + 1;
+									$sql .= " AND PrixDirect < '$maxPrix'";
 								}
 								else if($minPrix != ""){
-									if(1 == $nbRecherche)
-									{
-										$sql .= " AND ";
-										$nbRecherche = 0;
-									}
-									else
-									{
-										$sql .= " where ";
-									}
-									$sql .= "PrixDirect > '$minPrix'";
-									$nbRecherche = $nbRecherche + 1;
+									$sql .= " AND PrixDirect > '$minPrix'";
 								}
 								
-								$result = mysqli_query($db_handle, $sql);
+								$result = mysqli_query($db_handle, $sql) or die (mysqli_error($db_handle));
 								if (mysqli_num_rows($result) == 0) {
 									echo "Aucun produit enregistré";
 								}
