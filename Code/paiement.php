@@ -82,7 +82,7 @@
             }else{
 
                 //Requête pour trouver le participant ayant fait la meilleure offre
-                $sqlGagnantEnchere = "SELECT A.IDAcheteur as idGagnant,A.Valeur as montantGagnant,B.DateFin as dateFinEnchere, B.NumeroProduit as produitEnchere from offre A join enchere B on A.IDEnchere = B.IDEnchere where B.IDEnchere = $produitPaye ORDER by A.Valeur desc,A.DateOffre asc limit 1;";
+                $sqlGagnantEnchere = "SELECT A.IDAcheteur as idGagnant,A.Valeur as montantGagnant,B.DateFin as dateFinEnchere from offre A join enchere B on A.IDEnchere = B.IDEnchere where B.IDEnchere = $produitPaye ORDER by A.Valeur desc,A.DateOffre asc limit 1;";
                 $resultatGagnantEnchere = mysqli_query($db_handle,$sqlGagnantEnchere) or die (mysqli_error($db_handle));
 
                 if(mysqli_num_rows($resultatGagnantEnchere) == 0){
@@ -140,6 +140,11 @@
     }
     $prixTotalPaiement = $prixTotalPanier + $prixLivraison;
 
+
+
+    //Paiement
+
+
     $erreurPaiement = "";
     if(isset($_POST["boutonPayer"])){
         if($_POST["boutonPayer"]){
@@ -183,29 +188,60 @@
                                 echo "<script>alert(\"Votre solde banquaire est insuffisant pour cet achat\")</script>";
                                 $erreurPaiement = "Solde banquaire insuffisant";
                             }else{
+
                                 //Paiement validé : on supprime les Produits concernés, la BDD se charge de supprimer les autres tuples grâce aux au paramètre ON DELETE des contraintes, réglé sur CASCADE
                                 //On doit selectionner les produits à supprimer de manière différente selon le typede paiement
                                 if($typePaiement == 1){ //type panier
 
-                                    //TODO : enregistrer l'achat quelque part ?
+                                     //On récupère le nom produit
+                                    $sqlNomProduit = "SELECT Pr.* from produit Pr join panier Pa on Pr.Numero = Pa.NumeroProduit where Pa.IDClient = $idConnected";
+                                    $resultatNomProduit = mysqli_query($db_handle,$sqlNomProduit) or die (mysqli_error($db_handle));
+                                    if(mysqli_num_rows($resultatNomProduit) == 0){
+                                        $erreurPaiement = "Erreur : echec de récupération du nom du produit";
+                                    }else{
+                                        while($dataNomProduit = mysqli_fetch_assoc($resultatNomProduit)){
+                                            $sqlHistorique = "INSERT into historiqueachat (NomProduit,DateAchat,IDProduit,IDAcheteur) Values ('".$dataNomProduit["Nom"]."',CURDATE(),'".$dataNomProduit["Numero"]."','$idConnected')";
+                                            $resultatHistorique = mysqli_query($db_handle,$sqlHistorique) or die (mysqli_error($db_handle));
+                                        }
 
-                                    $sqlSupprimerPanier = "DELETE Pr from panier Pa join produit Pr on Pa.NumeroProduit = Pr.Numero where Pa.IDClient = ".$idConnected;
-                                    $resultatSupprimerPanier = mysqli_query($db_handle,$sqlSupprimerPanier) or die (mysqli_error($db_handle));
-                                    header('Location: accueil_client.php');
+                                        $sqlSupprimerPanier = "DELETE Pr from panier Pa join produit Pr on Pa.NumeroProduit = Pr.Numero where Pa.IDClient = ".$idConnected;
+                                        $resultatSupprimerPanier = mysqli_query($db_handle,$sqlSupprimerPanier) or die (mysqli_error($db_handle));
+                                        header('Location: accueil_client.php');*/
+                                    }
                                 }elseif ($typePaiement == 2) {  //type enchère
-                                    
-                                    //TODO : enregistrer l'achat ?
 
-                                    $sqlSupprimerEnchere = "DELETE from produit where Numero = ".$produitPaye;
-                                    $resultatSupprimerEnchere = mysqli_query($db_handle,$sqlSupprimerEnchere) or die (mysqli_error($db_handle));
-                                    header('Location: accueil_client.php');
+                                    //On récupère le nom produit
+                                    $sqlNomProduit = "SELECT * from produit where Numero = $produitPaye";
+                                    $resultatNomProduit = mysqli_query($db_handle,$sqlNomProduit) or die (mysqli_error($db_handle));
+                                    if(mysqli_num_rows($resultatNomProduit) == 0){
+                                        $erreurPaiement = "Erreur : echec de récupération du nom du produit";
+                                    }else{
+                                        $dataNomProduit = mysqli_fetch_assoc($resultatNomProduit);
+
+                                        $sqlHistorique = "INSERT into historiqueachat (NomProduit,DateAchat,IDProduit,IDAcheteur) Values ('".$dataNomProduit["Nom"]."',CURDATE(),'$produitPaye','$idConnected')";
+                                        $resultatHistorique = mysqli_query($db_handle,$sqlHistorique) or die (mysqli_error($db_handle));
+
+                                        $sqlSupprimerEnchere = "DELETE from produit where Numero = ".$produitPaye;
+                                        $resultatSupprimerEnchere = mysqli_query($db_handle,$sqlSupprimerEnchere) or die (mysqli_error($db_handle));
+                                        header('Location: accueil_client.php');
+                                    }
                                 }elseif ($typePaiement == 3) {  //type négoce
                                     
-                                    //TODO : eenregistrer l'achat ?
+                                     //On récupère le nom produit
+                                    $sqlNomProduit = "SELECT * from produit where Numero = $produitPaye";
+                                    $resultatNomProduit = mysqli_query($db_handle,$sqlNomProduit) or die (mysqli_error($db_handle));
+                                    if(mysqli_num_rows($resultatNomProduit) == 0){
+                                        $erreurPaiement = "Erreur : echec de récupération du nom du produit";
+                                    }else{
+                                        $dataNomProduit = mysqli_fetch_assoc($resultatNomProduit);
 
-                                    $sqlSupprimerNegoce = "DELETE from produit where Numero = ".$produitPaye;   //même requête que pour les enchères ...
-                                    $resultatSupprimerNegoce = mysqli_query($db_handle,$sqlSupprimerNegoce);
-                                    header('Location: accueil_client.php');
+                                        $sqlHistorique = "INSERT into historiqueachat (NomProduit,DateAchat,IDProduit,IDAcheteur) Values ('".$dataNomProduit["Nom"]."',CURDATE(),'$produitPaye','$idConnected')";
+                                        $resultatHistorique = mysqli_query($db_handle,$sqlHistorique) or die (mysqli_error($db_handle));
+
+                                        $sqlSupprimerNegoce = "DELETE from produit where Numero = ".$produitPaye;   //même requête que pour les enchères ...
+                                        $resultatSupprimerNegoce = mysqli_query($db_handle,$sqlSupprimerNegoce);
+                                        header('Location: accueil_client.php');
+                                    }
                                 }else{
                                     echo "Erreur de type de paiement : ".$typePaiement;
                                 }

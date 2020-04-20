@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 19, 2020 at 11:22 PM
+-- Generation Time: Apr 20, 2020 at 03:22 PM
 -- Server version: 8.0.18
 -- PHP Version: 7.3.12
 
@@ -123,6 +123,22 @@ CREATE TABLE IF NOT EXISTS `enchere` (
 
 INSERT INTO `enchere` (`IDEnchere`, `DateFin`, `NumeroProduit`) VALUES
 (1, '2020-04-19 23:00:00', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `historiqueachat`
+--
+
+DROP TABLE IF EXISTS `historiqueachat`;
+CREATE TABLE IF NOT EXISTS `historiqueachat` (
+  `IDAchat` int(11) NOT NULL AUTO_INCREMENT,
+  `NomProduit` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `DateAchat` date NOT NULL,
+  `IDProduit` int(11) NOT NULL,
+  `IDAcheteur` int(11) NOT NULL,
+  PRIMARY KEY (`IDAchat`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
