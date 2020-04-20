@@ -47,6 +47,7 @@
 
     //Page
 	$erreurCreation ="";
+	$erreurCreationBancaire="";
 	
 	if (isset($_POST["boutonCreation"])) {
 		if($_POST["boutonCreation"] && $db_found){
@@ -82,11 +83,16 @@
 					$erreurCreation = "Cette email est déjà utilisé";
 				}else{
 					$sqlCreation = "INSERT INTO acheteur (Prenom,Nom,AdresseMail,AdresseLigne1,AdresseLigne2,Ville,CodePostal,Pays,Telephone,MotDePasse) VALUES ('$creationPrenom','$creationNom','$creationMail','$creationAdresse1','$creationAdresse2','$creationVille','$creationZip','$creationPays','$creationPhone','$creationMdp')";
-					$sqlCreationBancaire = "INSERT INTO carte (NumeroCarte,NomTitulaire,TypeCarte,MoisExpiration,AnneeExpiration,CodeSecurite,Solde) VALUES ('$creationNumber','$creationTitulaire','$creationTypeCarte','$creationME','$creationAE','$creationSecurite','1000')";
-					
 					$resultCreation = mysqli_query($db_handle,$sqlCreation);
-					echo "resultat : ".$resultCreation;
+					
+					$sqlCreationBancaire = "INSERT INTO carte (NumeroCarte,NomTitulaire,TypeCarte,MoisExpiration,AnneeExpiration,CodeSecurite,Solde) VALUES ('$creationNumber','$creationTitulaire','$creationTypeCarte','$creationME','$creationAE','$creationSecurite','1000')";
 					$resultCreationBancaire = mysqli_query($db_handle,$sqlCreationBancaire);
+					
+					$sqlupdate = "UPDATE acheteur SET NumeroCarte = '$creationNumber' WHERE AdresseMail like '$creationMail' ";
+					$resultsqlupdate = mysqli_query($db_handle,$sqlupdate);
+					
+					echo "resultat : ".$resultCreation;
+					
 					$erreurCreation  = "Profil créé";
 					$erreurCreationBancaire = "Information Bancaire enregistré";
 				}
@@ -245,26 +251,26 @@
 							<legend class="col-form-label col-sm-2 pt-0">Type de carte/paiement</legend>
 								<div class="col-sm-10">
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="creationVisa" id="creationVisa" value="option1" checked>
+										<input class="form-check-input" type="radio" name="creationradio" id="creationradio" value="Visa" checked>
 										<label class="form-check-label" for="gridRadios1">
 										Visa
 										</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="creationMasterCard" id="creationMasterCard" value="option2">
+										<input class="form-check-input" type="radio" name="creationradio" id="creationradio" value="MasterCard">
 										<label class="form-check-label" for="gridRadios2">
 										MasterCard
 										</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="creationAmericanExpress" id="creationAmericanExpress" value="option1">
-										<label class="form-check-label" for="gridRadios1">
+										<input class="form-check-input" type="radio" name="creationradio" id="creationradio" value="American Express">
+										<label class="form-check-label" for="gridRadios3">
 										American Express
 										</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="creationPaypal" id="creationPaypal" value="option2">
-										<label class="form-check-label" for="gridRadios2">
+										<input class="form-check-input" type="radio" name="creationradio" id="creationradio" value="PayPal">
+										<label class="form-check-label" for="gridRadios4">
 										PayPal
 										</label>
 									</div>
