@@ -9,10 +9,13 @@
     //visiteur : 1
     //client : 2
     //vendeur : 3
-    $idConnected=(isset($_SESSION['idConnected']))?(int) $_SESSION['idConnected']:0;
+    $idConnected=(isset($_SESSION['idConnected']))?(int) $_SESSION['idConnected']:'';
     //id si client connecté
     $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
     //pseudo si vendeur connecté
+	
+	//produitouvert
+	$produitConnected=(isset($_SESSION['idproduit']))?(int) $_SESSION['idproduit']:'';
     
 	if(isset($_POST["toggleConnexion"])){
     	if($_POST["toggleConnexion"]){
@@ -44,8 +47,83 @@
     	}
     }
 
-
 	//Page
+	
+	
+	$erreurOffre ="";
+	$erreurAccept ="";
+	
+	if (isset($_POST["boutonoffre"])) {
+		if($_POST["boutonoffre"] && $db_found){
+			
+			$nouvelleoffre = isset($_POST["nouvelleoffre"])? $_POST["nouvelleoffre"]:"";
+			
+			if($nouvelleoffre==""){
+				$erreurOffre ="Saisir une offre";
+			}else{
+				$sqlTestCreation = "SELECT * FROM negociation WHERE NumeroProduit LIKE '%$produitConnected%'";
+				$resultTestCreation = mysqli_query($db_handle,$sqlTestCreation) or die (mysqli_error($db_handle));
+				
+				$sqlTestOffre1 = "SELECT  * FROM negociation  WHERE (IDAcheteur = $idConnected AND Prop2 IS NULL)";
+				$resultTestOffre1 = mysqli_query($db_handle,$sqlTestOffre1) or die (mysqli_error($db_handle));
+				
+				$sqlTestOffre2 = "SELECT  * FROM negociation  WHERE (IDAcheteur = $idConnected AND Prop4 IS NULL)";
+				$resultTestOffre2 = mysqli_query($db_handle,$sqlTestOffre2) or die (mysqli_error($db_handle));
+				
+				$sqlTestOffre3 = "SELECT  * FROM negociation  WHERE (IDAcheteur = $idConnected AND Prop6 IS NULL)";
+				$resultTestOffre3 = mysqli_query($db_handle,$sqlTestOffre3) or die (mysqli_error($db_handle));
+				
+				$sqlTestOffre4 = "SELECT  * FROM negociation  WHERE (IDAcheteur = $idConnected AND Prop8 IS NULL)";
+				$resultTestOffre4 = mysqli_query($db_handle,$sqlTestOffre4) or die (mysqli_error($db_handle));
+				
+				$sqlTestOffre5 = "SELECT  * FROM negociation  WHERE (IDAcheteur = $idConnected AND Prop10 IS NULL)";
+				$resultTestOffre5 = mysqli_query($db_handle,$sqlTestOffre4) or die (mysqli_error($db_handle));
+				
+				if(mysqli_num_rows($resultTestCreation) != 0){
+					$erruerOffre =  "Négociations déjà entamé.";
+				}else if(mysqli_num_rows($resultTestCreation) == 0){
+					$sqlOffre = "INSERT INTO negociation (IDAcheteur,PseudoVendeur,NumeroProduit, Prop1, Accepted) VALUES ('idConnected','Simon','produitConnected','0','0')";
+					$resultOffre = mysqli_query($db_handle,$sqlOffre);
+					$erreurOffre = "Offre non enregistré";
+				}
+				else if(mysqli_num_rows($resultTestOffre1) != 0){
+					$sqlOffre = "UPDATE negociation SET Prop2 ='$nouvelleoffre' WHERE IDAcheteur = $idConnected";
+					$resultOffre = mysqli_query($db_handle,$sqlOffre);
+					$erreurOffre = "Offre non enregistré";
+				}else if(mysqli_num_rows($resultTestOffre2) != 0){
+					$sqlOffre = "UPDATE negociation SET Prop4 ='$nouvelleoffre' WHERE IDAcheteur = $idConnected";
+					$resultOffre = mysqli_query($db_handle,$sqlOffre);
+					$erreurOffre = "Offre non enregistré";
+				}else if(mysqli_num_rows($resultTestOffre3) != 0){
+					$sqlOffre = "UPDATE negociation SET Prop6 ='$nouvelleoffre' WHERE IDAcheteur = $idConnected";
+					$resultOffre = mysqli_query($db_handle,$sqlOffre);
+					$erreurOffre = "Offre non enregistré";
+				}else if(mysqli_num_rows($resultTestOffre4) != 0){
+					$sqlOffre = "UPDATE negociation SET Prop8 ='$nouvelleoffre' WHERE IDAcheteur = $idConnected";
+					$resultOffre = mysqli_query($db_handle,$sqlOffre);
+					$erreurOffre = "Offre non enregistré";
+				}else if(mysqli_num_rows($resultTestOffre5) != 0){
+					$sqlOffre = "UPDATE negociation SET Prop10 ='$nouvelleoffre' WHERE IDAcheteur = $idConnected";
+					$resultOffre = mysqli_query($db_handle,$sqlOffre);
+					$erreurOffre = "Offre non enregistré";
+				} 
+			}
+		}
+	}
+	
+	if (isset($_POST["accepterbutton"])) {
+		if($_POST["accepterbutton"] && $db_found){
+			$sqlTestAccept = "SELECT * FROM negociation WHERE (IDAcheteur = $idConnected AND Accepted = '1')";
+			$resultTestAccept = mysqli_query($db_handle, $sqlTestAccept);
+			if(mysqli_num_rows($resultTestAccept) != 0)
+			{
+				echo "La négociation est déjà terminé";
+			}else{
+				$sqlAccepter = "UPDATE negociation SET Accepted = '1' WHERE IDAcheteur = $idConnected";
+				$resultAccepter = mysqli_query($db_handle, $sqlAccepter) or die (mysqli_error($db_handle));
+			}
+		}
+	}
  ?>
 
 <!DOCTYPE html>
@@ -142,113 +220,225 @@
 	<!-- 00 -->
 	
 		<div class="wrapper">
+		
 			<div class="produit_now">
 				<ul class="list-unstyled">
 					<li class="media">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-								Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
-					</li>
-					<li class="media my-4">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-								Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
-					</li>
-					<li class="media">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-							Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
-					</li>
-					<li class="media">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-							Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
+						<?php 
+							if($db_found){
+								$sqlObjetN = "SELECT * FROM produit WHERE MethodeVente LIKE 'Negoce' limit 1";
+								$resultObjetN = mysqli_query($db_handle,$sqlObjetN) or die (mysqli_error($db_handle));
+								while ($dataObjetN = mysqli_fetch_assoc($resultObjetN)) {
+									echo '
+										<a href="page_catalogue_client.php?categoriePrduit=2"><img class="mr-3" src="'.$dataObjetN["Photo1"].'" alt="ObjetN1"></a>
+										
+										<div class="media-body">
+							
+										<h5 class="mt-0 mb-1"><b>'.$dataObjetN["Nom"].'</b></h5>
+											<p> '.$dataObjetN["DescriptionCourte"].'</p>
+										</div>
+									
+									
+									';
+								}
+							}
+						?>
 					</li>
 					<li class="media">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-							Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
+						<?php 
+							if($db_found){
+								$sqlObjetN = "SELECT * FROM produit WHERE MethodeVente LIKE 'Negoce' limit 1";
+								$resultObjetN = mysqli_query($db_handle,$sqlObjetN) or die (mysqli_error($db_handle));
+								while ($dataObjetN = mysqli_fetch_assoc($resultObjetN)) {
+									echo '
+										<a href="page_catalogue_client.php?categoriePrduit=2"><img class="mr-3" src="'.$dataObjetN["Photo1"].'" alt="ObjetN1"></a>
+										
+										<div class="media-body">
+							
+										<h5 class="mt-0 mb-1"><b>'.$dataObjetN["Nom"].'</b></h5>
+											<p> '.$dataObjetN["DescriptionCourte"].'</p>
+										</div>
+									
+									
+									';
+								}
+							}
+						?>
+					</li>
+					<li class="media">
+						<?php 
+							if($db_found){
+								$sqlObjetN = "SELECT * FROM produit WHERE MethodeVente LIKE 'Negoce' limit 1";
+								$resultObjetN = mysqli_query($db_handle,$sqlObjetN) or die (mysqli_error($db_handle));
+								while ($dataObjetN = mysqli_fetch_assoc($resultObjetN)) {
+									echo '
+										<a href="page_catalogue_client.php?categoriePrduit=2"><img class="mr-3" src="'.$dataObjetN["Photo1"].'" alt="ObjetN1"></a>
+										
+										<div class="media-body">
+							
+										<h5 class="mt-0 mb-1"><b>'.$dataObjetN["Nom"].'</b></h5>
+											<p> '.$dataObjetN["DescriptionCourte"].'</p>
+										</div>
+									
+									
+									';
+								}
+							}
+						?>
 					</li>
 				</ul>
 			</div>
-			<div class="information">
-				<div class="row">
-					<div class="col-lg-6">
-						<a href="#"><h3><b>Nom du produit</b></h3></a>
-					</div>
-					<div class="col-lg-6">
-						<h3>Catégorie du produit</h3>
-					</div>
-					<div class="col-lg-3" style="background-color:inherit"></div>
-				</div>
-				<div class="row">
-					<div class="col-lg-3" id="ok">
-					<a href="#"><img class="imageProduit center" src="Images/logo.png"></a>
-					</div>
-					<div class="col-lg-8" style="background-color:white">
-					<h3>Description</h3>
-					<p>Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla </p>
-					</div>
-				</div>
-				<div class="row">
-					<br><p></p><br><br>
-				</div>
-				<div class="information_vendeur">
-					<div class="row">
-						<div class="col-sm-2" style="background-color:inherit"></div>
-						<div class="col">
-							<a href="#"><h3>Vendeur</h3></a>
-						</div>
-						<div class="col">
-							<a href="#"><h3>Lien vers le site du vendeur</h3></a>
-						</div>
-					</div>
-				</div>
-			</div>
 			
+			
+			<div class="information">
+			<?php
+			
+				if ($db_found) {
+									// $sqlVendeur = "SELECT * FROM negociation";
+									// $sqlProduit = "SELECT * FROM produit WHERE NumeroProduit LIKE (SELECT Numero FROM produit)";										
+									
+									$sqlNegoce = "SELECT Pr.* FROM produit Pr JOIN negociation  N ON Pr.Numero = N.NumeroProduit WHERE N.IDAcheteur = $idConnected";
+									$resultNegoce = mysqli_query($db_handle, $sqlNegoce);
+									
+									// $resultVendeur = mysqli_query($db_handle, $sqlVendeur);
+									// $resultProduit = mysqli_query($db_handle, $sqlProduit);
+								if (mysqli_num_rows($resultNegoce) == 0)
+								{
+									echo "ERREUR : Créer une négociation";
+								}
+								else{
+									while ($dataNegoce = mysqli_fetch_assoc($resultNegoce)) {
+										echo '
+				
+				
+									<div class="row">
+										<div class="col-lg-6">
+											<h3><b>'.$dataNegoce["Nom"].'</b></h3>
+										</div>
+										<div class="col-lg-6">
+										<h3>'.$dataNegoce["Categorie"].'</h3>
+										</div>
+									
+										<div class="col-lg-3" style="background-color:inherit"></div>
+									</div>
+				
+									<div class="row">
+										<div class="col-lg-3" id="ok">
+											<a href="#"><img class="imageProduit center" src="'.$dataNegoce["Photo1"].'"></a>
+										</div>
+										<div class="col-lg-8" style="background-color:white">
+											<h3>Description</h3>
+												<p>'.$dataNegoce["DescriptionLongue1"].'</p>
+										</div>
+									</div>
+									
+									<div class="row">
+										<br><p></p><br><br>
+									</div>
+									
+									<div class="information_vendeur">							
+										<div class="row">
+											<div class="col-sm-2" style="background-color:inherit">
+											</div>
+													
+											<div class="col">
+												<a href="profil_vendeur_public_client.php?pseudoVendeur="Simon""><h3>Vendeur '.$dataNegoce["PseudoVendeur"].' </h3></a>									
+											</div>																		
+									</div>
+												
+							';
+						}
+					}
+				}else{
+					echo "Database not found";
+				}		
+				?>
+			</div>
+		
 			<div class="row">
 			
 				<div class="col">
 					<div class="col">
-						<div id="mesoffres">
-							<h3>Mes offres : </h3>
-								<ul class="list-mesoffres">
-									<li class="list-group-item" style="background-color:#c6c1c1" id="objetc1">100</li>
-									<li class="list-group-item" style="background-color:#c6c1c1" id="objetc2">150</li>
-									<li class="list-group-item" style="background-color:#c6c1c1" id="objetc3">200</li>
-									<li class="list-group-item" style="background-color:#c6c1c1" id="objetc4">250</li>
-									<li class="list-group-item" style="background-color:white" id="objetc5"></li>
-								</ul>
-						</div>
+						
+						
+							<?php 
+								if ($db_found) {
+									$sqlOffresClient = "SELECT  N.* FROM negociation N JOIN produit Pr ON N.NumeroProduit = Pr.Numero  WHERE N.IDAcheteur = $idConnected";
+									$resultOffresClient = mysqli_query($db_handle, $sqlOffresClient);
+								if (mysqli_num_rows($resultOffresClient) == 0)
+								{
+									echo "ERREUR UNE";
+								}
+								else{
+									while ($dataOffresClient = mysqli_fetch_assoc($resultOffresClient)) {
+										echo '
+										<div id="mesoffres">
+											<h3>Mes offres : </h3> <?php echo "  $erreurOffre"; ?>
+												<ul class="list-mesoffres">
+													<li class="list-group-item" style="background-color:white" id="objetc1"> Offre 1 : '.$dataOffresClient["Prop2"].'</li>
+													
+													<li class="list-group-item" style="background-color:white" id="objetc2"> Offre 2 : '.$dataOffresClient["Prop4"].'</li>
+													
+													<li class="list-group-item" style="background-color:white" id="objetc3"> Offre 3 : '.$dataOffresClient["Prop6"].'</li>
+													
+													<li class="list-group-item" style="background-color:white" id="objetc4"> Offre 4 : '.$dataOffresClient["Prop8"].'</li>
+													
+													<li class="list-group-item" style="background-color:white" id="objetc5"> Offre 5 : '.$dataOffresClient["Prop10"].'</li>
+												</ul>
+										</div>
+										';
+									}
+								}
+							}else{
+									echo "DATABASE NOT FOUND";
+							}
+						?>
+							
 					</div>
 					<div class="col">
-						<div id="offresvendeur">
-							<h3>Offres du vendeurs : </h3>
-								<ul class="list-offresvendeur">
-									<li class="list-group-item" style="background-color:#c6c1c1" id="objetv1">110</li>
-									<li class="list-group-item" style="background-color:#c6c1c1" id="objetv2">160</li>
-									<li class="list-group-item" style="background-color:#c6c1c1" id="objetv3">210</li>
-									<li class="list-group-item" style="background-color:#f7ee2a" id="objetv4">260</li>
-									<li class="list-group-item" style="background-color:white" id="objetv5"></li>
-								</ul>
-						</div>
+						
+						<?php 
+								if ($db_found) {
+									$sqlOffresVendeur = "SELECT  N.* FROM negociation N JOIN produit Pr ON N.NumeroProduit = Pr.Numero  WHERE N.IDAcheteur = $idConnected";
+									$resultOffresVendeur = mysqli_query($db_handle, $sqlOffresVendeur);
+								if (mysqli_num_rows($resultOffresVendeur) == 0)
+								{
+									echo "ERREUR UNE";
+								}
+								else{
+									while ($dataOffresVendeur = mysqli_fetch_assoc($resultOffresVendeur)) {
+										echo '				
+										<div id="offresvendeur">
+						
+											<h3>Offres du vendeurs : </h3>
+												<ul class="list-offresvendeur">
+													<li class="list-group-item" style="background-color:white" id="objetv1">Offre 1 : '.$dataOffresVendeur["Prop1"].'</li>
+													
+													<li class="list-group-item" style="background-color:white" id="objetv2">Offre 2 : '.$dataOffresVendeur["Prop3"].'</li>
+													
+													<li class="list-group-item" style="background-color:white" id="objetv3">Offre 3 : '.$dataOffresVendeur["Prop5"].'</li>
+													
+													<li class="list-group-item" style="background-color:white" id="objetv4">Offre 4 : '.$dataOffresVendeur["Prop7"].'</li>
+													
+													<li class="list-group-item" style="background-color:white" id="objetv5">Offre 5 : '.$dataOffresVendeur["Prop9"].'</li>
+												</ul>
+										</div>
+									';
+									}
+								}
+							}else{
+									echo "DATABASE NOT FOUND";
+							}
+						?>				
 					</div>
 			
 				</div>
 				<div class="w-100"></div>
 				<div id="accepter" style="display:none">
 					<div class="col">
-					<a href="#"><button class="btn btn-success btn-block" id="accepterbutton">Accepter l'offre</button></a>
+					<form action="negoce_client.php" method="post">
+						<input type="submit" class="btn btn-success btn-block" id="accepterbutton" name="accepterbutton" value="Accepter l'offre">
+					</form>
 					</div>
 				</div>
 				<div id="accepterdisabled">
@@ -261,12 +451,14 @@
 				<div class="w-100"></div>
 				<div class="col">
 					<div class="row">
+						<form  action="negoce_client.php" method="post">
 						<div class="col">
-							<a href="#"><button class="btn btn-primary">Proposer une nouvelle offre</button></a>
+							<input type="submit" class="btn btn-primary" id="boutonoffre" name="boutonoffre" value="Proposer une nouvelle offre">
 						</div>
 						<div class="col">
-							<input type ="text" class="form-control" id="nouvelleMO" name="nouvelleMO" placeholder="Saisir votre nouvelle offre">
+							<input type ="text" class="form-control" id="nouvelleoffre" name="nouvelleoffre" placeholder="Saisir votre nouvelle offre">						
 						</div>
+						</form>
 					</div>
 				</div>
 				<div class="col-lg-5" style="background-color:inherit"><p>  </p></div>
@@ -278,7 +470,7 @@
 			<div class="w-100"></div>
 				<div class="col">
 				<h3>Règlement des négociations </h3>
-				<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec neque congue, suscipit turpis quis, viverra turpis. Vivamus mollis ipsum vel luctus blandit. Integer ultrices blandit augue nec elementum. Ut accumsan eros quis diam vehicula, at ultricies magna dictum. Sed vel euismod sem. Duis ut bibendum ex. Duis sit amet nisi tempus elit vulputate ullamcorper sed sit amet sem. Sed imperdiet enim ac efficitur fermentum. Donec enim urna, sollicitudin id mattis fermentum, tempus quis metus. Donec sed diam lobortis, sagittis nisl in, fringilla risus. Mauris vel augue in massa porttitor convallis. Etiam lacinia maximus libero. Nam volutpat, risus lobortis scelerisque rhoncus, ex purus faucibus nunc, quis ultrices ante nisl ac ligula. Donec ac feugiat nunc, eu blandit libero. Phasellus ligula justo, luctus ac elit a, semper porttitor nibh. Proin sollicitudin ut felis vitae bibendum. </p>
+				<p> Vous pouvez proposer 5 offres au vendeur. Le vendeur se garde le droit de mettre un terme à la négociation. Vous ne pouvez vous retracter après avoir proposer une offre. Aucun remboursement ne sera effectuer. </p>
 				<form>
 					<div class="form-group">
 						<div class="form-check">
