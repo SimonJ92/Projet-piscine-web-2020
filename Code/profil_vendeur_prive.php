@@ -53,6 +53,58 @@
     }
 
     //Page
+
+    //on récupère les infos du vendeur
+    $dataInfosVendeur = "";
+    if($db_found){
+    	$sqlInfosVendeur = "SELECT * from vendeur where Pseudo like '%$pseudoConnected%'";
+    	$resultatInfosVendeur = mysqli_query($db_handle,$sqlInfosVendeur) or die (mysqli_error($db_handle));
+    	if(mysqli_num_rows($resultatInfosVendeur) == 0){
+    		echo "Erreur : vendeur non trouvé";
+    	}else{
+    		$dataInfosVendeur = mysqli_fetch_assoc($resultatInfosVendeur);
+    	}
+    }
+
+    $erreurTexte = "";
+    if(isset($_POST["buttonSaveText"]) && $db_found){
+    	if($_POST["buttonSaveText"]){
+    		$newPseudo = isset($_POST["newPseudo"])?$_POST["newPseudo"]:"";
+    		$newDescription = isset($_POST["newDescription"])?$_POST["newDescription"]:"";
+    		if($newPseudo == ""){
+    			$erreurTexte ="Erreur : le pseudo doit être rensigné";
+    		}else{
+    			//On vérifie que les infos ne contiennent pas de caractères spéciaux
+    			$pattern= '/[\'^£$%&*()}{@#~?><>,|=_+¬-éàèùüïûç]/';
+    			if(preg_match($pattern, $newPseudo) || preg_match($pattern, $newDescription)){
+    				$erreurTexte = "Erreur : les champs ne doivent pas contenir de caractères spéciaux";
+
+    				//TODO : plus de vérification des champs
+
+    			}else{
+    				if($pseudoConnected == $newPseudo){	//Pas de changement de pseudon juste de description
+    					$sqlUpdateTexte = "UPDATE vendeur SET Description = '".$newDescription."' where Pseudo like '%$pseudoConnected%'";
+    					$resultatUpdateTexte = mysqli_query($db_handle,$sqlUpdateTexte) or die (mysqli_error($db_handle));
+    					header('Location: profil_vendeur_prive.php');
+    				}else{
+    					//On doit vérifier que le pseudo n'appartient pas déjà à quelqu'un
+	    				$sqlVerifPseudo = "SELECT * from vendeur where Pseudo like '%$newPseudo%' and Pseudo not like '%$pseudoConnected%'";
+	    				$resultatVerifPseudo = mysqli_query($db_handle,$sqlVerifPseudo);
+	    				if(mysqli_num_rows($resultatVerifPseudo) != 0){
+	    					$erreurTexte = "Erreur : ce pseudo est déjà pris";
+	    				}else{
+	    					//on update les infos du vendeur
+	    					$sqlUpdateTexte = "UPDATE vendeur SET Pseudo = '".$newPseudo."', Description = '".$newDescription."' where Pseudo like '%$pseudoConnected%'";
+	    					$resultatUpdateTexte = mysqli_query($db_handle,$sqlUpdateTexte) or die (mysqli_error($db_handle));
+	    					$_SESSION["pseudoConnected"] = $newPseudo;
+	    					header('Location: profil_vendeur_prive.php');
+	    				}
+    				}
+    			}
+    		}
+    	}
+    }
+
  ?>
 
 <!DOCTYPE html>
@@ -141,44 +193,48 @@
 		</div>
 
 	
-		<div class="container-fluid" id="conteneur" style="background-image: url('Images/fond-profil1.jpg');">
+		<?php echo '<div class="container-fluid" id="conteneur" style="background-image: url(\''.(isset($dataInfosVendeur["ImageFond"])?$dataInfosVendeur["ImageFond"]:"Images/fond-profil-default.jpg").'\');">'; ?>
 			<div class="row container-fluid" id="contenu">
 				<div class="row" id="infosVendeur">
 					<div class="col-md-4 col-sm-12 conteneurImage" style="height: 300px">
-						<img id="photoVendeur" src="Images/photo-vendeur1.jpg" class="imagesExemples">
+						<?php echo '<img id="photoVendeur" src="'.(isset($dataInfosVendeur["Photo"])?$dataInfosVendeur["Photo"]:"Images/photo-vendeur-default.jpg").'" class="imagesExemples">'; ?>
+						<!-- Ajouter form + input-->
 						<button id="changerImage" class="btn btn-warning col-12">Changer l'image de profil</button>
 					</div>
 					<div class="col-md-1 col-sm-12" style="height: 50px;"></div>
 					<div class="col-md-7 col-sm-12" id="infosTexte">
 						<div class="container-fluid" style="height: 100%">
 							<div class="row" id="nomVendeur" style="height:auto;">
-								Pseudo : <textarea class="col-12" rows="2">Nom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeur</textarea>
+								Pseudo : <textarea class="col-12" rows="2" name="newPseudo" form="formTexte"><?php echo $dataInfosVendeur["Pseudo"]; ?></textarea>
 							</div>
 							<div class="row" id="description">
-								Description : <textarea rows="6">Description du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeur
-								</textarea>
+								Description : <textarea rows="6" name="newDescription" form="formTexte"><?php echo (isset($dataInfosVendeur["Description"])?$dataInfosVendeur["Description"]:""); ?></textarea>
 							</div>
 							<div class="row">
-								<button class="btn btn-warning col-12" id="sauverInfosTexte">
-									Sauvegarder les informations
-								</button>
+								<form id="formTexte" action="profil_vendeur_prive.php" method="post">
+								<input type="submit" name="buttonSaveText" class="btn btn-warning col-12" id="sauverInfosTexte" value="Sauvegarder les informations">
+								</form>
 							</div>
+							<?php echo "<p>".$erreurTexte."</p>"; ?>
 						</div>
 					</div>
 				</div>
 
+				<!--ajouter form et input-->
 				<div class="row text-center"><button id="changerImageFond" class="btn btn-warning col-12">Changer l'image de fond</button></div>
 
 				<div class="row" id="exemplesProduits">
-					<div class="col-md-3 col-sm-12 conteneurImage">
-						<a href="#"><img src="Images/imageMusee.png" class="imagesExemples"></a>
-					</div>
-					<div class="col-md-3 col-sm-12 conteneurImage">
-						<a href="#"><img src="Images/imageFeraille.png" class="imagesExemples"></a>
-					</div>
-					<div class="col-md-3 col-sm-12 conteneurImage">
-						<a href="#"><img src="Images/imageVIP.png" class="imagesExemples"></a>
-					</div>
+					<?php 
+                        $sqlPhotos = "SELECT * from produit where PseudoVendeur like '%$pseudoConnected%' LIMIT 3";
+                        $resultPhotos = mysqli_query($db_handle,$sqlPhotos) or die (mysqli_error($db_handle));
+                        while ($dataPhotos = mysqli_fetch_assoc($resultPhotos)) {   //adapter lien vers produits
+                            echo '
+                                <div class="col-md-3 col-sm-12 conteneurImage">
+                                    <a href="produit_vendeur.php?numeroProduit='.$dataPhotos["Numero"].'"><img src="'.$dataPhotos["Photo1"].'" class="imagesExemples"></a>    
+                                </div>
+                            ';
+                        }
+                     ?>
 				</div>
 			</div>
 		</div>

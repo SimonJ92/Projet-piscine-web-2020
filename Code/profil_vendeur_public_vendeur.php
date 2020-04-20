@@ -165,7 +165,7 @@
 					<div class="col-md-7 col-sm-12" id="infosTexte">
 						<div class="container-fluid" style="height: 100%">
 							<div class="row" id="nomVendeur" style="height:50px;">
-								<?php echo '<h5 class="col-12">'.$dataProfilVendeur["Nom"].'</h5>'; ?>
+								<?php echo '<h5 class="col-12">'.$dataProfilVendeur["Pseudo"].'</h5>'; ?>
 							</div>
 							<div class="row" id="description" style="height: 250px;">
 								<?php echo '<p class="col-12">'.(isset($dataProfilVendeur["Description"])?$dataProfilVendeur["Description"]:"").'</p>'; ?>
