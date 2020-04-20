@@ -82,7 +82,7 @@
             }else{
 
                 //Requête pour trouver le participant ayant fait la meilleure offre
-                $sqlGagnantEnchere = "SELECT A.IDAcheteur as idGagnant,A.Valeur as montantGagnant,B.DateFin as dateFinEnchere from offre A join enchere B on A.IDEnchere = B.IDEnchere where B.IDEnchere = $produitPaye ORDER by A.Valeur desc,A.DateOffre asc limit 1;";
+                $sqlGagnantEnchere = "SELECT A.IDAcheteur as idGagnant,A.Valeur as montantGagnant,B.DateFin as dateFinEnchere from offre A join enchere B on A.IDEnchere = B.IDEnchere where B.IDEnchere = $produitPaye ORDER by A.Valeur desc,A.DateOffre asc limit 1";
                 $resultatGagnantEnchere = mysqli_query($db_handle,$sqlGagnantEnchere) or die (mysqli_error($db_handle));
 
                 if(mysqli_num_rows($resultatGagnantEnchere) == 0){

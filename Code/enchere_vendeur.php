@@ -53,6 +53,41 @@
     }
 
     //Page
+    $numeroProduit = isset($_GET["numeroProduit"])?$_GET["numeroProduit"]:"";
+    $dataProduit = "";
+    $erreurProduit = "";
+    $dataEnchere = "";
+    $erreurEnchere = "";
+    if($db_found){
+    	$sqlProduit = "SELECT * from produit where Numero = $numeroProduit";
+    	$resultatProduit = mysqli_query($db_handle,$sqlProduit) or die (mysqli_error($db_handle));
+    	if(mysqli_num_rows($resultatProduit) == 0){
+    		$erreurProduit = "Erreur : produit non trouvé dans la base de données";
+    	}else{
+    		$dataProduit = mysqli_fetch_assoc($resultatProduit);
+    	}
+    }
+    if($db_found){
+    	$sqlProduit = "SELECT * from produit where Numero = $numeroProduit";
+    	$resultatProduit = mysqli_query($db_handle,$sqlProduit) or die (mysqli_error($db_handle));
+    	if(mysqli_num_rows($resultatProduit) == 0){
+    		$erreurProduit = "Erreur : produit non trouvé dans la base de données";
+    	}else{
+    		$dataProduit = mysqli_fetch_assoc($resultatProduit);
+    	}
+    }
+
+    if($db_found){
+    	$sqlEnchere = "SELECT * from enchere where NumeroProduit = $numeroProduit";
+    	$resultatEnchere = mysqli_query($db_handle,$sqlEnchere) or die (mysqli_error($db_handle));
+    	if(mysqli_num_rows($resultatEnchere) == 0){
+    		$erreurProduit = "Erreur : enchère non trouvée dans la base de données";
+    	}else{
+    		$dataEnchere = mysqli_fetch_assoc($resultatEnchere);
+    		echo '<script>var dateFinEnchere = "'.$dataEnchere["DateFin"].'";</script>';
+    	}
+    }
+
  ?>
 
 <!DOCTYPE html>
@@ -71,8 +106,38 @@
 		<link rel="stylesheet" href="Styles/bootstrap.min.css">  <!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		<link rel="stylesheet" type="text/css" href="Styles/enchere_vendeur.css">
-		<script src="Scripts/enchere_vendeur.js"></script>
-		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
+		<!--<script src="Scripts/enchere_vendeur.js"></script>-->
+		<script>
+			// Set the date we're counting down to
+			
+			var countDownDate = new Date(dateFinEnchere).getTime();
+
+			// Update the count down every 1 second
+			var x = setInterval(function() {
+
+			  // Get today's date and time
+			  var now = new Date().getTime();
+			    
+			  // Find the distance between now and the count down date
+			  var distance = countDownDate - now;
+			    
+			  // Time calculations for days, hours, minutes and seconds
+			  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+			  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+			  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+			    
+			  // Output the result in an element with id="demo"
+			  document.getElementById("dateenchere").innerHTML = days + "d " + hours + "h "
+			  + minutes + "m " + seconds + "s ";
+			    
+			  // If the count down is over, write some text 
+			  if (distance < 0) {
+			    clearInterval(x);
+			    document.getElementById("dateenchere").innerHTML = "L\'enchère est terminée";
+			  }
+			}, 1000);
+		</script>
 	</head>
 
 	<body>	
@@ -149,60 +214,59 @@
 	<div class="wrapper">
 		<div class="produit_now">
 			<ul class="list-unstyled">
-				<li class="media">
-					<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-					<div class="media-body">
-						<h5 class="mt-0 mb-1">List-based media object</h5>
-							Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-					</div>
-				</li>
-				<li class="media my-4">
-					<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-					<div class="media-body">
-						<h5 class="mt-0 mb-1">List-based media object</h5>
-							Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-					</div>
-				</li>
-				<li class="media">
-					<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-					<div class="media-body">
-						<h5 class="mt-0 mb-1">List-based media object</h5>
-						Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-					</div>
-				</li>
-				<li class="media">
-					<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-					<div class="media-body">
-						<h5 class="mt-0 mb-1">List-based media object</h5>
-						Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-					</div>
-				</li>
-				<li class="media">
-					<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-					<div class="media-body">
-						<h5 class="mt-0 mb-1">List-based media object</h5>
-						Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-					</div>
-				</li>
+				<?php 
+					//On veut afficher toutes les enchères des produits que vent le vendeur
+					$sqlMesEncheres = "SELECT E.* from enchere E join Produit Pr on Pr.Numero = E.NumeroProduit where Pr.PseudoVendeur like '%$pseudoConnected%'";
+					$resultatMesEncheres = mysqli_query($db_handle,$sqlMesEncheres) or die (mysqli_error($db_handle));
+					if(mysqli_num_rows($resultatMesEncheres) == 0){
+						echo "Pas d'enchère trouvée";
+					}else{
+						while ($dataMesEncheres = mysqli_fetch_assoc($resultatMesEncheres)) {
+							$sqlProduitMesEncheres = "SELECT * from produit where Numero =".$dataMesEncheres["NumeroProduit"];
+							$resultatProduitMesEncheres = mysqli_query($db_handle,$sqlProduitMesEncheres) or die (mysqli_error($db_handle));
+							if(mysqli_num_rows($resultatProduitMesEncheres) == 0){
+								echo "Erreur lors de la récupéraiton du produit";
+							}else
+							{
+								$dataProduitMesEncheres = mysqli_fetch_assoc($resultatProduitMesEncheres);
+								echo '
+									<li class="media">
+										<a href="enchere_vendeur.php?numeroProduit='.$dataMesEncheres["NumeroProduit"].'"><img class="mr-3" src="'.$dataProduitMesEncheres["Photo1"].'" alt="Generic placeholder image" style="max-height: 150px;max-width: 150px;"></a>
+										<div class="media-body">
+											<h5 class="mt-0 mb-1">List-based media object</h5>
+												'.$dataProduitMesEncheres["DescriptionCourte"].'
+										</div>
+									</li>
+								';
+							}
+						}
+					}
+				 ?>
+				
 			</ul>
 		</div>
 		<div class="information">
 			<div class="row">
 				<div class="col-lg-6">
-					<a href="#"><h3><b>Nom du produit</b></h3></a>
+					<?php echo $erreurProduit; ?>
+					<?php echo '<a href="produit_vendeur.php?numeroProduit='.$numeroProduit.'">' ?>
+						<h3><b><?php echo $dataProduit["Nom"] ?></b></h3>
+					</a>
 				</div>
 				<div class="col-lg-6">
-					<h3>Catégorie du produit</h3>
+					<h3><?php echo (($dataProduit["Categorie"] == "Ferraille")?"Ferraille et trésors":(($dataProduit["Categorie"] == "Musee")?"Bon pour le musée":"Accessoires VIP")); ?></h3>
 				</div>
 				<div class="col-lg-3" style="background-color:inherit"></div>
 			</div>
 			<div class="row">
 				<div class="col-lg-3" id="ok">
-				<a href="#"><img class="imageProduit center" src="Images/logo.png"></a>
+				<?php echo '<a href="produit_vendeur.php?numeroProduit='.$numeroProduit.'">' ?>
+					<?php echo '<img class="imageProduit center" src="'.$dataProduit["Photo1"].'" style="max-height: 600px; max-width: 250px;">'; ?>
+				</a>
 				</div>
 				<div class="col-lg-8" style="background-color:white">
 				<h3>Description</h3>
-				<p>Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla </p>
+				<p><?php echo $dataProduit["DescriptionCourte"]; ?></p>
 				</div>
 			</div>
 			<div class="row">
@@ -211,36 +275,62 @@
 		</div>
 		
 		<div class="container">
-		<div class="container-fluid">
-			<div class="col-lg-9">
-				<h3>L'enchère se terminera le :</h3>
-				<p id="DateE"></p> 
+			<div class="container-fluid">
+				<?php echo $erreurEnchere; ?>
+				<div class="col-lg-9">
+					<h3>L'enchère se terminera le :</h3>
+					<span id="DateE"><?php echo $dataEnchere["DateFin"]; ?></span> 
+				</div>
+				<div class="col-lg-3" style="background-color:white"></div>
+				<div class="col-lg-5">
+					<h3> Fin enchère dans : <br> </h3>
+					<p id="dateenchere"></p>
+				</div>
 			</div>
-			<div class="col-lg-3" style="background-color:white"></div>
-			<div class="col-lg-5">
-				<h3> Fin enchère dans : <br> </h3>
-				<p id="dateenchere"></p>
-			</div>
-		</div>
-		<div class="container-fluid">
-			<div class="col-lg-9">
-				<h3>Meilleure offre actuelle</h3>
-				<p id="prix"> </p>
-			</div>
-			<div class="col-lg-3" style="background-color:white"></div>
-			<div class="col-lg-5">
-				<div class="row">
-					<div class="col">
-						<h3>Nombres d'offres effectués</h3>
-						<p id="offre"></p>
+			<div class="container-fluid">
+				<div class="col-lg-9">
+					<h3>Meilleure offre actuelle</h3>
+					<?php 
+						//chercher la meilleure offre
+						if($db_found){
+							$sqlMeilleureOffre = "SELECT A.* from offre A where A.IDEnchere = ".$dataEnchere['IDEnchere']." order by A.Valeur desc, A.DateOffre asc limit 1";
+							$resultatMeilleureOffre = mysqli_query($db_handle,$sqlMeilleureOffre) or die (mysqli_error($db_handle));
+							if(mysqli_num_rows($resultatMeilleureOffre) == 0){
+								echo '<p id="prix">Pas d\'offre pour l\'instant</p>';
+							}else{
+								$dataMeileureOffre = mysqli_fetch_assoc($resultatMeilleureOffre);
+								echo '<p id="prix">'.$dataMeileureOffre["Valeur"].'€</p>';
+							}
+						}
+					 ?>
+				</div>
+				<div class="col-lg-3" style="background-color:white"></div>
+				<div class="col-lg-5">
+					<div class="row">
+						<div class="col">
+							<h3>Nombres d'offres effectués</h3>
+							<?php 
+								//chercher la meilleure offre
+								if($db_found){
+									$sqlNombreOffre = "SELECT count(*) as compte from offre A where A.IDEnchere = ".$dataEnchere['IDEnchere'];
+									$resultatNombreOffre = mysqli_query($db_handle,$sqlNombreOffre) or die (mysqli_error($db_handle));
+									if(mysqli_num_rows($resultatNombreOffre) == 0){
+										echo '<p id="prix">Pas d\'offre pour l\'instant</p>';
+									}else{
+										$dataNombreOffre = mysqli_fetch_assoc($resultatNombreOffre);
+										echo '<p id="prix">'.$dataNombreOffre["compte"].'</p>';
+									}
+								}
+							 ?>
+							<p id="offre"></p>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		</div>
 		<div class="container-fluid">
 		<h3>Règlement des enchères </h3>
-		<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec neque congue, suscipit turpis quis, viverra turpis. Vivamus mollis ipsum vel luctus blandit. Integer ultrices blandit augue nec elementum. Ut accumsan eros quis diam vehicula, at ultricies magna dictum. Sed vel euismod sem. Duis ut bibendum ex. Duis sit amet nisi tempus elit vulputate ullamcorper sed sit amet sem. Sed imperdiet enim ac efficitur fermentum. Donec enim urna, sollicitudin id mattis fermentum, tempus quis metus. Donec sed diam lobortis, sagittis nisl in, fringilla risus. Mauris vel augue in massa porttitor convallis. Etiam lacinia maximus libero. Nam volutpat, risus lobortis scelerisque rhoncus, ex purus faucibus nunc, quis ultrices ante nisl ac ligula. Donec ac feugiat nunc, eu blandit libero. Phasellus ligula justo, luctus ac elit a, semper porttitor nibh. Proin sollicitudin ut felis vitae bibendum. </p>					
+		<p> La vente aux enchère peut être proposée par le vendeur s'il le souhaite. Celui-ci definira une date de fin d'enchère, jusqu'à laquelle chaque utilisateur a la possibilité de faire une unique offre du montant de son choix. Une fois la date limite atteinte, l'utilisateur qui aura fait l'offre la plus élevée est déclaré gagnant de l'enchère. Dans le cas où plusieurs utilisateurs feraient la même offre, seul le premier d'entre eux à effectuer l'offre en question sera déclaré gagnant. La somme à payer pour le gagnant sera la somme minimale, inférieure ou égale à la valeur de son offre, requise pour surpasser toutes les autres offres. </p>					
 		</div>
 			
 

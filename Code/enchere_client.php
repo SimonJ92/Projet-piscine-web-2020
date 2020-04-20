@@ -43,7 +43,7 @@
     		}
     	}
     }
-
+    
 
 	//Page
  ?>
@@ -268,7 +268,7 @@
 			</div>
 			<div class="container-fluid">
 			<h3>Règlement des enchères </h3>
-			<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec neque congue, suscipit turpis quis, viverra turpis. Vivamus mollis ipsum vel luctus blandit. Integer ultrices blandit augue nec elementum. Ut accumsan eros quis diam vehicula, at ultricies magna dictum. Sed vel euismod sem. Duis ut bibendum ex. Duis sit amet nisi tempus elit vulputate ullamcorper sed sit amet sem. Sed imperdiet enim ac efficitur fermentum. Donec enim urna, sollicitudin id mattis fermentum, tempus quis metus. Donec sed diam lobortis, sagittis nisl in, fringilla risus. Mauris vel augue in massa porttitor convallis. Etiam lacinia maximus libero. Nam volutpat, risus lobortis scelerisque rhoncus, ex purus faucibus nunc, quis ultrices ante nisl ac ligula. Donec ac feugiat nunc, eu blandit libero. Phasellus ligula justo, luctus ac elit a, semper porttitor nibh. Proin sollicitudin ut felis vitae bibendum. </p>
+			<p> La vente aux enchère peut être proposée par le vendeur s'il le souhaite. Celui-ci definira une date de fin d'enchère, jusqu'à laquelle chaque utilisateur a la possibilité de faire une unique offre du montant de son choix. Une fois la date limite atteinte, l'utilisateur qui aura fait l'offre la plus élevée est déclaré gagnant de l'enchère. Dans le cas où plusieurs utilisateurs feraient la même offre, seul le premier d'entre eux à effectuer l'offre en question sera déclaré gagnant. La somme à payer pour le gagnant sera la somme minimale, inférieure ou égale à la valeur de son offre, requise pour surpasser toutes les autres offres. </p>
 			<form>
 				<div class="form-group">
 					<div class="form-check">
