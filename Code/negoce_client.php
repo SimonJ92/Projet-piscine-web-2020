@@ -61,7 +61,7 @@
 			if($nouvelleoffre==""){
 				$erreurOffre ="Saisir une offre";
 			}else{
-				$sqlTestCreation = "SELECT * FROM negociation WHERE (IDAcheteur = $idConnected AND NumeroProduit = $numProduit)";
+				$sqlTestCreation = "SELECT * FROM negociation WHERE IDAcheteur = $idConnected";
 				$resultTestCreation = mysqli_query($db_handle,$sqlTestCreation) or die (mysqli_error($db_handle));
 				
 				if(mysqli_num_rows($resultTestCreation) != 0){
@@ -79,7 +79,7 @@
 					$resultTestOffre4 = mysqli_query($db_handle,$sqlTestOffre4) or die (mysqli_error($db_handle));
 				
 					$sqlTestOffre5 = "SELECT  * FROM negociation  WHERE (IDAcheteur like $idConnected AND Prop10 IS NULL)";
-					$resultTestOffre5 = mysqli_query($db_handle,$sqlTestOffre4) or die (mysqli_error($db_handle));
+					$resultTestOffre5 = mysqli_query($db_handle,$sqlTestOffre5) or die (mysqli_error($db_handle));
 					
 					if(mysqli_num_rows($resultTestOffre1) != 0){
 						$sqlOffre = "UPDATE negociation SET Prop2 ='$nouvelleoffre' WHERE IDAcheteur = $idConnected";
@@ -104,7 +104,7 @@
 					} 
 					
 				}else{
-					$sqlOffre = "INSERT INTO negociation (IDAcheteur,PseudoVendeur,NumeroProduit, Prop1,Prop2, Accepted) VALUES ('idConnected','Simon','','0','$nouvelleoffre','0')";
+					$sqlOffre = "INSERT INTO negociation (IDAcheteur,PseudoVendeur,NumeroProduit, Prop1,Prop2, Accepted) VALUES ('idConnected','Simon','$numProduit','0','$nouvelleoffre','0')";
 					$resultOffre = mysqli_query($db_handle,$sqlOffre);
 					$erreurOffre = "Offre non enregistré";
 				}
@@ -449,15 +449,13 @@
 				<div class="col">
 					<div class="row">
 						<div class="col">
-							<?php
-							echo '<a href="negoce_client.php?numeroProduit='.($numProduit).'"><input type="submit" class="btn btn-primary" id="boutonoffre" name="boutonoffre" value="Proposer une nouvelle offre">';
-							?></a>
+							<form action="negoce_client.php" method="post">
+								<div class="col">
+									<input type ="text" class="form-control" id="nouvelleoffre" name="nouvelleoffre" placeholder="Saisir votre nouvelle offre">
+									<input type="submit" class="btn btn-primary" id="boutonoffre" name="boutonoffre" value="Proposer une nouvelle offre">
+								</div>
+							</form>
 						</div>
-						<form action="negoce_client.php?numeroProduit='.($numProduit).'" method="post">
-						<div class="col">
-							<input type ="text" class="form-control" id="nouvelleoffre" name="nouvelleoffre" placeholder="Saisir votre nouvelle offre">						
-						</div>
-						</form>
 					</div>
 				</div>
 				<div class="col-lg-5" style="background-color:inherit"><p>  </p></div>
