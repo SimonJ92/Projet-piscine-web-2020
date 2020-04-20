@@ -45,58 +45,40 @@
     }
 
 
-	//Page
+    //Page
     $categorieProduit = isset($_GET['categorieProduit'])?$_GET['categorieProduit']:0; 
     //0 - erreur
     //1 - Ferraille et trésors
     //2 - Bon pour le musée
     //3 - Accesoires VIP
 	
-	$Numero = "";
-	$Noms = "";
-	$Photos = "";
-	$MethodeVentes = "";
-	$PrixDirects = "";
-	$Descriptions = "";
-	$Vendeur = "";
-	$compteur = 0;
+	$nbRecherche = 0;
 	
-	$chercheNom = "";
-	$chercheVendeur = "";
+	$rechercheNom = "";
+	$rechercheVendeur = "";
 	$maxPrix = "";
 	$minPrix = "";
 	
-	if ($db_found) { 
-		$sql = "SELECT * FROM produit WHERE Categorie LIKE '$categorieProduit'";
-        $result = mysqli_query($db_handle, $sql); 
-        while ($data = mysqli_fetch_assoc($result)) {
-			$Numero .= $data['Numero'];
-			$Numero .= "%marrq%";
-			
-			$Noms .= $data['Nom'];
-			$Noms .= "%marrq%";
-			
-			$Photos .= $data['Photo1'];
-			$Photos .= "%marrq%";
-			
-			$MethodeVentes .= $data['MethodeVente'];
-			$MethodeVentes .= "%marrq%";
-			
-			$PrixDirects .= $data['PrixDirect'];
-			$PrixDirects .= "%marrq%";
-			
-			$Descriptions .= $data['DescriptionLongue1'];
-			$Descriptions .= "%marrq%";
-			
-			$Vendeur .= $data['PseudoVendeur'];
-			$Vendeur .= "%marrq%";
-			
-			$compteur = $compteur + 1;
-        }   
-    }   
-    else  
-	{
-        echo "Database not found"; 
+	if (isset($_POST["boutonRecherche"])) {
+		if($_POST["boutonRecherche"] && $db_found){
+			$rechercheNom = isset($_POST["rechercheNom"])?$_POST["rechercheNom"]:"";
+		}
+	} 
+	if (isset($_POST["boutonRecherche"])) {
+		if($_POST["boutonRecherche"] && $db_found){
+			$rechercheVendeur = isset($_POST["rechercheVendeur"])?$_POST["rechercheVendeur"]:"";
+		}
+	} 
+
+	if (isset($_POST["boutonRecherche"])) {
+		if($_POST["boutonRecherche"] && $db_found){
+			$maxPrix = isset($_POST["maxPrix"])?$_POST["maxPrix"]:"";
+		}
+	}
+	if (isset($_POST["boutonRecherche"])) {
+		if($_POST["boutonRecherche"] && $db_found){
+			$minPrix = isset($_POST["minPrix"])?$_POST["minPrix"]:"";
+		}
 	} 
     
 
@@ -117,45 +99,7 @@
 		<link rel="stylesheet" href="Styles/MyFooter.css">
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		<link rel="stylesheet" href="Styles/style.css">
-		<link rel="stylesheet" href="Styles/bootstrap.min.css">
-		
-		 <script>
-			//fonction qui cache ou affiche l'option de trie pas date de fin d'enchere
-			//si le cliant choisie de ne regarder que les meilleur offre
-			function masque_trie_enchere()
-			{
-				if("meilleur offre" == document.getElementById("type_vente").value)
-				{
-					
-					$("#trie_encheres").hide();
-				}
-				else
-				{
-					$("#trie_encheres").show();
-				}
-			}
-			 
-			$(document).ready(function(){
-				$("#valider").click(function(){
-					masque_trie_enchere();
-					var nom_objet = document.getElementById("nom_objet").value
-					var nom_vendeur = document.getElementById("nom_vendeur").value
-					var prix_min = document.getElementById("prix_min").value
-					var prix_max = document.getElementById("prix_max").value
-					var type_vente = document.getElementById("type_vente").value
-					var type_trie = document.getElementById("type_trie").value
-
-					//blindage
-					if(prix_min > prix_max)
-					{
-						var sauve = prix_min;
-						prix_min = prix_max;
-						prix_max = sauve;
-					}
-
-				});
-			}); 
-		 </script> 
+		<link rel="stylesheet" href="Styles/bootstrap.min.css"> 
 	</head>
 
 	<body>
@@ -234,62 +178,141 @@
 	<!-- 00 -->
 	
 		<div class="page">
-			<form>
-				<table>
-					<tr>
-						<td>
-							<div class="recherche">
-								<div class="filtre">
-									<p> filtrer par par type de vente proposée </p>
-									<p> <select id="type_vente" size=1>
-											<option id="options_type_vente">toute</option>
-											<option id="options_type_vente">meilleur offre</option>
-											<option id="options_type_vente">vente aux encheres</option>
-										</select> </p>
+			<h1> Catalogue :  <?php echo $categorieProduit ?> </h1>
+			
+			
+			<div class="titre">
+				
+			</div>
+			<div class="row">
+				<div class="col-1">
+					<div class="row">
+						<div class="col-12 container" id="recherche">
+							<form action="" method="post" id="formRecherche" class="form-inline">
+								<div style="margin: 0px auto;">
+									<h4> recherche :</h4> 
+									<input type="text" name="rechercheNom" class="form-control" placeholder="un produit pas sont nom" id="barreRecherche">
+									<input type="text" name="rechercheVendeur" class="form-control" placeholder="les produit d'un vendeur" id="barreRecherche">
+									<h5 style="text-align: center;"> ne garder que les objet entre </h5>
+									<p><input name="minPrix" style="width: 50px;" type="int" id="prix_min"> € et <input name="maxPrix" style="width: 50px;" type="int" id="prix_max">€ </p>
+									<input type="submit" name="boutonRecherche" id="boutonRecherche" class="btn btn-default" value="Rechercher">
 								</div>
-								<div class="filtre">
-									<p> trier par </p>
-									<p> <select id="type_trie" size=1>
-											<option>ordre alphabetique</option>
-											<option>prix d'achat direct croissant</option>
-											<option>prix d'achat direct decroissant</option>
-											<option id="trie_encheres">date de fin d'encheres</option>
-										</select> </p>
-								</div>
-								<input type="button" id="valider" value="valider la recherche">
-								
-								
-								<form action="page_mes_produits.php" method="post" class="info_form" >
-									<h3> Filtre </h3>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="col-10">
+					<div id="galerie">
+						<?php 
+							if ($db_found) 
+							{
+								$sql = "Select * from produit";
+								if($rechercheNom != ""){
+									$sql .= " where Nom like '%$rechercheNom%'";
+									$nbRecherche = $nbRecherche + 1;
+								}
+								if($rechercheVendeur != ""){
+									if(1 == $nbRecherche)
+									{
+										$sql .= " AND ";
+										$nbRecherche = 0;
+									}
+									else
+									{
+										$sql .= " where";
+									}
+									$sql .= " PseudoVendeur like '%$rechercheVendeur%'";
+									$nbRecherche = $nbRecherche + 1;
+								}
+								if(($maxPrix != "") &&($minPrix != ""))
+								{
 									
-									<div class="filtre">
-										<p> chercher un objet par son nom :</p> 
-										<p> <input type="text" name="chercheNom" id="nom"> </p> 
-									</div>
-									<div class="filtre">
-										<p> chercher un objet par son vendeur : </p>
-										<p> <input type="text" name="chercheVendeur" id="nom"> </p>
-									</div>
-									<div class="filtre">
-										<p> ne garder que les objet entre </p>
-										<p><input name="maxPrix" style="width: 50px;" type="int" id="prix_min"> € et <input name="minPrix" style="width: 50px;" type="int" id="prix_max">€ </p>
-									</div>
-																	
-									<input type="submit" name="boutonAjout" id="btn_ajout" class="btn" value="Ajouter">
-								</form>
-							</div>
-						</td>
-						<td>
-							<div class="titre">
-								<h1> Catalogue :  <?php echo $categorieProduit ?> </h1>
-							</div>
-							<div id="galerie">	</div>
-						</td>
-					</tr>						
-				</table>
-			</form>
-		
+									if(1 == $nbRecherche)
+									{
+										$sql .= " AND ";
+										$nbRecherche = 0;
+									}
+									else
+									{
+										$sql .= " where ";
+									}
+									$sql .= "(PrixDirect < '$maxPrix' AND (NOT PrixDirect < '$minPrix'))";
+									$nbRecherche = $nbRecherche + 1;
+								}
+								else if($maxPrix != ""){
+									if(1 == $nbRecherche)
+									{
+										$sql .= " AND ";
+										$nbRecherche = 0;
+									}
+									else
+									{
+										$sql .= " where ";
+									}
+									$sql .= "PrixDirect < '$maxPrix'";
+									$nbRecherche = $nbRecherche + 1;
+								}
+								else if($minPrix != ""){
+									if(1 == $nbRecherche)
+									{
+										$sql .= " AND ";
+										$nbRecherche = 0;
+									}
+									else
+									{
+										$sql .= " where ";
+									}
+									$sql .= "PrixDirect > '$minPrix'";
+									$nbRecherche = $nbRecherche + 1;
+								}
+								
+								$result = mysqli_query($db_handle, $sql);
+								if (mysqli_num_rows($result) == 0) {
+									echo "Aucun produit enregistré";
+								}
+								else
+								{
+									while ($data= mysqli_fetch_assoc($result)) {
+										echo '
+										<div class="objet">
+											<table>
+												<tr>
+													<td> 
+														<img class="image" src="'.$data["Photo1"].'">
+													</td>
+													<td> 
+														<h4>'.$data["Nom"].'</h4>
+														<div class="description_objet">
+															<p>'.$data["DescriptionLongue1"].'</p>
+															<p>'.$data["PseudoVendeur"].'</p>
+														</div>
+													</td>
+													<td> 
+														<h5>Acheter: </h5>
+														<h4>'.$data["PrixDirect"].'</h4>
+														<p>'.$data["PseudoVendeur"].'</p>
+														<p>'.$data["MethodeVente"].'</p>
+														<a href="produit_client.php?numeroProduit='.$data["Numero"].'"> aller a la page du produit </a>
+													</td>
+												</tr>
+											</table>
+										</div>
+										';
+									}
+								}
+							}
+							else
+							{
+								echo "Database not found";
+							}
+						 ?>
+					</div>
+				</div>
+				<div class="col-1"></div>
+			</div>
+			
 		</div>
+		<div class="col-1"></div>
 	
 	<!-- 00 -->
 	<!-- FOOTER -->
@@ -348,140 +371,5 @@
                 <div class="footer-copyright text-center">Copyright &copy; 2020 <strong>Ebay ECE</strong></div>
             </div>
         </footer>
-		
-		<script> 
-			//////////////////////////////////////////////////////////
-			//ajout automatique des produits depui la base de donnee//
-			//////////////////////////////////////////////////////////
-			
-			var Numero = "<?php echo $Numero ?>";
-			var Noms = "<?php echo $Noms ?>";
-			var Photos = "<?php echo $Photos ?>";
-			var MethodeVentes = "<?php echo $MethodeVentes ?>";
-			var PrixDirects = "<?php echo $PrixDirects ?>";
-			var Descriptions = "<?php echo $Descriptions ?>";
-			var Vendeur = "<?php echo $Vendeur ?>";
-			var nbProduit = "<?php echo $compteur ?>";
-			
-			var n = 0;
-			var compteur = 0;
-			
-			if("" == Noms && "" == Photos && "" == MethodeVentes && "" == PrixDirects && "" == Descriptions && "" == Vendeur)
-			{
-				var objet = document.createElement("div");
-				objet.id = "objet";
-				objet.className = "objet";
-				document.getElementById("galerie_mes_produit").appendChild(objet);
-				
-				var h3 = document.createElement("h3");
-				h3.textContent = "il n'y a pas d'objet de cette categorie";
-				document.getElementById("objet").appendChild(h3);
-			}
-			else
-			{
-				for(compteur = 0; compteur < nbProduit; ++compteur)
-				{
-					var objet = document.createElement("div");
-					objet.id = "objet" + compteur;
-					objet.className = "objet";
-					document.getElementById("galerie").appendChild(objet);
-					
-					var form = document.createElement("form"); 
-					form.id = "form" + compteur; 
-					document.getElementById("objet" + compteur).appendChild(form);
-					
-					var table = document.createElement("table"); 
-					table.id = "table" + compteur; 
-					document.getElementById("form" + compteur).appendChild(table);
-					
-					var tr = document.createElement("tr"); 
-					tr.id = "tr" + compteur; 
-					document.getElementById("table" + compteur).appendChild(tr);
-					
-					var td_1 = document.createElement("td"); 
-					td_1.id = "td_1" + compteur; 
-					document.getElementById("tr" + compteur).appendChild(td_1);
-					
-					var img = document.createElement("img"); 
-					img.className = "image";
-					n = Photos.search("%marrq%");
-					var adresseImage = Photos.slice(0, n);
-					img.src = adresseImage;
-					Photos = Photos.replace(adresseImage + "%marrq%", "");
-					document.getElementById("td_1" + compteur).appendChild(img);
-					
-					var td_2 = document.createElement("td"); 
-					td_2.id = "td_2" + compteur; 
-					document.getElementById("tr" + compteur).appendChild(td_2);
-					
-					var h4_1 = document.createElement("h4"); 
-					n = Noms.search("%marrq%");
-					var Nom_objet = Noms.slice(0, n);
-					h4_1.textContent = Nom_objet;
-					Noms = Noms.replace(Nom_objet + "%marrq%", "");
-					document.getElementById("td_2" + compteur).appendChild(h4_1);		
-
-					var description = document.createElement("div"); 
-					description.id = "description" + compteur; 
-					description.className = "description_objet";
-					document.getElementById("td_2" + compteur).appendChild(description);
-					
-					var p_1 = document.createElement("p"); 
-					n = Descriptions.search("%marrq%");
-					var Description_objet = Descriptions.slice(0, n);
-					p_1.textContent = Description_objet;
-					Descriptions = Descriptions.replace(Description_objet + "%marrq%", "");
-					document.getElementById("description" + compteur).appendChild(p_1);
-					
-					var p_2 = document.createElement("p"); 
-					n = Vendeur.search("%marrq%");
-					var Categories_objet = Vendeur.slice(0, n);
-					p_2.textContent = "objet mit en vente par : " + Categories_objet;
-					Vendeur = Vendeur.replace(Categories_objet + "%marrq%", "");
-					document.getElementById("td_2" + compteur).appendChild(p_2);
-					
-					var td_3 = document.createElement("td"); 
-					td_3.id = "td_3" + compteur; 
-					document.getElementById("tr" + compteur).appendChild(td_3);
-					
-					var h5_1 = document.createElement("h5"); 
-					h5_1.textContent = "Acheter:"; 
-					document.getElementById("td_3" + compteur).appendChild(h5_1);
-					
-					var h4_2 = document.createElement("h4"); 
-					n = PrixDirects.search("%marrq%");
-					var PrixDirects_objet = PrixDirects.slice(0, n);
-					h4_2.textContent = PrixDirects_objet + " €";
-					PrixDirects = PrixDirects.replace(PrixDirects_objet + "%marrq%", "");
-					document.getElementById("td_3" + compteur).appendChild(h4_2);
-					
-					var p_3 = document.createElement("p"); 
-					n = MethodeVentes.search("%marrq%");
-					var MethodeVentes_objet = MethodeVentes.slice(0, n);
-					MethodeVentes = MethodeVentes.replace(MethodeVentes_objet + "%marrq%", "");
-					if("Encheres" == MethodeVentes_objet)
-					{
-						p_3.textContent = "aussi disponible en ventes aux encheres";
-					}
-					else
-					{
-						p_3.textContent = "le prix peut etre negocier avec le vendeur";
-					}
-					document.getElementById("td_3" + compteur).appendChild(p_3);
-					
-					
-					n = Numero.search("%marrq%");
-					var Numero_objet = Numero.slice(0, n);
-					Numero = Numero.replace(Numero_objet + "%marrq%", "");
-					
-					
-					
-					var href = document.createElement("a"); 
-					href.textContent = "aller a la page du produit";
-					href.href = "produit_client.php?numeroProduit=" + Numero_objet;
-					document.getElementById("td_3" + compteur).appendChild(href);								
-				}
-			}
-		</script>
 	</body>	
 </html>
