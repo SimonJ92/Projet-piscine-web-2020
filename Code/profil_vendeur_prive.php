@@ -116,21 +116,51 @@
 
     if (isset($_POST["boutonImageProfil"]) && $db_found) {
     	if($_POST["boutonImageProfil"]){
-    		/*$newImageFond = "";
-    		if($newImageFond == "NULL"){
-    			$sqlUpdateProfil = "UPDATE vendeur SET Photo = NULL where Pseudo like %$pseudoConnected%'";
-    		}else{
-    			//on teste les caractères spéciaux
-    			$pattern= '/[\'^£$%&*()}{@#~?><>,|=+¬éàèùüïûç]/';
-    			if (preg_match($pattern, $newImageFond) == 1) {
-    				echo "<script>alert(\"Adresse non sauvegardeé : l'adresse ne doit pas contenir de caractères spéciaux et ne peut pas être vide\")</script>";
-    			}else{
+    		$newImageProfil = isset($_POST["newImageProfil"])?$_POST["newImageProfil"]:"";
+    		if($newImageProfil != ""){	// on ne change rien si le champ est nul
+    			if($newImageProfil == "NULL"){
+	    			$sqlUpdateProfil = "UPDATE vendeur SET Photo = NULL where Pseudo like '".$pseudoConnected."'";
+	    			$resultatUpdateProfil = mysqli_query($db_handle,$sqlUpdateProfil) or die (mysqli_error($db_handle));
+	    			header('Location: profil_vendeur_prive.php');
+	    		}else{
+	    			//on teste les caractères spéciaux
+	    			$pattern= '/[\'^£$%&*()}{@#~?><>,|=+¬éàèùüïûç]/';
+	    			if (preg_match($pattern, $newImageProfil)) {
+	    				echo "<script>alert(\"Adresse non sauvegardeé : l'adresse ne doit pas contenir de caractères spéciaux et ne peut pas être vide\")</script>";
+	    			}else{
 
-    				// requête pour changer l'image dans la bdd
-    				$sqlUpdateProfil = "UPDATE vendeur SET Photo = '".$newImageFond."' where Pseudo like '%$pseudoConnected%'";
-    				$resultatUpdateProfil = mysqli_query($db_handle,$sqlUpdateProfil) or die (mysqli_error($db_handle));
-    			}	
-    		}*/
+	    				// requête pour changer l'image dans la bdd
+	    				$sqlUpdateProfil = "UPDATE vendeur SET Photo = '".$newImageProfil."' where Pseudo like '%$pseudoConnected%'";
+	    				$resultatUpdateProfil = mysqli_query($db_handle,$sqlUpdateProfil) or die (mysqli_error($db_handle));
+	    				header('Location: profil_vendeur_prive.php');
+	    			}	
+	    		}
+    		}
+    	}
+    }
+
+    if (isset($_POST["boutonImageFond"]) && $db_found) {
+    	if($_POST["boutonImageFond"]){
+    		$newImageFond = isset($_POST["newImageFond"])?$_POST["newImageFond"]:"";
+    		if($newImageFond != ""){	// on ne change rien si le champ est nul
+    			if($newImageFond == "NULL"){
+	    			$sqlUpdateFond = "UPDATE vendeur SET ImageFond = NULL where Pseudo like '".$pseudoConnected."'";
+	    			$resultatUpdateFond = mysqli_query($db_handle,$sqlUpdateFond) or die (mysqli_error($db_handle));
+	    			header('Location: profil_vendeur_prive.php');
+	    		}else{
+	    			//on teste les caractères spéciaux
+	    			$pattern= '/[\'^£$%&*()}{@#~?><>,|=+¬éàèùüïûç]/';
+	    			if (preg_match($pattern, $newImageFond)) {
+	    				echo "<script>alert(\"Adresse non sauvegardeé : l'adresse ne doit pas contenir de caractères spéciaux et ne peut pas être vide\")</script>";
+	    			}else{
+
+	    				// requête pour changer l'image dans la bdd
+	    				$sqlUpdateFond = "UPDATE vendeur SET ImageFond = '".$newImageFond."' where Pseudo like '%$pseudoConnected%'";
+	    				$resultatUpdateFond = mysqli_query($db_handle,$sqlUpdateFond) or die (mysqli_error($db_handle));
+	    				header('Location: profil_vendeur_prive.php');
+	    			}	
+	    		}
+    		}
     	}
     }
 
@@ -223,11 +253,12 @@
 
 	
 		<?php echo '<div class="container-fluid" id="conteneur" style="background-image: url(\''.(isset($dataInfosVendeur["ImageFond"])?$dataInfosVendeur["ImageFond"]:"Images/fond-profil-default.jpg").'\');">'; ?>
+			<?php echo '<input type="text" name="newImageProfil" value="'.(isset($dataInfosVendeur["Photo"])?$dataInfosVendeur["Photo"]:"Images/photo-vendeur-default.jpg").'" form="formImageProfil" style="width: 300px;">'; ?>
 			<div class="row container-fluid" id="contenu">
 				<div class="row" id="infosVendeur">
 					<div class="col-md-4 col-sm-12 conteneurImage" style="height: 300px">
 						<?php echo '<img id="photoVendeur" src="'.(isset($dataInfosVendeur["Photo"])?$dataInfosVendeur["Photo"]:"Images/photo-vendeur-default.jpg").'" class="imagesExemples">'; ?>
-						<form action="profil_vendeur_prive.php" method="post">
+						<form action="profil_vendeur_prive.php" method="post" class="row" id="formImageProfil">
 							<input type="submit" name="boutonImageProfil" id="changerImage" class="btn btn-warning col-12" value="Changer l'image de profil">
 						</form>
 					</div>
@@ -250,7 +281,7 @@
 					</div>
 				</div>
 
-				<input type="text" name="newImageFond" form="formImageFond" value="" >
+				<?php echo '<input type="text" name="newImageFond" form="formImageFond" value="'.(isset($dataInfosVendeur["ImageFond"])?$dataInfosVendeur["ImageFond"]:"Images/fond-profil-default.jpg").'" >' ?>
 				<!--ajouter form et input-->
 				<form action="profil_vendeur_prive.php" method="post" id="formImageFond">
 					
