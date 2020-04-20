@@ -206,7 +206,7 @@
 
                                         $sqlSupprimerPanier = "DELETE Pr from panier Pa join produit Pr on Pa.NumeroProduit = Pr.Numero where Pa.IDClient = ".$idConnected;
                                         $resultatSupprimerPanier = mysqli_query($db_handle,$sqlSupprimerPanier) or die (mysqli_error($db_handle));
-                                        header('Location: accueil_client.php');*/
+                                        header('Location: accueil_client.php');
                                     }
                                 }elseif ($typePaiement == 2) {  //type enchère
 

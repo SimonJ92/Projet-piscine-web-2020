@@ -47,10 +47,18 @@
 	//Page
 
 	$numeroProduit = isset($_GET["numeroProduit"])?$_GET["numeroProduit"]:"";
+
     $dataProduit = "";
     $erreurProduit = "";
+
     $dataEnchere = "";
     $erreurEnchere = "";
+
+    $testOffreFaite = 0;
+    $valeurOffreFaite = 0;
+
+    $boolEnchereFinie =0;
+
     if($db_found){
     	$sqlProduit = "SELECT * from produit where Numero = $numeroProduit";
     	$resultatProduit = mysqli_query($db_handle,$sqlProduit) or die (mysqli_error($db_handle));
@@ -69,6 +77,59 @@
     	}else{
     		$dataEnchere = mysqli_fetch_assoc($resultatEnchere);
     		echo '<script>var dateFinEnchere = "'.$dataEnchere["DateFin"].'";</script>';
+
+    		date_default_timezone_set('Europe/Paris');  //On va tester si l'enchère est bien terminée
+            $date = date('m/d/Y h:i:s a', time());
+
+            if(strtotime($date) > strtotime($dataEnchere["DateFin"])){
+            	$boolEnchereFinie = 1;
+            }
+
+    		//On vérifie que l'offre n'a pas déjà effectuée pour cette enchère
+    		$sqlTestOffreFaite = "SELECT A.* from offre A where A.IDEnchere = ".$dataEnchere["IDEnchere"]." and A.IDAcheteur = $idConnected";
+    		$resultatTestOffreFaite = mysqli_query($db_handle,$sqlTestOffreFaite) or die (mysqli_error($db_handle));
+    		if(mysqli_num_rows($resultatTestOffreFaite) != 0){
+    			$testOffreFaite = 1;
+    			$dataTestOffreFaite = mysqli_fetch_assoc($resultatTestOffreFaite);
+    			$valeurOffreFaite = $dataTestOffreFaite["Valeur"];
+    		}
+    	}
+    }
+
+    $erreurAjouterPanier = "";
+    if(isset($_POST["boutonAcheterMaintenant"]) && $db_found){
+    	if($_POST["boutonAcheterMaintenant"]){
+    		//On vérifie que l'objet n'est pas déjà dans le panier du client
+    		$sqlVerifPanier = "SELECT * from panier where IDClient = $idConnected and NumeroProduit=$numeroProduit";
+    		$resultatVerifPanier = mysqli_query($db_handle,$sqlVerifPanier) or die (mysqli_error($db_handle));
+    		if(mysqli_num_rows($resultatVerifPanier) == 0){
+    			//on insère le produit dans la table panier
+    			$sqlAjouterPanier = "INSERT into panier (NumeroProduit,IDClient) values (".$numeroProduit.",".$idConnected.")";
+    			$resultatAjouterPanier = mysqli_query($db_handle,$sqlAjouterPanier) or die (mysqli_error($db_handle));
+    			header('Location: panier.php');
+    		}else{
+    			$erreurAjouterPanier = "L'objet est déjà dans le panier";
+    		}
+    	}
+    }
+
+    $erreurFaireEnchere = "";
+    if(isset($_POST["boutonFaireEnchere"]) && $db_handle){
+    	if($_POST["boutonFaireEnchere"]){
+    		$newEnchere = isset($_POST["newEnchere"])?$_POST["newEnchere"]:0;
+    		if($newEnchere <= 0){
+    			$erreurFaireEnchere = "Erreur lors de la saisie du montant";
+    		}else{
+    			$sqlFaireOffre = "INSERT into offre (IDEnchere, IDAcheteur, Valeur, DateOffre) VALUES (".$dataEnchere["IDEnchere"].",".$idConnected.",".$newEnchere.",CURDATE())";
+    			$resultatFaireOffre = mysqli_query($db_handle,$sqlFaireOffre) or die (mysqli_error($db_handle));
+    			header('Location: enchere_client.php?numeroProduit='.$numeroProduit);
+    		}
+    	}
+    }
+
+    if (isset($_POST["boutonAllerPayer"])) {
+    	if($_POST["boutonAllerPayer"]){
+    		header('Location: paiement.php?typePaiement=2&produitPaye='.$numeroProduit);
     	}
     }
 
@@ -122,6 +183,19 @@
 			    document.getElementById("dateenchere").innerHTML = "L\'enchère est terminée";
 			  }
 			}, 1000);
+
+			function afficheenchere(gridCheck) {
+				if (gridCheck.checked)
+				{
+					document.getElementById("divenchere").style.display="block";
+					document.getElementById("divencheredisabled").style.display="none";
+				}
+				else{
+					document.getElementById("divenchere").style.display="none";
+					document.getElementById("divencheredisabled").style.display="block";
+				}
+				
+			}
 		</script>
 	</head>
 
@@ -217,7 +291,7 @@
 								$dataProduitMesEncheres = mysqli_fetch_assoc($resultatProduitMesEncheres);
 								echo '
 									<li class="media">
-										<a href="enchere_vendeur.php?numeroProduit='.$dataMesEncheres["NumeroProduit"].'"><img class="mr-3" src="'.$dataProduitMesEncheres["Photo1"].'" alt="Generic placeholder image" style="max-height: 150px;max-width: 150px;"></a>
+										<a href="enchere_client.php?numeroProduit='.$dataMesEncheres["NumeroProduit"].'"><img class="mr-3" src="'.$dataProduitMesEncheres["Photo1"].'" alt="Generic placeholder image" style="max-height: 150px;max-width: 150px;"></a>
 										<div class="media-body">
 											<h5 class="mt-0 mb-1">'.$dataProduitMesEncheres["Nom"].'</h5>
 												'.$dataProduitMesEncheres["DescriptionCourte"].'
@@ -231,106 +305,128 @@
 				</ul>
 			</div>
 			<div class="information">
-				<div class="row">
-					<div class="col-lg-6">
-						<a href="#"><h3><b>Nom du produit</b></h3></a>
-					</div>
-					<div class="col-lg-6">
-						<h3>Catégorie du produit</h3>
-					</div>
-					<div class="col-lg-3" style="background-color:inherit"></div>
+			<div class="row">
+				<div class="col-lg-6">
+					<?php echo $erreurProduit; ?>
+					<?php echo '<a href="produit_client.php?numeroProduit='.$numeroProduit.'">' ?>
+						<h3><b><?php echo $dataProduit["Nom"] ?></b></h3>
+					</a>
 				</div>
-				<div class="row">
-					<div class="col-lg-3" id="ok">
-					<a href="#"><img class="imageProduit center" src="Images/logo.png"></a>
-					</div>
-					<div class="col-lg-8" style="background-color:white">
-					<h3>Description</h3>
-					<p>Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla Blabla </p>
-					</div>
+				<div class="col-lg-6">
+					<h3><?php echo (($dataProduit["Categorie"] == "Ferraille")?"Ferraille et trésors":(($dataProduit["Categorie"] == "Musee")?"Bon pour le musée":"Accessoires VIP")); ?></h3>
 				</div>
-				<div class="row">
-					<br><p></p><br><br>
+				<div class="col-lg-3" style="background-color:inherit"></div>
+			</div>
+			<div class="row">
+				<div class="col-lg-3" id="ok">
+				<?php echo '<a href="produit_client.php?numeroProduit='.$numeroProduit.'">' ?>
+					<?php echo '<img class="imageProduit center" src="'.$dataProduit["Photo1"].'" style="max-height: 600px; max-width: 250px;">'; ?>
+				</a>
 				</div>
-				<div class="information_vendeur">
-					<div class="row">
-						<div class="col-sm-2" style="background-color:inherit"></div>
-						<div class="col">
-							<a href="#"><h3>Vendeur</h3></a>
-						</div>
-						<div class="col">
-							<a href="#"><h3>Lien vers le site du vendeur</h3></a>
-						</div>
-					</div>
+				<div class="col-lg-8" style="background-color:white">
+				<h3>Description</h3>
+				<p><?php echo $dataProduit["DescriptionCourte"]; ?></p>
 				</div>
 			</div>
+			<div class="row">
+				<br><p></p><br><br>
+			</div>
+		</div>
 			
 			<div class="container">
-			<div class="container-fluid">
-				<div class="col-lg-9">
-					<h3>L'enchère se terminera le :</h3>
-					<p id="DateE"></p> 
+				<div class="container-fluid">
+					<div class="col-lg-9">
+						<h3>L'enchère se terminera le :</h3>
+						<span id="DateE"><?php echo $dataEnchere["DateFin"]; ?></span>
+					</div>
+					<div class="col-lg-3" style="background-color:white"></div>
+					<div class="col-lg-5">
+						<h3> Fin enchère dans : <br> </h3>
+						<p id="dateenchere"></p>
+					</div>
 				</div>
-				<div class="col-lg-3" style="background-color:white"></div>
-				<div class="col-lg-5">
-					<h3> Fin enchère dans : <br> </h3>
-					<p id="dateenchere"></p>
-				</div>
-			</div>
-			<div class="container-fluid">
-				<div class="col-lg-9">
-					<div id="divencheredisabled">
-					<h3>Mon enchère</h3>
-					<form>
-						<fieldset disabled>
+				<div class="container-fluid">
+					<div class="col-lg-9">
+						<div id="divencheredisabled">
+						<h3>Mon enchère</h3>
+						<?php echo $erreurFaireEnchere;
+							echo '<form action="enchere_client.php?numeroProduit='.$numeroProduit.'" method="post" id="formFaireOffre">' ?>
+							<fieldset disabled>
+								<div class="form-group">
+									<label for="enchere">Mon enchère: </label>
+									<input type ="text" class="form-control" id="encheredisabled" name="newEnchere" placeholder="Saisir votre enchère" form="formFaireOffre">
+									<small class="form-text text-muted">Attention une seule enchère maximale possible.</small>
+									<input type="submit" name="boutonFaireEnchere" class="btn btn-block btn-success" value="Faire une enchère" disabled form="formFaireOffre">
+									<?php echo (($testOffreFaite == 0)?"":"Vous avez déjà fait une offre de ".$valeurOffreFaite."€"); ?>
+								</div>
+							</fieldset>
+						</form>
+						</div>
+						<div id="divenchere" style="display:none">
+						<h3>Mon	enchère </h3>
+						<?php echo '<form action="enchere_client.php?numeroProduit='.$numeroProduit.'" method="post id="formFaireOffre">' ?>
 							<div class="form-group">
-								<label for="enchere">Mon enchère: </label>
-								<input type ="text" class="form-control" id="encheredisabled" name="enchere" placeholder="Saisir votre enchère">
-								<small class="form-text text-muted">Attention une seule enchère maximale possible.</small>
+									<label for="enchere">Mon enchère: </label>
+									<input type ="text" class="form-control" id="enchere" name="newEnchere" placeholder="Saisir votre enchère" form="formFaireOffre">
+									<small class="form-text text-muted">Attention une seule enchère maximale possible.</small>
+									<?php echo '<input type="submit" name="boutonFaireEnchere" class="btn btn-block btn-success" value="Faire une enchère" form="formFaireOffre" '.((($testOffreFaite != 0) || $boolEnchereFinie)?"disabled":"").'>';
+										echo (($testOffreFaite == 0)?"":"Vous avez déjà fait une offre de ".$valeurOffreFaite."€");
+									?>
 							</div>
-						</fieldset>
-					</form>
-					</div>
-					<div id="divenchere" style="display:none">
-					<h3>Mon	enchère </h3>
-					<form>
-						<div class="form-group">
-								<label for="enchere">Mon enchère: </label>
-								<input type ="text" class="form-control" id="enchere" name="enchere" placeholder="Saisir votre enchère">
-								<small class="form-text text-muted">Attention une seule enchère maximale possible.</small>
+						</form>
 						</div>
-					</form>
 					</div>
-				</div>
-				<div class="col-lg-3" style="background-color:white"></div>
-				<div class="col-lg-5">
-					<div class="row">
-						<div class="col">
-							<a href="#"><button class="btn btn-block btn-success" >Acheter Maintenant </button></a>
-						</div>
-						<div class="col">
-							PRIX : 
-							<p id="prix"></p>
+					<div class="col-lg-3" style="background-color:white"></div>
+					<div class="col-lg-5">
+						<div class="row">
+							<div class="col">
+								<?php 
+									echo $erreurAjouterPanier;
+									echo '<form action="enchere_client.php?numeroProduit='.$numeroProduit.'" method="post">'; 
+								?>
+									<input type="submit" name="boutonAcheterMaintenant" class="btn btn-block btn-success" value="Acheter Maintenant">
+								</form>
+							</div>
+							<div class="col">
+								PRIX : 
+								<span id="prix"><?php echo $dataProduit["PrixDirect"].'€'; ?></span>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 			</div>
 			<div class="container-fluid">
-			<h3>Règlement des enchères </h3>
-			<p> La vente aux enchère peut être proposée par le vendeur s'il le souhaite. Celui-ci definira une date de fin d'enchère, jusqu'à laquelle chaque utilisateur a la possibilité de faire une unique offre du montant de son choix. Une fois la date limite atteinte, l'utilisateur qui aura fait l'offre la plus élevée est déclaré gagnant de l'enchère. Dans le cas où plusieurs utilisateurs feraient la même offre, seul le premier d'entre eux à effectuer l'offre en question sera déclaré gagnant. La somme à payer pour le gagnant sera la somme minimale, inférieure ou égale à la valeur de son offre, requise pour surpasser toutes les autres offres. </p>
-			<form>
-				<div class="form-group">
-					<div class="form-check">
-						<input class="form-check-input" type="checkbox" id="gridCheck" onChange="afficheenchere(gridCheck)">
-						<label class="form-check-label" for="gridCheck">
-									Je certifie avoir pris connaissance des conditions d'utilisations.
-						</label>
+				<h3>Règlement des enchères </h3>
+				<p> La vente aux enchère peut être proposée par le vendeur s'il le souhaite. Celui-ci definira une date de fin d'enchère, jusqu'à laquelle chaque utilisateur a la possibilité de faire une unique offre du montant de son choix. Une fois la date limite atteinte, l'utilisateur qui aura fait l'offre la plus élevée est déclaré gagnant de l'enchère. Dans le cas où plusieurs utilisateurs feraient la même offre, seul le premier d'entre eux à effectuer l'offre en question sera déclaré gagnant. La somme à payer pour le gagnant sera la somme minimale, inférieure ou égale à la valeur de son offre, requise pour surpasser toutes les autres offres. </p>
+				<form>
+					<div class="form-group">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" id="gridCheck" onChange="afficheenchere(gridCheck)">
+							<label class="form-check-label" for="gridCheck">
+										<b>Je certifie avoir pris connaissance des conditions d'utilisations.</b>
+							</label>
+						</div>
 					</div>
-				</div>
-			</form>
-						
+				</form>
+				<?php 
+					if($boolEnchereFinie){
+						$sqlTestGagne = "SELECT A.IDAcheteur as idGagnant,A.Valeur as montantGagnant from offre A join enchere B on A.IDEnchere = B.IDEnchere where B.IDEnchere = $numeroProduit ORDER by A.Valeur desc,A.DateOffre asc limit 1";
+						$resultTestGagne = mysqli_query($db_handle,$sqlTestGagne) or die (mysqli_error($db_handle));
+						if(mysqli_num_rows($resultTestGagne) != 0){
+							$dataTestGagne = mysqli_fetch_assoc($resultTestGagne);
+							if($idConnected == $dataTestGagne["idGagnant"]){
+								echo "
+									<p>Vous avez gagné l'enchère ! Cliquez sur le bouton pour procéder au paiement. Attention : le produit est toujours disponible à la vente directe !</p>
+									<form action='' method='post'>
+										<input type='submit' name='boutonAllerPayer' class='btn btn-block btn-success' value='Paiement'>
+									</form>
+								";
+							}
+						}
+					}
+				 ?>		
 			</div>
+
 				
 
 		</div>
