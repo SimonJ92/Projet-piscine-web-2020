@@ -82,7 +82,7 @@
             }else{
 
                 //Requête pour trouver le participant ayant fait la meilleure offre
-                $sqlGagnantEnchere = "SELECT A.IDAcheteur as idGagnant,A.Valeur as montantGagnant,B.DateFin as dateFinEnchere from offre A join enchere B on A.IDEnchere = B.IDEnchere where B.IDEnchere = $produitPaye ORDER by A.Valeur desc,A.DateOffre asc limit 1;";
+                $sqlGagnantEnchere = "SELECT A.IDAcheteur as idGagnant,A.Valeur as montantGagnant,B.DateFin as dateFinEnchere, B.NumeroProduit as produitEnchere from offre A join enchere B on A.IDEnchere = B.IDEnchere where B.IDEnchere = $produitPaye ORDER by A.Valeur desc,A.DateOffre asc limit 1;";
                 $resultatGagnantEnchere = mysqli_query($db_handle,$sqlGagnantEnchere) or die (mysqli_error($db_handle));
 
                 if(mysqli_num_rows($resultatGagnantEnchere) == 0){
@@ -160,6 +160,62 @@
 
             if($verifNom == "" || $verifPrenom == "" || $verifAdresseLigne1 == "" || $verifVille == "" || $verifCodePostal == "" || $verifPays == "" || $verifNumeroTelephone == "" || $verifTypeCarte == "" || $verifNumeroCarte == "" || $verifNomTitulaire == "" || $verifMoisExpiration == "" || $verifAnneeExpiration == "" || $verifCodeSecurite == ""){
                 $erreurPaiement = "Tous les champs doivent être remplis ! (excepté la ligne 2 de l'adresse)";
+            }else{
+                //On vérifie qu'il n'y a pas de caractères spéciaux
+                $pattern= '/[\'^£$%&*()}{@#~?><>,|=_+¬-éàèùüïûç]/';
+                if(preg_match($pattern, $verifNom) || preg_match($pattern, $verifPrenom) || preg_match($pattern, $verifAdresseLigne1) || preg_match($pattern, $verifAdresseLigne2) || preg_match($pattern, $verifVille) || preg_match($pattern, $verifCodePostal) || preg_match($pattern, $verifPays) || preg_match('/[\'^£$%&*()}{@~?><>,|=_¬-éàèùüïûç]/', $verifNumeroTelephone) || preg_match($pattern, $verifTypeCarte) || preg_match($pattern, $verifNumeroCarte) || preg_match($pattern, $verifNomTitulaire) || preg_match($pattern, $verifMoisExpiration) || preg_match($pattern, $verifAnneeExpiration) || preg_match($pattern, $verifCodeSecurite)){
+                    $erreurPaiement = "Les champs ne doivent pas contenir de caractère spéciaux";
+                }else{
+                    //TODO : autres vérifications des champs
+
+                    //L'adresse de livraison n'a pas à être comparée
+                    //Requête pour récupérer les infos de la carte, pour vérifier que les infos sont valides et que le solde est suffisant
+                    $sqlCarte = "SELECT * from carte where NumeroCarte = ".$verifNumeroCarte;
+                    $resultatCarte = mysqli_query($db_handle,$sqlCarte) or die (mysqli_error($db_handle));
+                    if(mysqli_num_rows($resultatCarte) == 0){
+                        echo "<script>alert(\"La carte n'est pas reconnue par notre base de données\")</script>";
+                        $erreurPaiement = "La carte n'est pas reconnue par notre base de données";
+                    }else{
+                        $dataCarte = mysqli_fetch_assoc($resultatCarte);
+                        if($dataCarte["TypeCarte"] == $verifTypeCarte && $dataCarte["NumeroCarte"] == $verifNumeroCarte && $dataCarte["NomTitulaire"] == $verifNomTitulaire && $dataCarte["MoisExpiration"] == $verifMoisExpiration && $dataCarte["AnneeExpiration"] == $verifAnneeExpiration && $dataCarte["CodeSecurite"] == $verifCodeSecurite){
+                            //La carte est reconnue
+                            if($prixTotalPaiement > $dataCarte["Solde"]){
+                                echo "<script>alert(\"Votre solde banquaire est insuffisant pour cet achat\")</script>";
+                                $erreurPaiement = "Solde banquaire insuffisant";
+                            }else{
+                                //Paiement validé : on supprime les Produits concernés, la BDD se charge de supprimer les autres tuples grâce aux au paramètre ON DELETE des contraintes, réglé sur CASCADE
+                                //On doit selectionner les produits à supprimer de manière différente selon le typede paiement
+                                if($typePaiement == 1){ //type panier
+
+                                    //TODO : enregistrer l'achat quelque part ?
+
+                                    $sqlSupprimerPanier = "DELETE Pr from panier Pa join produit Pr on Pa.NumeroProduit = Pr.Numero where Pa.IDClient = ".$idConnected;
+                                    $resultatSupprimerPanier = mysqli_query($db_handle,$sqlSupprimerPanier) or die (mysqli_error($db_handle));
+                                    header('Location: accueil_client.php');
+                                }elseif ($typePaiement == 2) {  //type enchère
+                                    
+                                    //TODO : enregistrer l'achat ?
+
+                                    $sqlSupprimerEnchere = "DELETE from produit where Numero = ".$produitPaye;
+                                    $resultatSupprimerEnchere = mysqli_query($db_handle,$sqlSupprimerEnchere) or die (mysqli_error($db_handle));
+                                    header('Location: accueil_client.php');
+                                }elseif ($typePaiement == 3) {  //type négoce
+                                    
+                                    //TODO : eenregistrer l'achat ?
+
+                                    $sqlSupprimerNegoce = "DELETE from produit where Numero = ".$produitPaye;   //même requête que pour les enchères ...
+                                    $resultatSupprimerNegoce = mysqli_query($db_handle,$sqlSupprimerNegoce);
+                                    header('Location: accueil_client.php');
+                                }else{
+                                    echo "Erreur de type de paiement : ".$typePaiement;
+                                }
+                            }
+                        }else{
+                            echo "<script>alert(\"Les informations banquaires sont incorrectes\")</script>";
+                            $erreurPaiement = "Les informations banquaires sont incorrectes";
+                        }
+                    }
+                }
             }
         }
     }
@@ -266,7 +322,7 @@
 			<div class="row" id="wrapperInterieur">
                 
 				<div class="col-md-6 col-sm-12">
-                    <?php echo '<form id="formPaiement" action="paiement.php?typePaiement='.$typePaiement.''.(isset($produitPaye)?"&produitPaye=".$produitPaye:"").'" method="post">'; ?>
+                    <?php echo '<form id="formPaiement" action="paiement.php?typePaiement='.$typePaiement.''.(($produitPaye)?"&produitPaye=".$produitPaye:"").'" method="post">'; ?>
     					<div class="row" id="infosClient" style="height: auto;">
     						<div class="col-12 container-fluid">
     							<h3 style="margin-bottom: 15px;">Informations de livraison</h3>
