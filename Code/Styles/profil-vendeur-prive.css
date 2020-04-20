@@ -19,6 +19,7 @@
 #infosVendeur{
 	padding-left: 100px;
 	padding-right: 100px;
+	height: 800px;
 }
 
 #photoVendeur{
@@ -104,21 +105,3 @@
 		padding-right: 50px;
 	}
 }
-
-
-/*<div class="row" id="nomVendeur" style="height:50px;">
-								<textarea class="col-12" style="overflow: hidden;">Nom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeurNom du vendeur</textarea>
-							</div>
-							<div class="row" id="description">
-								<textarea name="description" rows="6">Description du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeurDescription du vendeur</textarea>
-							</div>
-							<div class="row">
-								<button class="btn btn-warning col-12" id="sauverInfosTexte">Sauvegarder la description</button>
-							</div>
-
-
-
-
-
-							<button id="changerImage" class="btn btn-warning col-12">Changer l'image de profil</button>
-							*/

@@ -54,6 +54,15 @@
 
     //Page
 
+    //prompt function (https://stackoverflow.com/questions/30388997/equivalent-of-alert-and-prompt-in-php)
+    function prompt($prompt_msg){
+        
+
+        
+        //return($answer);
+    }
+
+
     //on récupère les infos du vendeur
     $dataInfosVendeur = "";
     if($db_found){
@@ -102,6 +111,26 @@
     				}
     			}
     		}
+    	}
+    }
+
+    if (isset($_POST["boutonImageProfil"]) && $db_found) {
+    	if($_POST["boutonImageProfil"]){
+    		/*$newImageFond = "";
+    		if($newImageFond == "NULL"){
+    			$sqlUpdateProfil = "UPDATE vendeur SET Photo = NULL where Pseudo like %$pseudoConnected%'";
+    		}else{
+    			//on teste les caractères spéciaux
+    			$pattern= '/[\'^£$%&*()}{@#~?><>,|=+¬éàèùüïûç]/';
+    			if (preg_match($pattern, $newImageFond) == 1) {
+    				echo "<script>alert(\"Adresse non sauvegardeé : l'adresse ne doit pas contenir de caractères spéciaux et ne peut pas être vide\")</script>";
+    			}else{
+
+    				// requête pour changer l'image dans la bdd
+    				$sqlUpdateProfil = "UPDATE vendeur SET Photo = '".$newImageFond."' where Pseudo like '%$pseudoConnected%'";
+    				$resultatUpdateProfil = mysqli_query($db_handle,$sqlUpdateProfil) or die (mysqli_error($db_handle));
+    			}	
+    		}*/
     	}
     }
 
@@ -198,8 +227,9 @@
 				<div class="row" id="infosVendeur">
 					<div class="col-md-4 col-sm-12 conteneurImage" style="height: 300px">
 						<?php echo '<img id="photoVendeur" src="'.(isset($dataInfosVendeur["Photo"])?$dataInfosVendeur["Photo"]:"Images/photo-vendeur-default.jpg").'" class="imagesExemples">'; ?>
-						<!-- Ajouter form + input-->
-						<button id="changerImage" class="btn btn-warning col-12">Changer l'image de profil</button>
+						<form action="profil_vendeur_prive.php" method="post">
+							<input type="submit" name="boutonImageProfil" id="changerImage" class="btn btn-warning col-12" value="Changer l'image de profil">
+						</form>
 					</div>
 					<div class="col-md-1 col-sm-12" style="height: 50px;"></div>
 					<div class="col-md-7 col-sm-12" id="infosTexte">
@@ -220,8 +250,14 @@
 					</div>
 				</div>
 
+				<input type="text" name="newImageFond" form="formImageFond" value="" >
 				<!--ajouter form et input-->
-				<div class="row text-center"><button id="changerImageFond" class="btn btn-warning col-12">Changer l'image de fond</button></div>
+				<form action="profil_vendeur_prive.php" method="post" id="formImageFond">
+					
+					<div class="row text-center">
+						<input type="submit" name="boutonImageFond" id="changerImageFond" class="btn btn-warning col-12" value="Changer l'image de fond">
+					</div>
+				</form>
 
 				<div class="row" id="exemplesProduits">
 					<?php 

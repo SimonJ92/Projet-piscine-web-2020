@@ -78,7 +78,7 @@
           //On vérifie qu'il n'y a pas de caractères spéciaux
           $pattern= '/[\'^£$%&*()}{@#~?><>,|=_+¬-éàèùüïûç]/';
           if(preg_match($pattern, $verifNom) || preg_match($pattern, $verifPrenom) || preg_match('/[\'^£$%&*()}{#~?><>,|=_+¬-éàèùüïûç]/', $verifAdresseMail) || preg_match($pattern, $verifAdresseLigne1) || preg_match($pattern, $verifAdresseLigne2) || preg_match($pattern, $verifVille) || preg_match($pattern, $verifCodePostal) || preg_match($pattern, $verifPays) || preg_match('/[\'^£$%&*()}{@~?><>,|=_¬-éàèùüïûç]/', $verifNumeroTelephone)){
-              echo "<script>alert(\"Données non sauvegardeés : les champs ne doivent pas contenir de caractère spéciaux (excepté le @ de l'adresse mail et le + du numéro de téléphone)\")</script>";
+              echo "<script>alert(\"Données non sauvegardeés : les champs ne doivent pas contenir de caractères spéciaux (excepté le @ de l'adresse mail et le + du numéro de téléphone)\")</script>";
               $erreurSauvegarder = "Les champs ne doivent pas contenir de caractère spéciaux (excepté le @ de l'adresse mail et le + du numéro de téléphone)";
           }else{
             //TODO : autres vérifications des champs
