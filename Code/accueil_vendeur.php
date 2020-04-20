@@ -68,7 +68,7 @@
 		 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="Styles/style.css">
 		<link rel="stylesheet" type="text/css" href="Styles/myFooter.css">
-		<link rel="stylesheet" type="text/css" href="Styles/bootstrap.min.css">		<!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
+		<link rel="stylesheet" type="text/css" href="Styles/bootstrap.min.css">
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		<link rel="stylesheet" type="text/css" href="Styles/accueil.css">
 	</head>
