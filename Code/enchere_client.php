@@ -43,9 +43,36 @@
     		}
     	}
     }
-    
 
 	//Page
+
+	$numeroProduit = isset($_GET["numeroProduit"])?$_GET["numeroProduit"]:"";
+    $dataProduit = "";
+    $erreurProduit = "";
+    $dataEnchere = "";
+    $erreurEnchere = "";
+    if($db_found){
+    	$sqlProduit = "SELECT * from produit where Numero = $numeroProduit";
+    	$resultatProduit = mysqli_query($db_handle,$sqlProduit) or die (mysqli_error($db_handle));
+    	if(mysqli_num_rows($resultatProduit) == 0){
+    		$erreurProduit = "Erreur : produit non trouvé dans la base de données";
+    	}else{
+    		$dataProduit = mysqli_fetch_assoc($resultatProduit);
+    	}
+    }
+
+    if($db_found){
+    	$sqlEnchere = "SELECT * from enchere where NumeroProduit = $numeroProduit";
+    	$resultatEnchere = mysqli_query($db_handle,$sqlEnchere) or die (mysqli_error($db_handle));
+    	if(mysqli_num_rows($resultatEnchere) == 0){
+    		$erreurProduit = "Erreur : enchère non trouvée dans la base de données";
+    	}else{
+    		$dataEnchere = mysqli_fetch_assoc($resultatEnchere);
+    		echo '<script>var dateFinEnchere = "'.$dataEnchere["DateFin"].'";</script>';
+    	}
+    }
+
+
  ?>
 
 <!DOCTYPE html>
@@ -64,8 +91,38 @@
 		<link rel="stylesheet" href="Styles/bootstrap.min.css">  <!-- Cette fiche de style n'est pas dans le dossier Styles : elle est importante ? -->
 		<link rel="stylesheet" href="Styles/nav_bar.css">
 		<link rel="stylesheet" type="text/css" href="Styles/enchere_client.css">
-		<script src="Scripts/enchere_client.js"></script>
-		<link rel="icon" href="Images/favicon.ico" type="images/x-icon">
+		<!--<script src="Scripts/enchere_client.js"></script>-->
+		<script>
+			// Set the date we're counting down to
+			
+			var countDownDate = new Date(dateFinEnchere).getTime();
+
+			// Update the count down every 1 second
+			var x = setInterval(function() {
+
+			  // Get today's date and time
+			  var now = new Date().getTime();
+			    
+			  // Find the distance between now and the count down date
+			  var distance = countDownDate - now;
+			    
+			  // Time calculations for days, hours, minutes and seconds
+			  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+			  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+			  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+			    
+			  // Output the result in an element with id="demo"
+			  document.getElementById("dateenchere").innerHTML = days + "d " + hours + "h "
+			  + minutes + "m " + seconds + "s ";
+			    
+			  // If the count down is over, write some text 
+			  if (distance < 0) {
+			    clearInterval(x);
+			    document.getElementById("dateenchere").innerHTML = "L\'enchère est terminée";
+			  }
+			}, 1000);
+		</script>
 	</head>
 
 	<body>	
@@ -143,41 +200,34 @@
 		<div class="wrapper">
 			<div class="produit_now">
 				<ul class="list-unstyled">
-					<li class="media">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-								Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
-					</li>
-					<li class="media my-4">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-								Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
-					</li>
-					<li class="media">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-							Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
-					</li>
-					<li class="media">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-							Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
-					</li>
-					<li class="media">
-						<a href="#"><img class="mr-3" src="..." alt="Generic placeholder image"></a>
-						<div class="media-body">
-							<h5 class="mt-0 mb-1">List-based media object</h5>
-							Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-						</div>
-					</li>
+					<?php 
+					//On veut afficher toutes les enchères auxquelles participe le client
+					$sqlMesEncheres = "SELECT E.* from enchere E join offre S on S.IDEnchere = E.IDEnchere where S.IDAcheteur like $idConnected";
+					$resultatMesEncheres = mysqli_query($db_handle,$sqlMesEncheres) or die (mysqli_error($db_handle));
+					if(mysqli_num_rows($resultatMesEncheres) == 0){
+						echo "Pas d'enchère trouvée";
+					}else{
+						while ($dataMesEncheres = mysqli_fetch_assoc($resultatMesEncheres)) {
+							$sqlProduitMesEncheres = "SELECT * from produit where Numero =".$dataMesEncheres["NumeroProduit"];
+							$resultatProduitMesEncheres = mysqli_query($db_handle,$sqlProduitMesEncheres) or die (mysqli_error($db_handle));
+							if(mysqli_num_rows($resultatProduitMesEncheres) == 0){
+								echo "Erreur lors de la récupéraiton du produit";
+							}else
+							{
+								$dataProduitMesEncheres = mysqli_fetch_assoc($resultatProduitMesEncheres);
+								echo '
+									<li class="media">
+										<a href="enchere_vendeur.php?numeroProduit='.$dataMesEncheres["NumeroProduit"].'"><img class="mr-3" src="'.$dataProduitMesEncheres["Photo1"].'" alt="Generic placeholder image" style="max-height: 150px;max-width: 150px;"></a>
+										<div class="media-body">
+											<h5 class="mt-0 mb-1">'.$dataProduitMesEncheres["Nom"].'</h5>
+												'.$dataProduitMesEncheres["DescriptionCourte"].'
+										</div>
+									</li>
+								';
+							}
+						}
+					}
+				 ?>
 				</ul>
 			</div>
 			<div class="information">

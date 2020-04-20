@@ -67,15 +67,6 @@
     		$dataProduit = mysqli_fetch_assoc($resultatProduit);
     	}
     }
-    if($db_found){
-    	$sqlProduit = "SELECT * from produit where Numero = $numeroProduit";
-    	$resultatProduit = mysqli_query($db_handle,$sqlProduit) or die (mysqli_error($db_handle));
-    	if(mysqli_num_rows($resultatProduit) == 0){
-    		$erreurProduit = "Erreur : produit non trouvé dans la base de données";
-    	}else{
-    		$dataProduit = mysqli_fetch_assoc($resultatProduit);
-    	}
-    }
 
     if($db_found){
     	$sqlEnchere = "SELECT * from enchere where NumeroProduit = $numeroProduit";
@@ -233,7 +224,7 @@
 									<li class="media">
 										<a href="enchere_vendeur.php?numeroProduit='.$dataMesEncheres["NumeroProduit"].'"><img class="mr-3" src="'.$dataProduitMesEncheres["Photo1"].'" alt="Generic placeholder image" style="max-height: 150px;max-width: 150px;"></a>
 										<div class="media-body">
-											<h5 class="mt-0 mb-1">List-based media object</h5>
+											<h5 class="mt-0 mb-1">'.$dataProduitMesEncheres["Nom"].'</h5>
 												'.$dataProduitMesEncheres["DescriptionCourte"].'
 										</div>
 									</li>
