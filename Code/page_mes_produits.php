@@ -460,15 +460,12 @@
 					h5.textContent = "methode de vente:"; 
 					document.getElementById("td_3" + compteur).appendChild(h5);
 					
-					var p_3 = document.createElement("p"); 
 					n = MethodeVentes.search("%marrq%");
 					var MethodeVentes_objet = MethodeVentes.slice(0, n);
 					MethodeVentes = MethodeVentes.replace(MethodeVentes_objet + "%marrq%", "");
 					
 					
-					var button = document.createElement("button"); 
-					button.id = "achat_par_methode" + compteur; 
-					button.className = "button_achat";
+					var lien = document.createElement("a");
 					
 					
 					n = Numero.search("%marrq%");
@@ -477,15 +474,15 @@
 					
 					if("Encheres" == MethodeVentes_objet)
 					{
-						button.textContent = "etat actuel des encheres";
-						button.onclick = "location.href='enchere_vendeur.php?numeroProduit='" + Numero_objet;
+						lien.textContent = "etat actuel des encheres";
+						lien.href = "enchere_vendeur.php?numeroProduit=" + Numero_objet;
 					}
 					else
 					{
-						button.textContent = "etat actuel des negociations";
-						button.onclick = "location.href=\'negoce_vendeur.php\''?'\'numeroProduit=\'" + Numero_objet;
+						lien.textContent = "etat actuel des negociations";
+						lien.href = "negoce_vendeur.php?numeroProduit=" + Numero_objet;
 					}
-					document.getElementById("td_3" + compteur).appendChild(button);
+					document.getElementById("td_3" + compteur).appendChild(lien);
 				}
 			}
 		</script>
