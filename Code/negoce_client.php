@@ -13,10 +13,10 @@
     //id si client connecté
     $pseudoConnected=(isset($_SESSION['pseudoConnected']))?$_SESSION['pseudoConnected']:'';
     //pseudo si vendeur connecté
-	
-	//produitouvert
-	$produitConnected=(isset($_SESSION['idproduit']))?(int) $_SESSION['idproduit']:'';
     
+	$numProduit = (isset($_GET['numeroProduit']))?(int) $_GET['numeroProduit']:0; 
+	
+	
 	if(isset($_POST["toggleConnexion"])){
     	if($_POST["toggleConnexion"]){
     		if($typeConnected == 1){
@@ -61,7 +61,7 @@
 			if($nouvelleoffre==""){
 				$erreurOffre ="Saisir une offre";
 			}else{
-				$sqlTestCreation = "SELECT * FROM negociation WHERE (IDAcheteur like '%$idConnected%' AND NumeroProduit like '%$produitConnected%')";
+				$sqlTestCreation = "SELECT * FROM negociation WHERE (IDAcheteur like '%$idConnected%' AND NumeroProduit = $numProduit)";
 				$resultTestCreation = mysqli_query($db_handle,$sqlTestCreation) or die (mysqli_error($db_handle));
 				
 				if(mysqli_num_rows($resultTestCreation) != 0){
@@ -82,29 +82,29 @@
 					$resultTestOffre5 = mysqli_query($db_handle,$sqlTestOffre4) or die (mysqli_error($db_handle));
 					
 					if(mysqli_num_rows($resultTestOffre1) != 0){
-						$sqlOffre = "UPDATE negociation SET Prop2 ='$nouvelleoffre' WHERE (IDAcheteur like '%$idConnected%' AND NumeroProduit like '%$produitConnected%')";
+						$sqlOffre = "UPDATE negociation SET Prop2 ='$nouvelleoffre' WHERE IDAcheteur like '%$idConnected%'";
 						$resultOffre = mysqli_query($db_handle,$sqlOffre);
 						$erreurOffre = "Offre non enregistré";
 					}else if(mysqli_num_rows($resultTestOffre2) != 0){
-						$sqlOffre = "UPDATE negociation SET Prop4 ='$nouvelleoffre' WHERE (IDAcheteur like '%$idConnected%' AND NumeroProduit like '%$produitConnected%')";
+						$sqlOffre = "UPDATE negociation SET Prop4 ='$nouvelleoffre' WHERE IDAcheteur like '%$idConnected%'";
 						$resultOffre = mysqli_query($db_handle,$sqlOffre);
 						$erreurOffre = "Offre non enregistré";
 					}else if(mysqli_num_rows($resultTestOffre3) != 0){
-						$sqlOffre = "UPDATE negociation SET Prop6 ='$nouvelleoffre' WHERE (IDAcheteur like '%$idConnected%' AND NumeroProduit like '%$produitConnected%')";
+						$sqlOffre = "UPDATE negociation SET Prop6 ='$nouvelleoffre' WHERE IDAcheteur like '%$idConnected%'";
 						$resultOffre = mysqli_query($db_handle,$sqlOffre);
 						$erreurOffre = "Offre non enregistré";
 					}else if(mysqli_num_rows($resultTestOffre4) != 0){
-						$sqlOffre = "UPDATE negociation SET Prop8 ='$nouvelleoffre' WHERE (IDAcheteur like '%$idConnected%' AND NumeroProduit like '%$produitConnected%')";
+						$sqlOffre = "UPDATE negociation SET Prop8 ='$nouvelleoffre' WHERE IDAcheteur like '%$idConnected%'";
 						$resultOffre = mysqli_query($db_handle,$sqlOffre);
 						$erreurOffre = "Offre non enregistré";
 					}else if(mysqli_num_rows($resultTestOffre5) != 0){
-						$sqlOffre = "UPDATE negociation SET Prop10 ='$nouvelleoffre' WHERE (IDAcheteur like '%$idConnected%' AND NumeroProduit like '%$produitConnected%')";
+						$sqlOffre = "UPDATE negociation SET Prop10 ='$nouvelleoffre' WHERE IDAcheteur like '%$idConnected%'";
 						$resultOffre = mysqli_query($db_handle,$sqlOffre);
 						$erreurOffre = "Offre non enregistré";
 					} 
 					
 				}else{
-					$sqlOffre = "INSERT INTO negociation (IDAcheteur,PseudoVendeur,NumeroProduit, Prop1,Prop2, Accepted) VALUES ('idConnected','Simon','produitConnected','0','$nouvelleoffre','0')";
+					$sqlOffre = "INSERT INTO negociation (IDAcheteur,PseudoVendeur,NumeroProduit, Prop1,Prop2, Accepted) VALUES ('idConnected','Simon','','0','$nouvelleoffre','0')";
 					$resultOffre = mysqli_query($db_handle,$sqlOffre);
 					$erreurOffre = "Offre non enregistré";
 				}
@@ -296,7 +296,7 @@
 			<?php
 			
 				if ($db_found) {															
-									$sqlNegoce = "SELECT * FROM produit WHERE Numero = '%$produitConnected%'";
+									$sqlNegoce = "SELECT * FROM produit WHERE Numero = $numProduit";
 									$resultNegoce = mysqli_query($db_handle, $sqlNegoce);
 									
 								if (mysqli_num_rows($resultNegoce) == 0)
@@ -360,7 +360,7 @@
 						
 							<?php 
 								if ($db_found) {
-									$sqlOffresClient = "SELECT * FROM negociation WHERE (IDAcheteur like '%$idConnected%' AND NumeroProduit like '%$produitConnected%')";
+									$sqlOffresClient = "SELECT * FROM negociation WHERE IDAcheteur like '%$idConnected%'";
 									$resultOffresClient = mysqli_query($db_handle, $sqlOffresClient);
 								if (mysqli_num_rows($resultOffresClient) == 0)
 								{
@@ -396,7 +396,7 @@
 						
 						<?php 
 								if ($db_found) {
-									$sqlOffresVendeur = "SELECT * FROM negociation WHERE (IDAcheteur like '%$idConnected%' AND NumeroProduit like '%$produitConnected%')";
+									$sqlOffresVendeur = "SELECT * FROM negociation WHERE IDAcheteur like '%$idConnected%'";
 									$resultOffresVendeur = mysqli_query($db_handle, $sqlOffresVendeur);
 								if (mysqli_num_rows($resultOffresVendeur) == 0)
 								{
@@ -448,10 +448,12 @@
 				<div class="w-100"></div>
 				<div class="col">
 					<div class="row">
-						<form  action="negoce_client.php" method="post">
 						<div class="col">
-							<input type="submit" class="btn btn-primary" id="boutonoffre" name="boutonoffre" value="Proposer une nouvelle offre">
+							<?php
+							echo '<a href="negoce_client.php?numeroProduit='.($numProduit).'"><input type="submit" class="btn btn-primary" id="boutonoffre" name="boutonoffre" value="Proposer une nouvelle offre">';
+							?></a>
 						</div>
+						<form action="negoce_client.php?numeroProduit='.($numProduit).'" method="post">
 						<div class="col">
 							<input type ="text" class="form-control" id="nouvelleoffre" name="nouvelleoffre" placeholder="Saisir votre nouvelle offre">						
 						</div>
