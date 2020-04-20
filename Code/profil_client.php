@@ -46,6 +46,70 @@
 
 
 	//Page
+    $dataInfosClient = "";
+    if($db_found){
+      $sqlInfosClient = "SELECT * from acheteur where IDAcheteur =".$idConnected;
+      $resultInfosClient = mysqli_query($db_handle,$sqlInfosClient) or die (mysqli_error($db_handle));
+      if(mysqli_num_rows($resultInfosClient) == 0){
+        echo "Erreur : le client n'a pas été trouvé";
+      }else{
+        $dataInfosClient = mysqli_fetch_assoc($resultInfosClient);
+      }
+    }
+
+    $erreurSauvegarder = "";
+    if(isset($_POST["boutonSauvegarder"]) && $db_found){
+      if($_POST["boutonSauvegarder"]){
+        //On récupère les informations du form
+        $verifNom = isset($_POST["Nom"])?$_POST["Nom"]:"";
+        $verifPrenom = isset($_POST["Prenom"])?$_POST["Prenom"]:"";
+        $verifAdresseMail = isset($_POST["AdresseMail"])?$_POST["AdresseMail"]:"";
+        $verifAdresseLigne1 = isset($_POST["AdresseLigne1"])?$_POST["AdresseLigne1"]:"";
+        $verifAdresseLigne2 = isset($_POST["AdresseLigne2"])?$_POST["AdresseLigne2"]:"";
+        $verifVille = isset($_POST["Ville"])?$_POST["Ville"]:"";
+        $verifCodePostal = isset($_POST["CodePostal"])?$_POST["CodePostal"]:"";
+        $verifPays = isset($_POST["Pays"])?$_POST["Pays"]:"";
+        $verifNumeroTelephone = isset($_POST["NumeroTelephone"])?$_POST["NumeroTelephone"]:"";
+
+        if($verifNom == "" || $verifPrenom == "" || $verifAdresseMail == "" || $verifAdresseLigne1 == "" || $verifVille == "" || $verifCodePostal == "" || $verifPays == "" || $verifNumeroTelephone == ""){
+          echo "<script>alert(\"Données non sauvegardées : tous les champs doivent être remplis\")</script>";
+          $erreurSauvegarder = "Tous les champs doivent être remplis !";
+        }else{
+          //On vérifie qu'il n'y a pas de caractères spéciaux
+          $pattern= '/[\'^£$%&*()}{@#~?><>,|=_+¬-éàèùüïûç]/';
+          if(preg_match($pattern, $verifNom) || preg_match($pattern, $verifPrenom) || preg_match('/[\'^£$%&*()}{#~?><>,|=_+¬-éàèùüïûç]/', $verifAdresseMail) || preg_match($pattern, $verifAdresseLigne1) || preg_match($pattern, $verifAdresseLigne2) || preg_match($pattern, $verifVille) || preg_match($pattern, $verifCodePostal) || preg_match($pattern, $verifPays) || preg_match('/[\'^£$%&*()}{@~?><>,|=_¬-éàèùüïûç]/', $verifNumeroTelephone)){
+              echo "<script>alert(\"Données non sauvegardeés : les champs ne doivent pas contenir de caractère spéciaux (excepté le @ de l'adresse mail et le + du numéro de téléphone)\")</script>";
+              $erreurSauvegarder = "Les champs ne doivent pas contenir de caractère spéciaux (excepté le @ de l'adresse mail et le + du numéro de téléphone)";
+          }else{
+            //TODO : autres vérifications des champs
+
+            //L'adresse 'mail étant l'identifiant, on va vérifier qu'il n'y a pas d'autre compte avec la même adresse mail
+            $sqlVerifMail = "SELECT * from acheteur where AdresseMail like '%$verifAdresseMail%' and IDAcheteur != ".$idConnected;
+            $resultatVerifMail = mysqli_query($db_handle,$sqlVerifMail) or die (mysqli_error($db_handle));
+            if(mysqli_num_rows($resultatVerifMail) != 0){
+              echo "<script>alert(\"Données non sauvegardeés : cette adresse mail est déjà utilisée par un autre client\")</script>";
+              $erreurSauvegarder = "Cette adresse mail est déjà utilisée par un autre client";
+            }else{
+
+              //On update les infos du client
+              $sqlUpdate = "UPDATE acheteur
+                            Set Prenom = '".$verifPrenom."',
+                                Nom = '".$verifNom."',
+                                AdresseMail = '".$verifAdresseMail."',
+                                AdresseLigne1 = '".$verifAdresseLigne1."' ,
+                                AdresseLigne2 = '".$verifAdresseLigne2."' ,
+                                Ville = '".$verifVille."',
+                                CodePostal = '".$verifCodePostal."' ,
+                                Pays = '".$verifPays."',
+                                Telephone = '".$verifNumeroTelephone."'
+                            where IDAcheteur = ".$idConnected;
+              $resultatUpdate = mysqli_query($db_handle,$sqlUpdate) or die (mysqli_error($db_handle));
+              header('Location: profil_client.php');
+            }
+          }
+        }
+      }
+    }
  ?>
 
 <!DOCTYPE html>
@@ -67,65 +131,6 @@
 		<script src="Scripts/script_pageclient.js" type="text/javascript" ></script>
 		<style>
 body {font-family: Arial, Helvetica, sans-serif;}
-
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  -webkit-animation-name: fadeIn; /* Fade in the background */
-  -webkit-animation-duration: 0.4s;
-  animation-name: fadeIn;
-  animation-duration: 0.4s
-}
-
-/* Modal Content */
-.modal-content {
-  position: fixed;
-  bottom: 0;
-  background-color: #fefefe;
-  width: 100%;
-  -webkit-animation-name: slideIn;
-  -webkit-animation-duration: 0.4s;
-  animation-name: slideIn;
-  animation-duration: 0.4s
-}
-
-/* The Close Button */
-.close {
-  color: white;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.modal-header {
-  padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
-}
-
-.modal-body {padding: 2px 16px;}
-
-.modal-footer {
-  padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
-}
 
 /* Add Animation */
 @-webkit-keyframes slideIn {
@@ -227,182 +232,75 @@ body {font-family: Arial, Helvetica, sans-serif;}
 		<br>
 			<!-- <button id="savebtn" class="btn btn-primary btn-lg btn-block">Sauvegarder les changements</button> -->
 			<!-- </div> -->
-
-			<!-- Trigger/Open The Modal -->
-			<button id="myBtn" class="btn btn-primary btn-lg btn-block">Sauvegarder vos modifications</button>
-
-			<!-- The Modal -->
-			<div id="myModal" class="modal">
-
-			<!-- Modal content -->
-				<div class="modal-content">
-					<div class="modal-header">
-				
-				<button id="Save" class="btn btn-warning" onclick="save()">VALIDER </button>
-					</div>
-						<div class="modal-body">
-						<form>
-							<h1>Informations</h1>
-								<label for="prenom"><b>Prénom</b></label>
-								<input type="text" id="prenom" name="prenom" required><br>
-
-								<label for="nom"><b>Nom</b></label>
-								<input type="text" id="nom" name="nom" required><br>
-
-								<label for="mail"><b>Adresse Mail</b></label>
-								<input type="text" id="mail" name="mail" required><br>
-
-								<label for="adresse1"><b>Adresse 1</b></label>
-								<input type="text" id="adresse1" name="adresse1" required><br>
-
-								<label for="adresse2"><b>Adresse 2</b></label>
-								<input type="text" id="adresse2" placeholder="NULL" name="adresse2" required><br>
-
-								<label for="ville"><b>Ville</b></label>
-								<input type="text" id="ville" name="ville" required><br>
-
-								<label for="zip"><b>Code Postal</b></label>
-								<input type="text" id="zip" name="zip" required><br>
-
-								<label for="pays"><b>Pays</b></label>
-								<input type="text" id="pays" name="pays" required><br>
-
-								<label for="phone"><b>Téléphone</b></label>
-								<input type="text" id="phone" name="phone" required>
-						</div>
-			<div class="modal-footer">
-				
-			</div>
-				</div>
-
-			</div>
-			<script>
-// Get the modal
-var modal = document.getElementById("myModal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-</script>
-		<br>
-		<!-- </div> -->
-		<div class="row" id="ensemble">
-			<div class="col-sm-10" style="background-color:#aaa;">
-				<h2>Prénom</h2>
-				<p id="old_prenom">André</p>
-			</div>
-			<div class="col-sm-2" >
-				<br>
-				<button class="btn btn-success btn-lg btn-block" onclick="changement_prenom()">Modifier</button>
-			</div>
-		</div>
-		<br>
-		<div class="row" id="ensemble">
-			<div class="col-sm-10" style="background-color:#aaa;">
-				<h2>Nom</h2>
-				<p id="old_nom">Breton</p>
-			</div>
-			<div class="col-sm-2" >
-				<br>
-				<button class="btn btn-success btn-lg btn-block" onclick="changement_nom()">Modifier</button>
-			</div>
-		</div>
-		<br>
-		<div class="row" id="ensemble">
-			<div class="col-sm-10" style="background-color:#aaa;">
-				<h2>Adresse Mail</h2>
-				<p id="old_mail">andre.breton@edu.ece.fr</p>
-			</div>
-			<div class="col-sm-2">
-				<br>
-				<button class="btn btn-success btn-lg btn-block" onclick="changement_mail()">Modifier</button>
-			</div>
-		</div>
-		<br>
-		<div class="row" id="ensemble">
-			<div class="col-sm-10" style="background-color:#aaa;">
-				<h2>Adresse 1</h2>
-				<p id="old_adresse1">10 Rue du Poète</p>
-			</div>
-			<div class="col-sm-2">
-				<br>
-				<button class="btn btn-success btn-lg btn-block" onclick="changement_adresse1()">Modifier</button>
-			</div>
-		</div>
-		<br>
-		<div class="row" id="ensemble">
-			<div class="col-sm-10" style="background-color:#aaa;">
-				<h2>Adresse 2</h2>
-				<p id="old_adresse2">Appartement N°28</p>
-			</div>
-			<div class="col-sm-2">
-				<br>
-				<button class="btn btn-success btn-lg btn-block" onclick="changement_adresse2()">Modifier</button>
-			</div>
-		</div>
-		<br>
-		<div class="row" id="ensemble">
-			<div class="col-sm-10" style="background-color:#aaa;">
-				<h2>Ville</h2>
-				<p id="old_ville">Tinchebray</p>
-			</div>
-			<div class="col-sm-2">
-				<br>
-				<button class="btn btn-success btn-lg btn-block" onclick="changement_ville()">Modifier</button>
-			</div>
-		</div>
-		<br>
-		<div class="row" id="ensemble">
-			<div class="col-sm-10" style="background-color:#aaa;">
-				<h2>Code Postal</h2>
-				<p id="old_zip">61800</p>
-			</div>
-			<div class="col-sm-2">
-				<br>
-				<button class="btn btn-success btn-lg btn-block" onclick="changement_zip()">Modifier</button>
-			</div>
-		</div>
-		<br>
-		<div class="row" id="ensemble">
-			<div class="col-sm-10" style="background-color:#aaa;">
-				<h2>Pays</h2>
-				<p id="old_pays">France</p>
-			</div>
-			<div class="col-sm-2">
-				<br>
-				<button class="btn btn-success btn-lg btn-block" onclick="changement_pays()">Modifier</button>
-			</div>
-		</div>
-		<br>
-		<div class="row" id="ensemble">
-			<div class="col-sm-10" style="background-color:#aaa;">
-				<h2>Téléphone</h2>
-				<p id="old_phone">+33 1 23 45 67 89</p>
-			</div>
-			<div class="col-sm-2">
-				<br>
-				<button class="btn btn-success btn-lg btn-block" onclick="changement_phone()">Modifier</button>
-			</div>
-		</div>
+    <?php echo $erreurSauvegarder; ?>
+    <form action="profil_client.php" method="post">
+  		<input type="submit" name="boutonSauvegarder" id="myBtn" class="btn btn-primary btn-lg btn-block" value="Sauvegarder vos modifications">
+      
+  		<br>
+  		<!-- </div> -->
+  		<div class="row" id="ensemble">
+  			<div class="col-sm-10" style="background-color:#aaa;">
+  				<h2>Prénom</h2>
+  				<?php echo '<input type="text" name="Prenom" value="'.$dataInfosClient["Prenom"].'" >'; ?>
+  			</div>
+  		</div>
+  		<br>
+  		<div class="row" id="ensemble">
+  			<div class="col-sm-10" style="background-color:#aaa;">
+  				<h2>Nom</h2>
+  				<?php echo '<input type="text" name="Nom" value="'.$dataInfosClient["Nom"].'" >'; ?>
+  			</div>
+  		</div>
+  		<br>
+  		<div class="row" id="ensemble">
+  			<div class="col-sm-10" style="background-color:#aaa;">
+  				<h2>Adresse Mail</h2>
+  				<?php echo '<input type="text" name="AdresseMail" value="'.$dataInfosClient["AdresseMail"].'" >'; ?>
+  			</div>
+  		</div>
+  		<br>
+  		<div class="row" id="ensemble">
+  			<div class="col-sm-10" style="background-color:#aaa;">
+  				<h2>Adresse 1</h2>
+  				<?php echo '<input type="text" name="AdresseLigne1" value="'.$dataInfosClient["AdresseLigne1"].'" >'; ?>
+  			</div>
+  		</div>
+  		<br>
+  		<div class="row" id="ensemble">
+  			<div class="col-sm-10" style="background-color:#aaa;">
+  				<h2>Adresse 2</h2>
+  				<?php echo '<input type="text" name="AdresseLigne2" value="'.$dataInfosClient["AdresseLigne2"].'" >'; ?>
+  			</div>
+  		</div>
+  		<br>
+  		<div class="row" id="ensemble">
+  			<div class="col-sm-10" style="background-color:#aaa;">
+  				<h2>Ville</h2>
+  				<?php echo '<input type="text" name="Ville" value="'.$dataInfosClient["Ville"].'" >'; ?>
+  			</div>
+  		</div>
+  		<br>
+  		<div class="row" id="ensemble">
+  			<div class="col-sm-10" style="background-color:#aaa;">
+  				<h2>Code Postal</h2>
+  				<?php echo '<input type="text" name="CodePostal" value="'.$dataInfosClient["CodePostal"].'" >'; ?>
+  			</div>
+  		</div>
+  		<br>
+  		<div class="row" id="ensemble">
+  			<div class="col-sm-10" style="background-color:#aaa;">
+  				<h2>Pays</h2>
+  				<?php echo '<input type="text" name="Pays" value="'.$dataInfosClient["Pays"].'" >'; ?>
+  			</div>
+  		</div>
+  		<br>
+  		<div class="row" id="ensemble">
+  			<div class="col-sm-10" style="background-color:#aaa;">
+  				<h2>Téléphone</h2>
+  				<?php echo '<input type="text" name="NumeroTelephone" value="'.$dataInfosClient["Telephone"].'" >'; ?>
+  			</div>
+  		</div>
+    </form>
 		
 	</div>
 	
